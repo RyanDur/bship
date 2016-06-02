@@ -1,0 +1,10 @@
+# .pairs - configuration for 'git pair'
+pairs:
+  # <initials>: <Firstname> <Lastname>[; <email-id>]
+  rd: Ryan Durling; rdurling
+  lm: Luke Mueller; lmueller
+email:
+  prefix: pair
+  domain: pair-exchange.com
+  no_solo_prefix: true
+global: false  # Set to true for git-pair to change git configuration for all your projects
