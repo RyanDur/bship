@@ -19,4 +19,8 @@ public class GameService {
         List<Board> boards = boardRepository.createBoards();
         return new Game(boards);
     }
+
+    public void placeShip(int gameId, int boardId, Ship battleShipToBeCreated) {
+
+    }
 }

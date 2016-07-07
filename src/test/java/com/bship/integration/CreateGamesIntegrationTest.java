@@ -1,6 +1,7 @@
 package com.bship.integration;
 
 import com.bship.BattleshipApplication;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,12 +24,18 @@ public class CreateGamesIntegrationTest {
 
     @Value("${server.port}")
     private Integer port;
+    private RestTemplate restTemplate;
+
+    private final String host = "http://localhost:";
+
+    @Before
+    public void setup() {
+        restTemplate = new RestTemplate();
+    }
 
     @Test
     public void postGame_shouldCreateNewGameAndReturnsBoards() {
-        RestTemplate restTemplate = new RestTemplate();
-
-        String url = "http://localhost:" + port + "/game";
+        String url = host + port + "/game";
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, "", String.class);
 
         String actualResponseBody = responseEntity.getBody();
@@ -41,6 +48,28 @@ public class CreateGamesIntegrationTest {
                 "}";
 
         assertEquals(expectedResponseBody, actualResponseBody);
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void placeShip_shouldBeAbleToPlaceAShipOnTheBoard() {
+        String url = host + port + "/games/1/boards/1/ship";
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, "" +
+                "{\n" +
+                "  \"type\": \"AIRCRAFT_CARRIER\",\n" +
+                "  \"start\": {\n" +
+                "    \"x\": 0,\n" +
+                "    \"y\": 0\n" +
+                "  },\n" +
+                "  \"end\": {\n" +
+                "    \"x\": 0,\n" +
+                "    \"y\": 4\n" +
+                "  }\n" +
+                "}", String.class
+        );
+
+        assertEquals("{}", responseEntity.getBody());
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     }
 }

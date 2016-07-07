@@ -2,10 +2,7 @@ package com.bship.games;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CreateGameController {
@@ -18,9 +15,16 @@ public class CreateGameController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/game",method = RequestMethod.POST)
+    @RequestMapping(value = "/games", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Game createGame() {
         return service.getNewGame();
+    }
+
+    @RequestMapping(value = "/games/{gameId}/boards/{boardId}/ship", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public String placeShip(@PathVariable Integer gameId, @PathVariable Integer boardId, @RequestBody Ship battleShipToBeCreated) {
+        service.placeShip(gameId, boardId, battleShipToBeCreated);
+        return "{}";
     }
 }
