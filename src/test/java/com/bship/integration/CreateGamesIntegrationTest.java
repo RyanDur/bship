@@ -7,8 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
@@ -35,7 +34,7 @@ public class CreateGamesIntegrationTest {
 
     @Test
     public void postGame_shouldCreateNewGameAndReturnsBoards() {
-        String url = host + port + "/game";
+        String url = host + port + "/games";
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, "", String.class);
 
         String actualResponseBody = responseEntity.getBody();
@@ -54,8 +53,11 @@ public class CreateGamesIntegrationTest {
     @Test
     public void placeShip_shouldBeAbleToPlaceAShipOnTheBoard() {
         String url = host + port + "/games/1/boards/1/ship";
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, "" +
+        HttpEntity<String> stringHttpEntity = new HttpEntity<>("" +
                 "{\n" +
                 "  \"type\": \"AIRCRAFT_CARRIER\",\n" +
                 "  \"start\": {\n" +
@@ -66,10 +68,10 @@ public class CreateGamesIntegrationTest {
                 "    \"x\": 0,\n" +
                 "    \"y\": 4\n" +
                 "  }\n" +
-                "}", String.class
-        );
+                "}", headers);
+        ResponseEntity<String> entity = restTemplate.exchange(url, HttpMethod.POST, stringHttpEntity, String.class);
 
-        assertEquals("{}", responseEntity.getBody());
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertEquals("{}", entity.getBody());
+        assertEquals(HttpStatus.CREATED, entity.getStatusCode());
     }
 }
