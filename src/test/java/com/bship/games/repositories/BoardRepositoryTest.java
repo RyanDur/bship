@@ -37,8 +37,7 @@ public class BoardRepositoryTest {
 
         repository = new BoardRepository(template);
 
-        game = new Game();
-        game.setId(1L);
+        game = Game.builder().withId(1L).build();
         template.update("INSERT INTO games(id) VALUE(?) ", game.getId());
     }
 
@@ -52,11 +51,8 @@ public class BoardRepositoryTest {
     public void createBoards_shouldPersistTwoNewBoards() {
         List<Board> boardList = repository.createBoards(game);
 
-        List<Board> boards = template.query("SELECT * FROM boards", (rs, rowNum) -> {
-            Board board = new Board();
-            board.setId(rs.getLong("id"));
-            return board;
-        });
+        List<Board> boards = template.query("SELECT * FROM boards", (rs, rowNum) -> Board.builder()
+                .withId(rs.getLong("id")).build());
 
         assertThat(boards, containsInAnyOrder(boardList.toArray()));
     }

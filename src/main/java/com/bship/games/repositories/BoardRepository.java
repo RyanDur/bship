@@ -7,12 +7,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.stream.Collectors.toList;
 
 @Component
@@ -31,20 +33,19 @@ public class BoardRepository {
                 .collect(toList());
     }
 
-    private Function<Game, Board> save = (game) -> {
-        Board board = new Board();
-        board.setId(getGeneratedId(game));
-        return board;
-    };
+    private Function<Game, Board> save = (game) -> Board.builder()
+            .withId(getGeneratedId(game))
+            .build();
 
     private Long getGeneratedId(Game game) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
-        template.update(con -> {
-            PreparedStatement statement = con.prepareStatement("INSERT INTO boards(game_id) VALUE(?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            statement.setLong(1, game.getId());
-            return statement;
-        }, holder);
+        template.update(con -> prepareInsertStatement(game, con), holder);
         return holder.getKey().longValue();
+    }
+
+    private PreparedStatement prepareInsertStatement(Game game, Connection con) throws SQLException {
+        PreparedStatement statement = con.prepareStatement("INSERT INTO boards(game_id) VALUE(?)", RETURN_GENERATED_KEYS);
+        statement.setLong(1, game.getId());
+        return statement;
     }
 }

@@ -3,12 +3,29 @@ package com.bship.games.models;
 public class Board {
     private Long id;
 
+    private Board(Builder builder) {
+        id = builder.id;
+    }
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Long id;
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Board build() {
+            return new Board(this);
+        }
     }
 
     @Override

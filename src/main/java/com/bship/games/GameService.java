@@ -24,8 +24,7 @@ public class GameService {
     public Game getNewGame() {
         Game game = gameRepository.createGame();
         List<Board> boards = boardRepository.createBoards(game);
-        game.setBoards(boards);
-        return game;
+        return game.copy().withBoards(boards).build();
     }
 
     public void placeShip(int gameId, int boardId, Ship battleShipToBeCreated) {

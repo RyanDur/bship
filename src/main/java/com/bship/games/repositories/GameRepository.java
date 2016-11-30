@@ -21,9 +21,7 @@ public class GameRepository {
     }
 
     public Game createGame() {
-        Game game = new Game();
-        game.setId(getGeneratedId());
-        return game;
+        return Game.builder().withId(getGeneratedId()).build();
     }
 
     private Long getGeneratedId() {

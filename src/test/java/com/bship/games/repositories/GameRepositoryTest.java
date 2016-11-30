@@ -49,11 +49,8 @@ public class GameRepositoryTest {
         Game game1 = repository.createGame();
         Game game2 = repository.createGame();
 
-        List<Game> games = jdbcTemplate.query("SELECT * FROM games", (rs, rowNum) -> {
-            Game game = new Game();
-            game.setId(rs.getLong("id"));
-            return game;
-        });
+        List<Game> games = jdbcTemplate.query("SELECT * FROM games", (rs, rowNum) -> Game.builder()
+                .withId(rs.getLong("id")).build());
 
         assertThat(games, is(not(empty())));
         assertThat(games, contains(game1, game2));

@@ -21,18 +21,25 @@ public class GameServiceTest {
     private GameService gameService;
     private BoardRepository mockBoardRepository;
     private GameRepository mockGameRepository;
+    private Board firstStubbedBoard;
+    private Board secondStubbedBoard;
 
     @Before
     public void setup() {
         mockBoardRepository = Mockito.mock(BoardRepository.class);
         mockGameRepository = Mockito.mock(GameRepository.class);
+        Game game = Game.builder().build();
+        firstStubbedBoard = Board.builder().build();
+        secondStubbedBoard = Board.builder().build();
+
+        when(mockGameRepository.createGame()).thenReturn(game);
+        when(mockBoardRepository.createBoards(game)).thenReturn(Arrays.asList(firstStubbedBoard, secondStubbedBoard));
+
         gameService = new GameService(mockBoardRepository, mockGameRepository);
     }
 
     @Test
     public void getNewGame_shouldReturnANewGame() {
-        Game game = new Game();
-        when(mockGameRepository.createGame()).thenReturn(game);
         Game actualGame = gameService.getNewGame();
 
         assertThat(actualGame, is(instanceOf(Game.class)));
@@ -40,13 +47,6 @@ public class GameServiceTest {
 
     @Test
     public void getNewGame_shouldCreateTwoNewBoardsAndAssociateThemWithTheGame() {
-        Game game = new Game();
-        Board firstStubbedBoard = new Board();
-        Board secondStubbedBoard = new Board();
-
-        when(mockGameRepository.createGame()).thenReturn(game);
-        when(mockBoardRepository.createBoards(game)).thenReturn(Arrays.asList(firstStubbedBoard, secondStubbedBoard));
-
         Game actualGame = gameService.getNewGame();
 
         assertThat(actualGame.getBoards(), contains(firstStubbedBoard, secondStubbedBoard));

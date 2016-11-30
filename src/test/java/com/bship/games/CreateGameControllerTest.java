@@ -43,7 +43,7 @@ public class CreateGameControllerTest {
 
     @Test
     public void createGame_shouldReturnAGame() {
-        Game expected = new Game();
+        Game expected = Game.builder().build();
         when(mockService.getNewGame()).thenReturn(expected);
         Game actual = createGameController.createGame();
 
