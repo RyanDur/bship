@@ -43,3 +43,15 @@ flyway {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.2.1'
 }
+
+tasks.create(name: 'gitExecutableHooks') << {
+    Runtime.getRuntime().exec("chmod -R +x ./hooks/")
+}
+
+task installGitHooks(type: Copy) {
+    from new File(rootProject.rootDir, './hooks/pre-push')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+}
+
+gitExecutableHooks.dependsOn installGitHooks
+clean.dependsOn gitExecutableHooks
