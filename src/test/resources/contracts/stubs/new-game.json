@@ -3,8 +3,8 @@
     "url" : "/games",
     "method" : "POST",
     "headers" : {
-      "Accept" : {
-        "equalTo" : "application/json"
+      "Content-Type" : {
+        "equalTo" : "application/json;charset=UTF-8"
       }
     },
     "bodyPatterns" : [ {
