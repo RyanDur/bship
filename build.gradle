@@ -74,19 +74,6 @@ test {
     }
 }
 
-task resolveDependencies {
-    doLast {
-        project.rootProject.allprojects.each { subProject ->
-            subProject.buildscript.configurations.each { configuration ->
-                configuration.resolve()
-            }
-            subProject.configurations.each { configuration ->
-                configuration.resolve()
-            }
-        }
-    }
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = '3.2.1'
 }
