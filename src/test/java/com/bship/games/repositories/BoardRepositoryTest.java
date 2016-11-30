@@ -18,7 +18,6 @@ import static org.hamcrest.Matchers.hasSize;
 public class BoardRepositoryTest {
 
     private JdbcTemplate template;
-    private Flyway flyway;
     private BoardRepository repository;
     private Game game;
 
@@ -30,7 +29,7 @@ public class BoardRepositoryTest {
         dataSource.setUsername("root");
         dataSource.setPassword("");
 
-        flyway = new Flyway();
+        Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
         flyway.clean();
         flyway.migrate();
@@ -39,7 +38,7 @@ public class BoardRepositoryTest {
         repository = new BoardRepository(template);
 
         game = new Game();
-        game.setId(1);
+        game.setId(1L);
         template.update("INSERT INTO games(id) VALUE(?) ", game.getId());
     }
 

@@ -10,8 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -45,16 +45,18 @@ public class GameRepositoryTest {
     }
 
     @Test
-    public void createGame_should() {
-        Game game = repository.createGame();
+    public void createGame_shouldPersistGames() {
+        Game game1 = repository.createGame();
+        Game game2 = repository.createGame();
 
         List<Game> games = jdbcTemplate.query("SELECT * FROM games", (rs, rowNum) -> {
-            Game game1 = new Game();
-            game1.setId(rs.getInt("id"));
-            return game1;
+            Game game = new Game();
+            game.setId(rs.getLong("id"));
+            return game;
         });
 
         assertThat(games, is(not(empty())));
-        assertThat(game, is(equalTo(games.get(0))));
+        assertThat(games, contains(game1, game2));
+        assertThat(game2.getId(), is(2L));
     }
 }

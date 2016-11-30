@@ -4,25 +4,17 @@ import java.util.List;
 
 public class Game {
     private List<Board> boards;
-    private Integer id;
-
-    public Game(List<Board> boards) {
-        this.boards = boards;
-    }
-
-    public Game() {
-
-    }
+    private Long id;
 
     public List<Board> getBoards() {
         return boards;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -11,9 +11,9 @@ import org.mockito.Mockito;
 import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.sameInstance;
 import static org.mockito.Mockito.when;
 
 public class GameServiceTest {
@@ -49,7 +49,6 @@ public class GameServiceTest {
 
         Game actualGame = gameService.getNewGame();
 
-        assertThat(actualGame.getBoards().get(0), is(sameInstance(firstStubbedBoard)));
-        assertThat(actualGame.getBoards().get(1), is(sameInstance(secondStubbedBoard)));
+        assertThat(actualGame.getBoards(), contains(firstStubbedBoard, secondStubbedBoard));
     }
 }

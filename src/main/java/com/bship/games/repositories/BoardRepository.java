@@ -32,16 +32,19 @@ public class BoardRepository {
     }
 
     private Function<Game, Board> save = (game) -> {
+        Board board = new Board();
+        board.setId(getGeneratedId(game));
+        return board;
+    };
+
+    private Long getGeneratedId(Game game) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         template.update(con -> {
             PreparedStatement statement = con.prepareStatement("INSERT INTO boards(game_id) VALUE(?)",
                     Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, game.getId());
+            statement.setLong(1, game.getId());
             return statement;
         }, holder);
-
-        Board board = new Board();
-        board.setId(holder.getKey().longValue());
-        return board;
-    };
+        return holder.getKey().longValue();
+    }
 }

@@ -1,14 +1,15 @@
 package com.bship.integration;
 
-import com.bship.BattleshipApplication;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.flywaydb.core.Flyway;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,23 +17,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(BattleshipApplication.class)
-@WebAppConfiguration
-@IntegrationTest({"server.port=1337"})
+@SpringBootTest(webEnvironment=RANDOM_PORT)
 public class CreateGamesIntegrationTest {
 
-    @Value("${server.port}")
-    private Integer port;
-    private RestTemplate restTemplate;
-
-    private final String host = "http://localhost:";
+    @Autowired
+    private TestRestTemplate restTemplate;
 
     @Before
     public void setup() {
@@ -45,30 +40,27 @@ public class CreateGamesIntegrationTest {
         flyway.setDataSource(dataSource);
         flyway.clean();
         flyway.migrate();
-
-        restTemplate = new RestTemplate();
     }
 
     @Test
-    public void postGame_shouldCreateNewGameAndReturnsBoards() {
-        String url = host + port + "/games";
+    public void postGame_shouldCreateNewGameAndReturnsBoards() throws JSONException {
+        String url = "/games";
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, "", String.class);
 
         String actualResponseBody = responseEntity.getBody();
-        String expectedResponseBody = "{" +
-                "\"boards\":[" +
-                "{\"id\":1}," +
-                "{\"id\":2}" +
-                "]," +
-                "\"id\":1" +
-                "}";
-        assertEquals(expectedResponseBody, actualResponseBody);
+        String expectedResponseBody = "{\n" +
+                "\"id\":1, \n" +
+                "\"boards\": [\n" +
+                "  {\"id\": 1},\n" +
+                "  {\"id\": 2}\n" +
+                "]}";
+        JSONAssert.assertEquals(expectedResponseBody, actualResponseBody, true);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     }
 
     @Test
     public void placeShip_shouldBeAbleToPlaceAShipOnTheBoard() {
-        String url = host + port + "/games/1/boards/1/ship";
+        String url = "/games/1/boards/1/ship";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
