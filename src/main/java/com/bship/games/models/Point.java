@@ -1,4 +1,4 @@
-package com.bship.games;
+package com.bship.games.models;
 
 public class Point {
     private int x;

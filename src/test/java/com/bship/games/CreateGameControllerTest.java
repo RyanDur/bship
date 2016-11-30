@@ -1,5 +1,8 @@
 package com.bship.games;
 
+import com.bship.games.models.Game;
+import com.bship.games.models.Point;
+import com.bship.games.models.Ship;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -12,8 +15,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,13 +23,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CreateGameControllerTest {
 
-    private CreateGameController createGameController;
+    private GameController createGameController;
     private GameService mockService;
 
     @Before
     public void setup() {
         mockService = mock(GameService.class);
-        createGameController = new CreateGameController(mockService);
+        createGameController = new GameController(mockService);
     }
 
     @Test

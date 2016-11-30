@@ -1,4 +1,11 @@
+CREATE TABLE games(
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+);
 
 CREATE TABLE boards(
-  id INT
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  game_id INT NOT NULL,
+  CONSTRAINT games_id_fk
+  FOREIGN KEY (game_id)
+  REFERENCES games(id)
 );

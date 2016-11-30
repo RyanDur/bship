@@ -1,17 +1,18 @@
 package com.bship.games;
 
+import com.bship.games.models.Game;
+import com.bship.games.models.Ship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class CreateGameController {
+public class GameController {
 
     private GameService service;
 
     @Autowired
-    public CreateGameController(GameService service) {
-
+    public GameController(GameService service) {
         this.service = service;
     }
 

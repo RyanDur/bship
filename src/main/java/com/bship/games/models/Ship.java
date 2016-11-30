@@ -1,5 +1,6 @@
-package com.bship.games;
+package com.bship.games.models;
 
+import com.bship.games.Harbor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Ship {
