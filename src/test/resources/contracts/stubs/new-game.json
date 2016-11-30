@@ -1,0 +1,21 @@
+{
+  "request" : {
+    "url" : "/games",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalTo" : ""
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"boards\":[{\"id\":1},{\"id\":2}],\"id\":1}",
+    "headers" : {
+      "Content-Type" : "application/json;charset=UTF-8"
+    }
+  }
+}

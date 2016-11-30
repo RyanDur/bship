@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/games' -i -X POST -H 'Accept: application/json'
+----

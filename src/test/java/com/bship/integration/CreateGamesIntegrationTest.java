@@ -2,32 +2,35 @@ package com.bship.integration;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.flywaydb.core.Flyway;
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.Assert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(webEnvironment=RANDOM_PORT)
+@RunWith(SpringRunner.class)
+@AutoConfigureRestDocs(outputDir = "src/test/resources/contracts")
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+@AutoConfigureMockMvc
 public class CreateGamesIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @Before
     public void setup() {
@@ -43,43 +46,25 @@ public class CreateGamesIntegrationTest {
     }
 
     @Test
-    public void postGame_shouldCreateNewGameAndReturnsBoards() throws JSONException {
-        String url = "/games";
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, "", String.class);
-
-        String actualResponseBody = responseEntity.getBody();
-        String expectedResponseBody = "{\n" +
-                "\"id\":1, \n" +
-                "\"boards\": [\n" +
-                "  {\"id\": 1},\n" +
-                "  {\"id\": 2}\n" +
-                "]}";
-        JSONAssert.assertEquals(expectedResponseBody, actualResponseBody, true);
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    public void postGame_shouldCreateNewGameWithBoards() throws Exception {
+        mockMvc.perform(post("/games")
+                .contentType(APPLICATION_JSON_VALUE))
+                .andExpect(status().is(201))
+                .andExpect(content().json("{\"id\": 1, \"boards\": [{\"id\": 1}, {\"id\": 2}]}"))
+                .andDo(document("new-game"));
     }
 
     @Test
-    public void placeShip_shouldBeAbleToPlaceAShipOnTheBoard() {
-        String url = "/games/1/boards/1";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<String> stringHttpEntity = new HttpEntity<>("{\n" +
-                "  \"type\": \"AIRCRAFT_CARRIER\",\n" +
-                "  \"start\": {\n" +
-                "    \"x\": 0,\n" +
-                "    \"y\": 0\n" +
-                "  },\n" +
-                "  \"end\": {\n" +
-                "    \"x\": 0,\n" +
-                "    \"y\": 4\n" +
-                "  }\n" +
-                "}", headers
-        );
-        ResponseEntity<String> entity = restTemplate.exchange(url, HttpMethod.POST, stringHttpEntity, String.class);
-
-        assertEquals("{}", entity.getBody());
-        assertEquals(HttpStatus.CREATED, entity.getStatusCode());
+    public void placeShip_shouldBeAbleToPlaceAShipOnTheBoard() throws Exception {
+        mockMvc.perform(post("/games"));
+        mockMvc.perform(post("/games/1/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
+                        "\"start\": {\"x\": 0, \"y\": 0}, " +
+                        "\"end\": {\"x\": 0, \"y\": 4}}"
+                ))
+                .andExpect(status().is(201))
+                .andExpect(content().json("{}"))
+                .andDo(document("place-ship"));
     }
 }
