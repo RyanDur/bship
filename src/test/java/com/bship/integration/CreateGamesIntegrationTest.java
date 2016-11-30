@@ -60,7 +60,7 @@ public class CreateGamesIntegrationTest {
 
     @Test
     public void placeShip_shouldBeAbleToPlaceAShipOnTheBoard() {
-        String url = "/games/1/boards/1/ship";
+        String url = "/games/1/boards/1";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

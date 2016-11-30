@@ -53,10 +53,9 @@ public class CreateGameControllerTest {
     @Test
     public void placeShip_methodSignatureBindToPathParamsAndRequestBody() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(createGameController).build();
-        mockMvc.perform(post("/games/15/boards/9/ship")
+        mockMvc.perform(post("/games/15/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("" +
-                        "{\n" +
+                .content("{\n" +
                         "  \"type\": \"BATTLESHIP\",\n" +
                         "  \"start\": {\n" +
                         "    \"x\": 9,\n" +

@@ -22,7 +22,7 @@ public class GameController {
         return service.getNewGame();
     }
 
-    @RequestMapping(value = "/games/{gameId}/boards/{boardId}/ship", method = RequestMethod.POST)
+    @RequestMapping(value = "/games/{gameId}/boards/{boardId}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public String placeShip(@PathVariable Integer gameId, @PathVariable Integer boardId, @RequestBody Ship battleShipToBeCreated) {
         service.placeShip(gameId, boardId, battleShipToBeCreated);
