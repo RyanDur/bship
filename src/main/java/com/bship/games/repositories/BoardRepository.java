@@ -5,7 +5,7 @@ import com.bship.games.domains.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.stream.Collectors.toList;
 
-@Component
+@Repository
 public class BoardRepository {
     public static final int NUM_OF_BOARDS = 2;
     private JdbcTemplate template;
