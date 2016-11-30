@@ -1,8 +1,9 @@
 package com.bship.games;
 
-import com.bship.games.models.Game;
-import com.bship.games.models.Point;
-import com.bship.games.models.Ship;
+import com.bship.games.domains.Game;
+import com.bship.games.domains.Point;
+import com.bship.games.domains.Ship;
+import com.bship.games.services.GameService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;

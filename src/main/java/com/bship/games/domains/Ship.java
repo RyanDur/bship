@@ -1,4 +1,4 @@
-package com.bship.games.models;
+package com.bship.games.domains;
 
 import com.bship.games.Harbor;
 import com.fasterxml.jackson.annotation.JsonProperty;

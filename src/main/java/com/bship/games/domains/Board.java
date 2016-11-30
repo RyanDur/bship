@@ -1,4 +1,4 @@
-package com.bship.games.models;
+package com.bship.games.domains;
 
 public class Board {
     private Long id;

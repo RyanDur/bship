@@ -1,4 +1,4 @@
-package com.bship.games.models;
+package com.bship.games.domains;
 
 import org.junit.Before;
 import org.junit.Rule;

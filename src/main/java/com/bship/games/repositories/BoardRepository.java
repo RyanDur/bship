@@ -1,7 +1,7 @@
 package com.bship.games.repositories;
 
-import com.bship.games.models.Board;
-import com.bship.games.models.Game;
+import com.bship.games.domains.Board;
+import com.bship.games.domains.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

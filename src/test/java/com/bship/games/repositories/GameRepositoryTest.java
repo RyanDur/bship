@@ -1,6 +1,6 @@
 package com.bship.games.repositories;
 
-import com.bship.games.models.Game;
+import com.bship.games.domains.Game;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;

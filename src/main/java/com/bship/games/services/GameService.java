@@ -1,8 +1,8 @@
-package com.bship.games;
+package com.bship.games.services;
 
-import com.bship.games.models.Board;
-import com.bship.games.models.Game;
-import com.bship.games.models.Ship;
+import com.bship.games.domains.Board;
+import com.bship.games.domains.Game;
+import com.bship.games.domains.Ship;
 import com.bship.games.repositories.BoardRepository;
 import com.bship.games.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;

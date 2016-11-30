@@ -1,9 +1,10 @@
-package com.bship.games;
+package com.bship.games.services;
 
-import com.bship.games.models.Board;
-import com.bship.games.models.Game;
+import com.bship.games.domains.Board;
+import com.bship.games.domains.Game;
 import com.bship.games.repositories.BoardRepository;
 import com.bship.games.repositories.GameRepository;
+import com.bship.games.services.GameService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

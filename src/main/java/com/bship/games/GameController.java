@@ -1,7 +1,8 @@
 package com.bship.games;
 
-import com.bship.games.models.Game;
-import com.bship.games.models.Ship;
+import com.bship.games.domains.Game;
+import com.bship.games.domains.Ship;
+import com.bship.games.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
