@@ -12,10 +12,9 @@ public class Ship {
     private Long boardId;
     private Long id;
 
-    public Ship() {
-    }
+    public Ship() {}
 
-    public Ship(Builder builder) {
+    private Ship(Builder builder) {
         this.shipType = builder.shipType;
         this.start = builder.start;
         this.end = builder.end;
@@ -23,24 +22,12 @@ public class Ship {
         this.id = builder.id;
     }
 
-    public void setShipType(Harbor shipType) {
-        this.shipType = shipType;
-    }
-
     public Harbor getShipType() {
         return shipType;
     }
 
-    public void setStart(Point start) {
-        this.start = start;
-    }
-
     public Point getStart() {
         return start;
-    }
-
-    public void setEnd(Point end) {
-        this.end = end;
     }
 
     public Point getEnd() {
