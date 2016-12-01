@@ -15,7 +15,6 @@ import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -76,6 +75,5 @@ public class GameServiceTest {
         verify(mockBoardRepository).get(boardId);
         verify(shipRepository).create(ship, boardId);
         assertThat(actual.getShips(), contains(ship));
-        assertThat(actual, is(equalTo(board)));
     }
 }

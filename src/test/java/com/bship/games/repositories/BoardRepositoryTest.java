@@ -42,7 +42,8 @@ public class BoardRepositoryTest {
         List<Board> boardList = repository.create(game);
 
         List<Board> boards = template.query("SELECT * FROM boards", (rs, rowNum) -> Board.builder()
-                .withId(rs.getLong("id")).build());
+                .withId(rs.getLong("id"))
+                .withGameId(rs.getLong("game_id")).build());
 
         assertThat(boards, containsInAnyOrder(boardList.toArray()));
     }

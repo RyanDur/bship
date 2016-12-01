@@ -83,11 +83,16 @@ public class Board {
 
         Board board = (Board) o;
 
-        return id != null ? id.equals(board.id) : board.id == null;
+        if (id != null ? !id.equals(board.id) : board.id != null) return false;
+        if (gameId != null ? !gameId.equals(board.gameId) : board.gameId != null) return false;
+        return ships != null ? ships.equals(board.ships) : board.ships == null;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (gameId != null ? gameId.hashCode() : 0);
+        result = 31 * result + (ships != null ? ships.hashCode() : 0);
+        return result;
     }
 }
