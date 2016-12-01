@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 201 Created
 Content-Type: application/json;charset=UTF-8
-Content-Length: 37
+Content-Length: 85
 
-{"boards":[{"id":1},{"id":2}],"id":1}
+{"boards":[{"id":1,"gameId":1,"ships":null},{"id":2,"gameId":1,"ships":null}],"id":1}
 ----

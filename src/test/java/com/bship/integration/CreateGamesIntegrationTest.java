@@ -1,7 +1,6 @@
 package com.bship.integration;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
-import org.flywaydb.core.Flyway;
+import com.bship.DBHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,21 +29,14 @@ public class CreateGamesIntegrationTest {
 
     @Before
     public void setup() {
-        DataSource dataSource = new DataSource();
-        dataSource.setUrl("jdbc:mysql://localhost/bs");
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUsername("root");
-        dataSource.setPassword("");
-        Flyway flyway = new Flyway();
-        flyway.setDataSource(dataSource);
-        flyway.clean();
-        flyway.migrate();
+        DBHelper.reset();
     }
 
     @Test
     public void postGame_shouldCreateNewGameWithBoards() throws Exception {
         mockMvc.perform(post("/games")
-                .contentType(APPLICATION_JSON_VALUE))
+                .accept(APPLICATION_JSON_VALUE))
+
                 .andExpect(status().is(201))
                 .andExpect(content().json("{\"id\": 1, \"boards\": [{\"id\": 1}, {\"id\": 2}]}"))
                 .andDo(document("new-game"));
@@ -53,14 +45,21 @@ public class CreateGamesIntegrationTest {
     @Test
     public void placeShip_shouldBeAbleToPlaceAShipOnTheBoard() throws Exception {
         mockMvc.perform(post("/games"));
-        mockMvc.perform(post("/games/1/boards/1")
+
+        mockMvc.perform(post("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": 0, \"y\": 0}, " +
                         "\"end\": {\"x\": 0, \"y\": 4}}"
                 ))
+
                 .andExpect(status().is(201))
-                .andExpect(content().json("{}"))
+                .andExpect(content().json("{\"id\":1,\"gameId\":1," +
+                        "\"ships\":[" +
+                        "{\"start\":{\"x\":0,\"y\":0}," +
+                        "\"end\":{\"x\":0,\"y\":4}," +
+                        "\"boardId\":1," +
+                        "\"type\":\"AIRCRAFT_CARRIER\"}]}"))
                 .andDo(document("place-ship"));
     }
 }

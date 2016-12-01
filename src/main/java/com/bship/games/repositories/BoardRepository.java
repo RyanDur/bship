@@ -27,14 +27,23 @@ public class BoardRepository {
         this.template = template;
     }
 
-    public List<Board> createBoards(Game game) {
+    public List<Board> create(Game game) {
         return IntStream.range(0, NUM_OF_BOARDS)
                 .mapToObj(i -> save.apply(game))
                 .collect(toList());
     }
 
+    public Board get(Long id) {
+        return template.queryForObject("SELECT * FROM boards WHERE id = ?",
+                new Object[]{id},
+                (rs, rowNum) -> Board.builder()
+                        .withId(rs.getLong("id"))
+                        .withGameId(rs.getLong("game_id")).build());
+    }
+
     private Function<Game, Board> save = (game) -> Board.builder()
             .withId(getGeneratedId(game))
+            .withGameId(game.getId())
             .build();
 
     private Long getGeneratedId(Game game) {

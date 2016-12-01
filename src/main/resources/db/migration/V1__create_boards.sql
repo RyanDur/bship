@@ -9,3 +9,14 @@ CREATE TABLE boards(
   FOREIGN KEY (game_id)
   REFERENCES games(id)
 );
+
+CREATE TABLE ships(
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  type VARCHAR(50),
+  start INT NOT NULL,
+  end INT NOT NULL,
+  board_id INT NOT NULL,
+  CONSTRAINT boards_id_fk
+  FOREIGN KEY (board_id)
+  REFERENCES boards(id)
+);

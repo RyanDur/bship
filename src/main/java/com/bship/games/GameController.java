@@ -1,12 +1,19 @@
 package com.bship.games;
 
+import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Ship;
 import com.bship.games.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 public class GameController {
@@ -18,16 +25,22 @@ public class GameController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/games", method = RequestMethod.POST)
+    @RequestMapping(
+            value = "/games",
+            method = POST,
+            produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Game createGame() {
         return service.getNewGame();
     }
 
-    @RequestMapping(value = "/games/{gameId}/boards/{boardId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            value = "/boards/{boardId}",
+            method = POST,
+            consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public String placeShip(@PathVariable Integer gameId, @PathVariable Integer boardId, @RequestBody Ship battleShipToBeCreated) {
-        service.placeShip(gameId, boardId, battleShipToBeCreated);
-        return "{}";
+    public Board placeShip(@PathVariable Long boardId,
+                           @RequestBody Ship ship) {
+        return service.placeShip(boardId, ship);
     }
 }

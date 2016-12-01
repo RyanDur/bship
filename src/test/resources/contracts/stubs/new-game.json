@@ -3,8 +3,8 @@
     "url" : "/games",
     "method" : "POST",
     "headers" : {
-      "Content-Type" : {
-        "equalTo" : "application/json;charset=UTF-8"
+      "Accept" : {
+        "equalTo" : "application/json"
       }
     },
     "bodyPatterns" : [ {
@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"boards\":[{\"id\":1},{\"id\":2}],\"id\":1}",
+    "body" : "{\"boards\":[{\"id\":1,\"gameId\":1,\"ships\":null},{\"id\":2,\"gameId\":1,\"ships\":null}],\"id\":1}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

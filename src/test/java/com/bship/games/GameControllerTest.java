@@ -7,7 +7,6 @@ import com.bship.games.services.GameService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -18,11 +17,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CreateGameControllerTest {
+public class GameControllerTest {
 
     private GameController createGameController;
     private GameService mockService;
@@ -54,7 +54,7 @@ public class CreateGameControllerTest {
     @Test
     public void placeShip_methodSignatureBindToPathParamsAndRequestBody() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(createGameController).build();
-        mockMvc.perform(post("/games/15/boards/9")
+        mockMvc.perform(post("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"type\": \"BATTLESHIP\",\n" +
@@ -71,7 +71,7 @@ public class CreateGameControllerTest {
 
         ArgumentCaptor<Ship> captor = ArgumentCaptor.forClass(Ship.class);
 
-        Mockito.verify(mockService).placeShip(eq(15), eq(9), captor.capture());
+        verify(mockService).placeShip( eq(9L), captor.capture());
         Ship capturedShip = captor.getValue();
         assertEquals(Harbor.BATTLESHIP, capturedShip.getShipType());
         assertEquals(9, capturedShip.getStart().getX());
@@ -82,13 +82,14 @@ public class CreateGameControllerTest {
 
     @Test
     public void placeShip_passesTheShipObjectToTheServiceLayerForTheGivenGameAndBoard() {
-        Ship battleShipToBeCreated = new Ship();
-        battleShipToBeCreated.setShipType(Harbor.SUBMARINE);
-        battleShipToBeCreated.setStart(new Point());
-        battleShipToBeCreated.setEnd(new Point());
+        Ship ship = Ship.builder()
+                .withShipType(Harbor.SUBMARINE)
+                .withStart(new Point())
+                .withEnd(new Point()).build();
 
-        createGameController.placeShip(10, 90, battleShipToBeCreated);
+        Long boardId = 90L;
+        createGameController.placeShip(boardId, ship);
 
-        Mockito.verify(mockService).placeShip(10, 90, battleShipToBeCreated);
+        verify(mockService).placeShip(boardId, ship);
     }
 }
