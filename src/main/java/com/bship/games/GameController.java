@@ -37,7 +37,8 @@ public class GameController {
     @RequestMapping(
             value = "/boards/{boardId}",
             method = POST,
-            consumes = APPLICATION_JSON_VALUE)
+            consumes = APPLICATION_JSON_VALUE,
+            produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Board placeShip(@PathVariable Long boardId,
                            @RequestBody Ship ship) {

@@ -6,7 +6,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 
@@ -26,12 +28,14 @@ public class GameRepository {
 
     private Long getGeneratedId() {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
-        template.update(con -> {
-            PreparedStatement statement = con.prepareStatement("INSERT INTO games(id) VALUE (?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            statement.setNull(1, Types.INTEGER);
-            return statement;
-        }, holder);
+        template.update(this::getPreparedStatement, holder);
         return holder.getKey().longValue();
+    }
+
+    private PreparedStatement getPreparedStatement(Connection con) throws SQLException {
+        PreparedStatement statement = con.prepareStatement("INSERT INTO games(id) VALUE (?)",
+                Statement.RETURN_GENERATED_KEYS);
+        statement.setNull(1, Types.INTEGER);
+        return statement;
     }
 }

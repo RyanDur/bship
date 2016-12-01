@@ -53,7 +53,8 @@ public class BoardRepository {
     }
 
     private PreparedStatement prepareInsertStatement(Game game, Connection con) throws SQLException {
-        PreparedStatement statement = con.prepareStatement("INSERT INTO boards(game_id) VALUE(?)", RETURN_GENERATED_KEYS);
+        PreparedStatement statement = con.prepareStatement("INSERT INTO boards(game_id) VALUE(?)",
+                RETURN_GENERATED_KEYS);
         statement.setLong(1, game.getId());
         return statement;
     }
