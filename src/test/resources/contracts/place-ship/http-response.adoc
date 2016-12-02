@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 201 Created
 Content-Type: application/json;charset=UTF-8
-Content-Length: 111
+Content-Length: 100
 
-{"id":1,"gameId":1,"ships":[{"type":"AIRCRAFT_CARRIER","start":{"x":0,"y":0},"end":{"x":0,"y":4},"boardId":1}]}
+{"id":1,"ships":[{"type":"AIRCRAFT_CARRIER","start":{"x":0,"y":0},"end":{"x":0,"y":4},"boardId":1}]}
 ----

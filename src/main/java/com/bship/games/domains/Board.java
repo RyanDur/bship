@@ -1,5 +1,7 @@
 package com.bship.games.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -13,8 +15,11 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
 public class Board {
-    private Long id;
+
+    @JsonIgnore
     private Long gameId;
+
+    private Long id;
     private List<Ship> ships;
 
     private Board(Builder builder) {
