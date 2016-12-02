@@ -1,8 +1,10 @@
 package com.bship.games;
 
 import com.bship.games.domains.Game;
+import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Point;
 import com.bship.games.domains.Ship;
+import com.bship.games.endpoints.GameController;
 import com.bship.games.services.GameService;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -82,7 +85,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void placeShip_passesTheShipObjectToTheServiceLayerForTheGivenGameAndBoard() {
+    public void placeShip_passesTheShipObjectToTheServiceLayerForTheGivenGameAndBoard() throws NoSuchMethodException, MethodArgumentNotValidException {
         Ship ship = Ship.builder()
                 .withShipType(Harbor.SUBMARINE)
                 .withStart(new Point())
@@ -90,7 +93,7 @@ public class GameControllerTest {
 
         Long boardId = 90L;
         BindingResult bindingResult = mock(BindingResult.class);
-        createGameController.placeShip(boardId, ship, bindingResult);
+        createGameController.placeShip(boardId, ship);
 
         verify(mockService).placeShip(boardId, ship);
     }

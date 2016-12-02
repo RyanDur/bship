@@ -74,8 +74,12 @@ public class CreateGamesIntegrationTest {
                         "\"end\": {\"x\": 0, \"y\": 4}}"
                 ))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"error\": " +
-                        "[{\"field\": \"start\", \"message\": \"Point{x=-1, y=0} out of bounds.\"}]}"))
+                .andExpect(content().json("{\"errors\": [{" +
+                        "\"code\": \"BoundsCheck\", " +
+                        "\"field\": \"start\", " +
+                        "\"value\": \"Point{x=-1, y=0}\", " +
+                        "\"message\": \"out of bounds.\"" +
+                        "}]}"))
                 .andDo(document("place-ship-start-out-of-bounds"));
     }
 
@@ -90,8 +94,12 @@ public class CreateGamesIntegrationTest {
                         "\"end\": {\"x\": 9, \"y\": 10}}"
                 ))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"error\": " +
-                        "[{\"field\": \"end\", \"message\": \"Point{x=9, y=10} out of bounds.\"}]}"))
+                .andExpect(content().json("{\"errors\": [{" +
+                        "\"code\": \"BoundsCheck\", " +
+                        "\"field\": \"end\", " +
+                        "\"value\": \"Point{x=9, y=10}\", " +
+                        "\"message\": \"out of bounds.\"" +
+                        "}]}"))
                 .andDo(document("place-ship-end-out-of-bounds"));
     }
 }

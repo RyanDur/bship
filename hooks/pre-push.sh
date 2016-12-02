@@ -10,7 +10,7 @@
 #       i.e. - $ 'git commit --no-verify'
 
 # run the tests with the gradle wrapper
-./gradlew test
+./gradlew clean test
 
 # store the last exit code in a variable
 RESULT=$?

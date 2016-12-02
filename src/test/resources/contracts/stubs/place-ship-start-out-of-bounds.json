@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"error\": [{\"field\": \"start\", \"message\": \"Point{x=-1, y=0} out of bounds.\"}]}",
+    "body" : "{\"errors\": [{\"code\": \"BoundsCheck\", \"field\": \"start\", \"value\": \"Point{x=-1, y=0}\", \"message\": \"out of bounds.\"}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

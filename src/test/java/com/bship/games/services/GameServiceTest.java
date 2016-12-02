@@ -1,6 +1,6 @@
 package com.bship.games.services;
 
-import com.bship.games.Harbor;
+import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Point;

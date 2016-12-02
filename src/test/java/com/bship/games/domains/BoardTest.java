@@ -1,6 +1,5 @@
 package com.bship.games.domains;
 
-import com.bship.games.Harbor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

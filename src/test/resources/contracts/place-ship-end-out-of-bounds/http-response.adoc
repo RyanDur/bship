@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 400 Bad Request
 Content-Type: application/json;charset=UTF-8
-Content-Length: 75
+Content-Length: 111
 
-{"error": [{"field": "end", "message": "Point{x=9, y=10} out of bounds."}]}
+{"errors": [{"code": "BoundsCheck", "field": "end", "value": "Point{x=9, y=10}", "message": "out of bounds."}]}
 ----
