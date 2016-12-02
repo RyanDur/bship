@@ -121,4 +121,58 @@ public class PlaceShipIntegrationTest {
                         "\"message\": \"Ship does not exist.\"}]}]}"))
                 .andDo(document("place-ship-ship-existence"));
     }
+
+    @Test
+    public void shouldNotBeAbleToPlaceAShipWithANullStart() throws Exception {
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"AIRCRAFT_CARRIER\"," +
+                        "\"start\": null," +
+                        "\"end\": {\"x\": 0, \"y\": 1}}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"fieldErrors\": " +
+                        "[{\"code\": \"NonEmpty\", " +
+                        "\"field\": \"start\", " +
+                        "\"value\": \"null\", " +
+                        "\"message\": \"Cannot be empty or null.\"}]}]}"))
+                .andDo(document("place-ship-of-null-start"));
+    }
+
+    @Test
+    public void shouldNotBeAbleToPlaceAShipWithANullEnd() throws Exception {
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"AIRCRAFT_CARRIER\"," +
+                        "\"start\": {\"x\": 0, \"y\": 1}," +
+                        "\"end\": null}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"fieldErrors\": " +
+                        "[{\"code\": \"NonEmpty\", " +
+                        "\"field\": \"end\", " +
+                        "\"value\": \"null\", " +
+                        "\"message\": \"Cannot be empty or null.\"}]}]}"))
+                .andDo(document("place-ship-of-null-start"));
+    }
+
+    @Test
+    public void shouldNotBeAbleToPlaceAShipWithANullType() throws Exception {
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": null," +
+                        "\"start\": {\"x\": 0, \"y\": 1}," +
+                        "\"end\": {\"x\": 0, \"y\": 1}}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"fieldErrors\": " +
+                        "[{\"code\": \"NonEmpty\", " +
+                        "\"field\": \"type\", " +
+                        "\"value\": \"null\", " +
+                        "\"message\": \"Cannot be empty or null.\"}]}]}"))
+                .andDo(document("place-ship-of-null-start"));
+    }
 }

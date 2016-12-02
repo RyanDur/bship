@@ -5,6 +5,8 @@ import com.bship.games.domains.Point;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import java.util.Optional;
+
 import static com.bship.games.util.Util.SIDE;
 
 public class BoundsCheckValidation implements ConstraintValidator<BoundsCheck, Point> {
@@ -12,8 +14,10 @@ public class BoundsCheckValidation implements ConstraintValidator<BoundsCheck, P
     }
 
     public boolean isValid(Point point, ConstraintValidatorContext context) {
-        Integer x = point.getX();
-        Integer y = point.getY();
-        return x >= 0 && y >= 0 && x < SIDE && y < SIDE;
+        return Optional.ofNullable(point).map(p -> {
+            Integer x = p.getX();
+            Integer y = p.getY();
+            return x >= 0 && y >= 0 && x < SIDE && y < SIDE;
+        }).orElse(true);
     }
 }

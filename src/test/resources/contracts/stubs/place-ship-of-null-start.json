@@ -8,12 +8,12 @@
       }
     },
     "bodyPatterns" : [ {
-      "equalTo" : "{\"type\": \"AIRCRAFT_CARRIER\",\"start\": null,\"end\": {\"x\": 0, \"y\": 1}}"
+      "equalTo" : "{\"type\": null,\"start\": {\"x\": 0, \"y\": 1},\"end\": {\"x\": 0, \"y\": 1}}"
     } ]
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"errors\": [{\"fieldErrors\": [{\"code\": \"NonEmpty\", \"field\": \"start\", \"value\": \"null\", \"message\": \"Cannot be empty or null.\"}]}]}",
+    "body" : "{\"errors\": [{\"fieldErrors\": [{\"code\": \"NonEmpty\", \"field\": \"type\", \"value\": \"null\", \"message\": \"Cannot be empty or null.\"}]}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

@@ -1,24 +1,23 @@
 package com.bship.games.domains;
 
 import com.bship.games.domains.validations.BoundsCheck;
+import com.bship.games.domains.validations.NonEmpty;
 import com.bship.games.domains.validations.PlacementCheck;
 import com.bship.games.domains.validations.ShipExists;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.validation.constraints.NotNull;
-
 @PlacementCheck
 public class Ship {
 
-    @NotNull
+    @NonEmpty
     @ShipExists
     private Harbor type;
 
-    @NotNull
+    @NonEmpty
     @BoundsCheck
     private Point start;
 
-    @NotNull
+    @NonEmpty
     @BoundsCheck
     private Point end;
 

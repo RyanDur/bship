@@ -1,10 +1,13 @@
 package com.bship.games.domains.validations;
 
 import com.bship.games.domains.Harbor;
+import com.bship.games.domains.Point;
 import com.bship.games.domains.Ship;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import java.util.Optional;
 
 import static java.lang.Math.abs;
 
@@ -13,14 +16,14 @@ public class PlacementCheckValidation implements ConstraintValidator<PlacementCh
     }
 
     public boolean isValid(Ship ship, ConstraintValidatorContext context) {
-        Integer startX = ship.getStart().getX();
-        Integer startY = ship.getStart().getY();
-        Integer endX = ship.getEnd().getX();
-        Integer endY = ship.getEnd().getY();
-        Integer shipSize = ship.getType().getSize();
+        return Optional.ofNullable(ship).map(s -> {
+            Point start = s.getStart();
+            Point end = s.getEnd();
+            Harbor type = s.getType();
 
-        return ship.getType() == Harbor.INVALID_SHIP ||
-                (startX.equals(endX)) && (abs(startY - endY) + 1) == shipSize
-                || (startY.equals(endY)) && (abs(startX - endX) + 1) == shipSize;
+            return type == null || start == null || end == null || type == Harbor.INVALID_SHIP ||
+                    (start.getX() == end.getX()) && (abs(start.getY() - end.getY()) + 1) == type.getSize()
+                    || (start.getY() == end.getY()) && (abs(start.getX() - end.getX()) + 1) == type.getSize();
+        }).orElse(false);
     }
 }
