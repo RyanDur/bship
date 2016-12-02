@@ -54,6 +54,7 @@ public class Ship {
 
     public Builder copy() {
         return builder()
+                .withId(id)
                 .withType(type)
                 .withStart(start)
                 .withEnd(end)
