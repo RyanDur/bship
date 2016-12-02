@@ -1,4 +1,4 @@
 [source,bash]
 ----
-$ echo '{"type": "AIRCRAFT_CARRIER", "start": {"x": 1, "y": 0}, "end": {"x": 9, "y": 10}}' | http POST 'http://localhost:8080/boards/1' 'Content-Type:application/json;charset=UTF-8'
+$ echo '{"type": "AIRCRAFT_CARRIER", "start": {"x": 9, "y": 6}, "end": {"x": 9, "y": 10}}' | http POST 'http://localhost:8080/boards/1' 'Content-Type:application/json;charset=UTF-8'
 ----

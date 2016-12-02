@@ -71,15 +71,15 @@ public class CreateGamesIntegrationTest {
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": -1, \"y\": 0}, " +
-                        "\"end\": {\"x\": 0, \"y\": 4}}"
+                        "\"end\": {\"x\": 3, \"y\": 0}}"
                 ))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"errors\": [{" +
-                        "\"code\": \"BoundsCheck\", " +
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"fieldErrors\": " +
+                        "[{\"code\": \"BoundsCheck\", " +
                         "\"field\": \"start\", " +
                         "\"value\": \"Point{x=-1, y=0}\", " +
-                        "\"message\": \"out of bounds.\"" +
-                        "}]}"))
+                        "\"message\": \"out of bounds.\"}]}]}"))
                 .andDo(document("place-ship-start-out-of-bounds"));
     }
 
@@ -90,16 +90,35 @@ public class CreateGamesIntegrationTest {
         mockMvc.perform(post("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
-                        "\"start\": {\"x\": 1, \"y\": 0}, " +
+                        "\"start\": {\"x\": 9, \"y\": 6}, " +
                         "\"end\": {\"x\": 9, \"y\": 10}}"
                 ))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"errors\": [{" +
-                        "\"code\": \"BoundsCheck\", " +
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"fieldErrors\": " +
+                        "[{\"code\": \"BoundsCheck\", " +
                         "\"field\": \"end\", " +
                         "\"value\": \"Point{x=9, y=10}\", " +
-                        "\"message\": \"out of bounds.\"" +
-                        "}]}"))
+                        "\"message\": \"out of bounds.\"}]}]}"))
                 .andDo(document("place-ship-end-out-of-bounds"));
+    }
+
+    @Test
+    public void placeShip_shouldNotBeAbleToPlaceAShipOfIncorrectSize() throws Exception {
+        mockMvc.perform(post("/games"));
+
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
+                        "\"start\": {\"x\": 0, \"y\": 0}, " +
+                        "\"end\": {\"x\": 0, \"y\": 1}}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"globalErrors\": " +
+                        "[{\"code\": \"PlacementCheck\", " +
+                        "\"type\": \"ship\", " +
+                        "\"message\": \"Incorrect ship placement.\"}]}]}"))
+                .andDo(document("place-ship-of-incorrect-size"));
     }
 }

@@ -12,8 +12,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -63,7 +61,7 @@ public class GameControllerTest {
                 .content("{\n" +
                         "  \"type\": \"BATTLESHIP\",\n" +
                         "  \"start\": {\n" +
-                        "    \"x\": 9,\n" +
+                        "    \"x\": 4,\n" +
                         "    \"y\": 5\n" +
                         "  },\n" +
                         "  \"end\": {\n" +
@@ -78,21 +76,20 @@ public class GameControllerTest {
         verify(mockService).placeShip(eq(9L), captor.capture());
         Ship capturedShip = captor.getValue();
         assertEquals(Harbor.BATTLESHIP, capturedShip.getShipType());
-        assertEquals(9, capturedShip.getStart().getX());
+        assertEquals(4, capturedShip.getStart().getX());
         assertEquals(5, capturedShip.getStart().getY());
         assertEquals(1, capturedShip.getEnd().getX());
         assertEquals(5, capturedShip.getEnd().getY());
     }
 
     @Test
-    public void placeShip_passesTheShipObjectToTheServiceLayerForTheGivenGameAndBoard() throws NoSuchMethodException, MethodArgumentNotValidException {
+    public void placeShip_passesTheShipObjectToTheServiceLayerForTheGivenGameAndBoard() {
         Ship ship = Ship.builder()
                 .withShipType(Harbor.SUBMARINE)
                 .withStart(new Point())
                 .withEnd(new Point()).build();
 
         Long boardId = 90L;
-        BindingResult bindingResult = mock(BindingResult.class);
         createGameController.placeShip(boardId, ship);
 
         verify(mockService).placeShip(boardId, ship);

@@ -1,8 +1,10 @@
 package com.bship.games.domains;
 
 import com.bship.games.domains.validations.BoundsCheck;
+import com.bship.games.domains.validations.PlacementCheck;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@PlacementCheck
 public class Ship {
 
     @JsonProperty("type")

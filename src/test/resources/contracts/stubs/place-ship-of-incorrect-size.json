@@ -8,12 +8,12 @@
       }
     },
     "bodyPatterns" : [ {
-      "equalTo" : "{\"type\": \"AIRCRAFT_CARRIER\", \"start\": {\"x\": 9, \"y\": 6}, \"end\": {\"x\": 9, \"y\": 10}}"
+      "equalTo" : "{\"type\": \"AIRCRAFT_CARRIER\", \"start\": {\"x\": 0, \"y\": 0}, \"end\": {\"x\": 0, \"y\": 1}}"
     } ]
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"errors\": [{\"fieldErrors\": [{\"code\": \"BoundsCheck\", \"field\": \"end\", \"value\": \"Point{x=9, y=10}\", \"message\": \"out of bounds.\"}]}]}",
+    "body" : "{\"errors\": [{\"globalErrors\": [{\"code\": \"PlacementCheck\", \"type\": \"ship\", \"message\": \"Incorrect ship placement.\"}]}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

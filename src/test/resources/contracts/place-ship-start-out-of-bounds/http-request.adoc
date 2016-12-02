@@ -5,5 +5,5 @@ Content-Type: application/json;charset=UTF-8
 Host: localhost:8080
 Content-Length: 81
 
-{"type": "AIRCRAFT_CARRIER", "start": {"x": -1, "y": 0}, "end": {"x": 0, "y": 4}}
+{"type": "AIRCRAFT_CARRIER", "start": {"x": -1, "y": 0}, "end": {"x": 3, "y": 0}}
 ----
