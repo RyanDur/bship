@@ -47,7 +47,6 @@ public class PlaceShipIntegrationTest {
                         "\"ships\":[" +
                         "{\"start\":{\"x\":0,\"y\":0}," +
                         "\"end\":{\"x\":0,\"y\":4}," +
-                        "\"boardId\":1," +
                         "\"type\":\"AIRCRAFT_CARRIER\"}]}"))
                 .andDo(document("place-ship"));
     }
