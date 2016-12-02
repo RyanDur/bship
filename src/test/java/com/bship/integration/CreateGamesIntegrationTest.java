@@ -121,4 +121,24 @@ public class CreateGamesIntegrationTest {
                         "\"message\": \"Incorrect ship placement.\"}]}]}"))
                 .andDo(document("place-ship-of-incorrect-size"));
     }
+
+    @Test
+    public void placeShip_shouldNotBeAbleToPlaceAShipThatDoesNotExist() throws Exception {
+        mockMvc.perform(post("/games"));
+
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"SCHOONER\", " +
+                        "\"start\": {\"x\": 0, \"y\": 0}, " +
+                        "\"end\": {\"x\": 0, \"y\": 1}}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"fieldErrors\": " +
+                        "[{\"code\": \"ShipExists\", " +
+                        "\"field\": \"type\", " +
+                        "\"value\": \"INVALID_SHIP\", " +
+                        "\"message\": \"Ship does not exist.\"}]}]}"))
+                .andDo(document("place-ship-ship-existence"));
+    }
 }

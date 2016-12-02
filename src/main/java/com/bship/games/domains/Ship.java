@@ -2,17 +2,22 @@ package com.bship.games.domains;
 
 import com.bship.games.domains.validations.BoundsCheck;
 import com.bship.games.domains.validations.PlacementCheck;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.bship.games.domains.validations.ShipExists;
+
+import javax.validation.constraints.NotNull;
 
 @PlacementCheck
 public class Ship {
 
-    @JsonProperty("type")
-    private Harbor shipType;
+    @NotNull
+    @ShipExists
+    private Harbor type;
 
+    @NotNull
     @BoundsCheck
     private Point start;
 
+    @NotNull
     @BoundsCheck
     private Point end;
 
@@ -22,15 +27,15 @@ public class Ship {
     public Ship() {}
 
     private Ship(Builder builder) {
-        this.shipType = builder.shipType;
+        this.type = builder.type;
         this.start = builder.start;
         this.end = builder.end;
         this.boardId = builder.boardId;
         this.id = builder.id;
     }
 
-    public Harbor getShipType() {
-        return shipType;
+    public Harbor getType() {
+        return type;
     }
 
     public Point getStart() {
@@ -47,7 +52,7 @@ public class Ship {
 
     public Builder copy() {
         return builder()
-                .withShipType(shipType)
+                .withType(type)
                 .withStart(start)
                 .withEnd(end)
                 .withBoardId(boardId);
@@ -58,14 +63,14 @@ public class Ship {
     }
 
     public static final class Builder {
-        private Harbor shipType;
+        private Harbor type;
         private Point start;
         private Point end;
         private Long boardId;
         private Long id;
 
-        public Builder withShipType(Harbor shipType) {
-            this.shipType = shipType;
+        public Builder withType(Harbor shipType) {
+            this.type = shipType;
             return this;
         }
 
@@ -101,7 +106,7 @@ public class Ship {
 
         Ship ship = (Ship) o;
 
-        if (shipType != ship.shipType) return false;
+        if (type != ship.type) return false;
         if (start != null ? !start.equals(ship.start) : ship.start != null) return false;
         if (end != null ? !end.equals(ship.end) : ship.end != null) return false;
         if (boardId != null ? !boardId.equals(ship.boardId) : ship.boardId != null) return false;
@@ -110,7 +115,7 @@ public class Ship {
 
     @Override
     public int hashCode() {
-        int result = shipType != null ? shipType.hashCode() : 0;
+        int result = type != null ? type.hashCode() : 0;
         result = 31 * result + (start != null ? start.hashCode() : 0);
         result = 31 * result + (end != null ? end.hashCode() : 0);
         result = 31 * result + (boardId != null ? boardId.hashCode() : 0);
@@ -121,7 +126,7 @@ public class Ship {
     @Override
     public String toString() {
         return "Ship{" +
-                "shipType=" + shipType +
+                "type=" + type +
                 ", start=" + start +
                 ", end=" + end +
                 ", boardId=" + boardId +

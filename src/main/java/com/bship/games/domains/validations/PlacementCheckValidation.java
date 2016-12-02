@@ -1,5 +1,6 @@
 package com.bship.games.domains.validations;
 
+import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Ship;
 
 import javax.validation.ConstraintValidator;
@@ -16,9 +17,10 @@ public class PlacementCheckValidation implements ConstraintValidator<PlacementCh
         Integer startY = ship.getStart().getY();
         Integer endX = ship.getEnd().getX();
         Integer endY = ship.getEnd().getY();
-        Integer shipSize = ship.getShipType().getSize();
+        Integer shipSize = ship.getType().getSize();
 
-        return (startX.equals(endX)) && (abs(startY - endY) + 1) == shipSize
+        return ship.getType() == Harbor.INVALID_SHIP ||
+                (startX.equals(endX)) && (abs(startY - endY) + 1) == shipSize
                 || (startY.equals(endY)) && (abs(startX - endX) + 1) == shipSize;
     }
 }

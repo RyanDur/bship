@@ -75,7 +75,7 @@ public class GameControllerTest {
 
         verify(mockService).placeShip(eq(9L), captor.capture());
         Ship capturedShip = captor.getValue();
-        assertEquals(Harbor.BATTLESHIP, capturedShip.getShipType());
+        assertEquals(Harbor.BATTLESHIP, capturedShip.getType());
         assertEquals(4, capturedShip.getStart().getX());
         assertEquals(5, capturedShip.getStart().getY());
         assertEquals(1, capturedShip.getEnd().getX());
@@ -85,7 +85,7 @@ public class GameControllerTest {
     @Test
     public void placeShip_passesTheShipObjectToTheServiceLayerForTheGivenGameAndBoard() {
         Ship ship = Ship.builder()
-                .withShipType(Harbor.SUBMARINE)
+                .withType(Harbor.SUBMARINE)
                 .withStart(new Point())
                 .withEnd(new Point()).build();
 

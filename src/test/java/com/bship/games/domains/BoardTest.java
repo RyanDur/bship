@@ -21,12 +21,12 @@ public class BoardTest {
         Point start = new Point(0, 0);
         Point end = new Point(0, 2);
         Harbor type = Harbor.BATTLESHIP;
-        battleship = Ship.builder().withShipType(type).withStart(start).withEnd(end).build();
+        battleship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
 
         Point start1 = new Point(1, 0);
         Point end1 = new Point(1, 5);
         Harbor type1 = Harbor.AIRCRAFT_CARRIER;
-        aircraftCarrier = Ship.builder().withShipType(type1).withStart(start1).withEnd(end1).build();
+        aircraftCarrier = Ship.builder().withType(type1).withStart(start1).withEnd(end1).build();
 
     }
 

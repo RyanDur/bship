@@ -62,7 +62,7 @@ public class GameServiceTest {
     public void placeShip_shouldPlaceAShipOnTheBoard() {
         Point start = new Point(0, 0);
         Point end = new Point(0, 4);
-        Ship ship = Ship.builder().withShipType(Harbor.AIRCRAFT_CARRIER).withStart(start).withEnd(end).build();
+        Ship ship = Ship.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(start).withEnd(end).build();
         long boardId = 1L;
         Board board = Board.builder().build();
 

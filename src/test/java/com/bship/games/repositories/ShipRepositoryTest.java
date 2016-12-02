@@ -37,7 +37,7 @@ public class ShipRepositoryTest {
         Point start = new Point(0, 0);
         Point end = new Point(0, 2);
         Harbor type = Harbor.BATTLESHIP;
-        Ship battleship = Ship.builder().withShipType(type).withStart(start).withEnd(end).build();
+        Ship battleship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
         Ship ship = repository.create(battleship, board.getId());
 
         assertThat(ship.getBoardId(), is(equalTo(board.getId())));
@@ -48,12 +48,12 @@ public class ShipRepositoryTest {
         Point start = new Point(0, 0);
         Point end = new Point(0, 2);
         Harbor type = Harbor.BATTLESHIP;
-        Ship battleship = Ship.builder().withShipType(type).withStart(start).withEnd(end).build();
+        Ship battleship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
         Ship ship = repository.create(battleship, board.getId());
 
         Ship expected = template.queryForObject("SELECT * FROM ships WHERE board_id = " + board.getId(), (rs, rowNum) -> Ship.builder()
                 .withId(rs.getLong("id"))
-                .withShipType(Harbor.valueOf(rs.getString("type")))
+                .withType(Harbor.valueOf(rs.getString("type")))
                 .withStart(toPoint(rs.getInt("start")))
                 .withEnd(toPoint(rs.getInt("end")))
                 .withBoardId(rs.getLong("board_id")).build());
