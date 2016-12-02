@@ -7,12 +7,10 @@ public class Util {
     public static final int SIDE = 10;
 
     public static Integer toIndex(Point point) {
-        return (point.getX() * SIDE) + point.getY();
+        return point.getY() + (point.getX() * SIDE);
     }
 
     public static Point toPoint(Integer index) {
-        int row = Math.floorDiv(index, SIDE);
-        int column = index - (row * SIDE);
-        return new Point(row, column);
+        return new Point(index / SIDE, index % SIDE);
     }
 }

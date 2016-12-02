@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.BindingResult;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -71,7 +72,7 @@ public class GameControllerTest {
 
         ArgumentCaptor<Ship> captor = ArgumentCaptor.forClass(Ship.class);
 
-        verify(mockService).placeShip( eq(9L), captor.capture());
+        verify(mockService).placeShip(eq(9L), captor.capture());
         Ship capturedShip = captor.getValue();
         assertEquals(Harbor.BATTLESHIP, capturedShip.getShipType());
         assertEquals(9, capturedShip.getStart().getX());
@@ -88,7 +89,8 @@ public class GameControllerTest {
                 .withEnd(new Point()).build();
 
         Long boardId = 90L;
-        createGameController.placeShip(boardId, ship);
+        BindingResult bindingResult = mock(BindingResult.class);
+        createGameController.placeShip(boardId, ship, bindingResult);
 
         verify(mockService).placeShip(boardId, ship);
     }

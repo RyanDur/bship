@@ -1,14 +1,20 @@
 package com.bship.games.domains;
 
 import com.bship.games.Harbor;
+import com.bship.games.domains.validations.BoundsCheck;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Ship {
 
     @JsonProperty("type")
     private Harbor shipType;
+
+    @BoundsCheck
     private Point start;
+
+    @BoundsCheck
     private Point end;
+
     private Long boardId;
     private Long id;
 

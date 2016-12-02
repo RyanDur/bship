@@ -41,9 +41,10 @@ public class BoardRepositoryTest {
     public void create_shouldPersistTwoNewBoards() {
         List<Board> boardList = repository.create(game);
 
-        List<Board> boards = template.query("SELECT * FROM boards", (rs, rowNum) -> Board.builder()
-                .withId(rs.getLong("id"))
-                .withGameId(rs.getLong("game_id")).build());
+        List<Board> boards = template.query("SELECT * FROM boards",
+                (rs, rowNum) -> Board.builder()
+                        .withId(rs.getLong("id"))
+                        .withGameId(rs.getLong("game_id")).build());
 
         assertThat(boards, containsInAnyOrder(boardList.toArray()));
     }
@@ -53,9 +54,10 @@ public class BoardRepositoryTest {
         List<Board> boardList = repository.create(game);
         Board board1 = boardList.get(1);
 
-        Board expected = template.queryForObject("SELECT * FROM boards WHERE id = " + board1.getId(), (rs, rowNum) -> Board.builder()
-                .withId(rs.getLong("id"))
-                .withGameId(rs.getLong("game_id")).build());
+        Board expected = template.queryForObject("SELECT * FROM boards WHERE id = " + board1.getId(),
+                (rs, rowNum) -> Board.builder()
+                        .withId(rs.getLong("id"))
+                        .withGameId(rs.getLong("game_id")).build());
 
         Board actual = repository.get(board1.getId());
 

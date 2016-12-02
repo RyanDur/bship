@@ -62,4 +62,36 @@ public class CreateGamesIntegrationTest {
                         "\"type\":\"AIRCRAFT_CARRIER\"}]}"))
                 .andDo(document("place-ship"));
     }
+
+    @Test
+    public void placeShip_shouldNotBeAbleToPlaceAShipsStartOutsideTheBoard() throws Exception {
+        mockMvc.perform(post("/games"));
+
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
+                        "\"start\": {\"x\": -1, \"y\": 0}, " +
+                        "\"end\": {\"x\": 0, \"y\": 4}}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"error\": " +
+                        "[{\"field\": \"start\", \"message\": \"Point{x=-1, y=0} out of bounds.\"}]}"))
+                .andDo(document("place-ship-start-out-of-bounds"));
+    }
+
+    @Test
+    public void placeShip_shouldNotBeAbleToPlaceAShipsEndOutsideTheBoard() throws Exception {
+        mockMvc.perform(post("/games"));
+
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
+                        "\"start\": {\"x\": 1, \"y\": 0}, " +
+                        "\"end\": {\"x\": 9, \"y\": 10}}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"error\": " +
+                        "[{\"field\": \"end\", \"message\": \"Point{x=9, y=10} out of bounds.\"}]}"))
+                .andDo(document("place-ship-end-out-of-bounds"));
+    }
 }
