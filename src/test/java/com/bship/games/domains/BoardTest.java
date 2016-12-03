@@ -27,7 +27,6 @@ public class BoardTest {
         Point end1 = new Point(1, 5);
         Harbor type1 = Harbor.AIRCRAFT_CARRIER;
         aircraftCarrier = Ship.builder().withType(type1).withStart(start1).withEnd(end1).build();
-
     }
 
     @Test

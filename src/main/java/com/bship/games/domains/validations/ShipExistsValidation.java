@@ -12,7 +12,6 @@ public class ShipExistsValidation implements ConstraintValidator<ShipExists, Har
     }
 
     public boolean isValid(Harbor shipType, ConstraintValidatorContext context) {
-        System.out.println(shipType);
         return shipType != INVALID_SHIP;
     }
 }

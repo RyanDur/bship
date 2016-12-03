@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,6 +34,7 @@ public class BoardRepository {
                 .collect(toList());
     }
 
+    @Transactional(readOnly = true)
     public Board get(Long id) {
         return template.queryForObject("SELECT * FROM boards WHERE id = ?",
                 new Object[]{id},

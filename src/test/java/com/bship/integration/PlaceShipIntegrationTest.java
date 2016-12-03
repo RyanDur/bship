@@ -175,4 +175,28 @@ public class PlaceShipIntegrationTest {
                         "\"message\": \"Cannot be empty or null.\"}]}]}"))
                 .andDo(document("place-ship-of-null-start"));
     }
+
+    @Test
+    public void shouldNotBeAbleToPlaceAShipMoreThanOnce() throws Exception {
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
+                        "\"start\": {\"x\": 0, \"y\": 0}, " +
+                        "\"end\": {\"x\": 0, \"y\": 4}}"
+                )).andExpect(status().is(201));
+
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
+                        "\"start\": {\"x\": 9, \"y\": 0}, " +
+                        "\"end\": {\"x\": 9, \"y\": 4}}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"globalErrors\": " +
+                        "[{\"code\": \"ShipExistenceCheck\", " +
+                        "\"type\": \"ship\", " +
+                        "\"message\": \"Ship already exists on board.\"}]}]}"))
+                .andDo(document("place-ship-more-than-once"));
+    }
 }

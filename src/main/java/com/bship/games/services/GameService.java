@@ -3,6 +3,7 @@ package com.bship.games.services;
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Ship;
+import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.repositories.BoardRepository;
 import com.bship.games.repositories.GameRepository;
 import com.bship.games.repositories.ShipRepository;
@@ -32,9 +33,18 @@ public class GameService {
         return game.copy().withBoards(boards).build();
     }
 
-    public Board placeShip(Long boardId, Ship ship) {
+    public Board placeShip(Long boardId, Ship ship) throws ShipExistsCheck {
+        List<Ship> ships = shipRepository.getAll(boardId);
+        if (shipExists(ships, ship)) throw new ShipExistsCheck("Ship already exists on board.");
+
         Board board = boardRepository.get(boardId);
         Ship createdShip = shipRepository.create(ship, boardId);
-        return board.copy().addShip(createdShip).build();
+
+        ships.add(createdShip);
+        return board.copy().withShips(ships).build();
+    }
+
+    private boolean shipExists(List<Ship> ships, Ship ship) {
+        return ships.stream().anyMatch(savedShip -> savedShip.getType().equals(ship.getType()));
     }
 }

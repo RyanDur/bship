@@ -64,15 +64,14 @@ public class Board {
         }
 
         public Builder addShip(Ship ship) {
-            ships = ofNullable(ships).map(list -> Stream.of(list, singletonList(ship))
-                    .flatMap(Collection::stream)
-                    .collect(collectingAndThen(toList(), Collections::unmodifiableList)))
-                    .orElse(unmodifiableList(singletonList(ship)));
-            return this;
+            return withShips(singletonList(ship));
         }
 
-        public Builder withShips(List<Ship> ships) {
-            this.ships = unmodifiableList(ofNullable(ships).orElse(emptyList()));
+        public Builder withShips(List<Ship> shipList) {
+            ships = ofNullable(ships).map(list -> Stream.of(list, shipList)
+                    .flatMap(Collection::stream)
+                    .collect(collectingAndThen(toList(), Collections::unmodifiableList)))
+                    .orElse(unmodifiableList(ofNullable(shipList).orElse(emptyList())));
             return this;
         }
 
