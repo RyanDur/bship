@@ -1,5 +1,6 @@
 package com.bship.games.endpoints;
 
+import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.util.TriFunction;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,16 @@ public class GameExceptionHandler {
         return ResponseEntity.badRequest().body(getErrors(getGlobalErrors(
                 singletonList(objectErrors.apply(
                         objectError.apply("ship", "ShipExistenceCheck", check.getMessage())))
+                        .toString()
+        )));
+    }
+
+    @ExceptionHandler(ShipCollisionCheck.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity processShipCollisionCheck(ShipCollisionCheck check) {
+        return ResponseEntity.badRequest().body(getErrors(getGlobalErrors(
+                singletonList(objectErrors.apply(
+                        objectError.apply("ship", "ShipCollisionCheck", check.getMessage())))
                         .toString()
         )));
     }

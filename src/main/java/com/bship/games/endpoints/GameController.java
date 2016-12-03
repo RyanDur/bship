@@ -3,6 +3,7 @@ package com.bship.games.endpoints;
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Ship;
+import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,8 @@ public class GameController {
             consumes = APPLICATION_JSON_VALUE,
             produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
-    public Board placeShip(@PathVariable Long boardId, @Valid @RequestBody Ship ship) throws ShipExistsCheck {
+    public Board placeShip(@PathVariable Long boardId,
+                           @Valid @RequestBody Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
         return service.placeShip(boardId, ship);
     }
 }

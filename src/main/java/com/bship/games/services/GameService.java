@@ -3,6 +3,7 @@ package com.bship.games.services;
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Ship;
+import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.repositories.BoardRepository;
 import com.bship.games.repositories.GameRepository;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.bship.games.util.Util.detectCollision;
+import static com.bship.games.util.Util.pointsRange;
 
 @Service
 public class GameService {
@@ -33,15 +37,23 @@ public class GameService {
         return game.copy().withBoards(boards).build();
     }
 
-    public Board placeShip(Long boardId, Ship ship) throws ShipExistsCheck {
+    public Board placeShip(Long boardId, Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
         List<Ship> ships = shipRepository.getAll(boardId);
         if (shipExists(ships, ship)) throw new ShipExistsCheck("Ship already exists on board.");
+        if (collision(ships, ship)) throw new ShipCollisionCheck("Ship collision.");
 
         Board board = boardRepository.get(boardId);
         Ship createdShip = shipRepository.create(ship, boardId);
 
         ships.add(createdShip);
         return board.copy().withShips(ships).build();
+    }
+
+    private boolean collision(List<Ship> ships, Ship ship) {
+        return ships.stream().anyMatch(savedShip -> detectCollision(
+                pointsRange(savedShip.getStart(), savedShip.getEnd()),
+                pointsRange(ship.getStart(), ship.getEnd())
+        ));
     }
 
     private boolean shipExists(List<Ship> ships, Ship ship) {

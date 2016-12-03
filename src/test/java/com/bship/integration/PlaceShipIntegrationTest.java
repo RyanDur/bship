@@ -199,4 +199,28 @@ public class PlaceShipIntegrationTest {
                         "\"message\": \"Ship already exists on board.\"}]}]}"))
                 .andDo(document("place-ship-more-than-once"));
     }
+
+    @Test
+    public void shouldNotBeAbleToPlaceAShipUponAnotherShip() throws Exception {
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
+                        "\"start\": {\"x\": 3, \"y\": 3}, " +
+                        "\"end\": {\"x\": 7, \"y\": 3}}"
+                )).andExpect(status().is(201));
+
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"BATTLESHIP\", " +
+                        "\"start\": {\"x\": 4, \"y\": 2}, " +
+                        "\"end\": {\"x\": 4, \"y\": 5}}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"globalErrors\": " +
+                        "[{\"code\": \"ShipCollisionCheck\", " +
+                        "\"type\": \"ship\", " +
+                        "\"message\": \"Ship collision.\"}]}]}"))
+                .andDo(document("place-ship-collision"));
+    }
 }

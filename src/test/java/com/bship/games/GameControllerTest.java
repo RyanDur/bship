@@ -5,6 +5,7 @@ import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Point;
 import com.bship.games.domains.Ship;
 import com.bship.games.endpoints.GameController;
+import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.services.GameService;
 import org.junit.Before;
@@ -84,7 +85,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void placeShip_passesTheShipObjectToTheServiceLayerForTheGivenGameAndBoard() throws ShipExistsCheck {
+    public void placeShip_passesTheShipObjectToTheServiceLayerForTheGivenGameAndBoard() throws ShipExistsCheck, ShipCollisionCheck {
         Ship ship = Ship.builder()
                 .withType(Harbor.SUBMARINE)
                 .withStart(new Point())

@@ -1,0 +1,21 @@
+{
+  "request" : {
+    "url" : "/boards/1",
+    "method" : "POST",
+    "headers" : {
+      "Content-Type" : {
+        "equalTo" : "application/json;charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalTo" : "{\"type\": \"BATTLESHIP\", \"start\": {\"x\": 4, \"y\": 2}, \"end\": {\"x\": 4, \"y\": 5}}"
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"errors\": [{\"globalErrors\": [{\"code\": \"ShipCollisionCheck\", \"type\": \"ship\", \"message\": \"Ship collision.\"}]}]}",
+    "headers" : {
+      "Content-Type" : "application/json;charset=UTF-8"
+    }
+  }
+}

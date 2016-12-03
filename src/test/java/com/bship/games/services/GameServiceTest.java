@@ -5,6 +5,7 @@ import com.bship.games.domains.Game;
 import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Point;
 import com.bship.games.domains.Ship;
+import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.repositories.BoardRepository;
 import com.bship.games.repositories.GameRepository;
@@ -17,6 +18,7 @@ import org.junit.rules.ExpectedException;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
@@ -75,7 +77,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void placeShip_shouldPlaceAShipOnTheBoard() throws ShipExistsCheck {
+    public void placeShip_shouldPlaceAShipOnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
         long boardId = 1L;
         Board board = Board.builder().build();
 
@@ -90,14 +92,33 @@ public class GameServiceTest {
     }
 
     @Test
-    public void placeShip_shouldGuardAgainstPlacingDuplicateShip() throws ShipExistsCheck {
+    public void placeShip_shouldGuardAgainstPlacingDuplicateShip() throws ShipExistsCheck, ShipCollisionCheck {
         thrown.expect(ShipExistsCheck.class);
         thrown.expectMessage("Ship already exists on board.");
 
         long boardId = 1L;
-        List<Ship> ships = Arrays.asList(ship.copy().build());
+        List<Ship> ships = singletonList(ship.copy().build());
         when(shipRepository.getAll(boardId)).thenReturn(ships);
 
         gameService.placeShip(boardId, ship);
+    }
+
+    @Test
+    public void placeShip_shouldGuardAgainstShipCollisions() throws ShipExistsCheck, ShipCollisionCheck {
+        thrown.expect(ShipCollisionCheck.class);
+        thrown.expectMessage("Ship collision.");
+
+        long boardId = 1L;
+        Point startA = new Point(0, 0);
+        Point endA = new Point(0, 2);
+        Ship cruiser = ship.copy().withStart(startA).withEnd(endA).withType(Harbor.CRUISER).build();
+        List<Ship> ships = singletonList(cruiser);
+        when(shipRepository.getAll(boardId)).thenReturn(ships);
+
+        Point startB = new Point(0, 1);
+        Point endB = new Point(0, 3);
+        Ship sub = ship.copy().withStart(startB).withEnd(endB).withType(Harbor.SUBMARINE).build();
+
+        gameService.placeShip(boardId, sub);
     }
 }
