@@ -20,8 +20,10 @@ import static org.springframework.http.ResponseEntity.badRequest;
 
 public interface BShipExceptionHandler {
 
+    ResponseEntity processValidationError(Exception check);
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    default ResponseEntity processValidationError(MethodArgumentNotValidException ex) {
+    default ResponseEntity processArgumentError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         return badRequest().body(getErrors(
                 of(result).filter(Errors::hasFieldErrors).map(Errors::getFieldErrors)

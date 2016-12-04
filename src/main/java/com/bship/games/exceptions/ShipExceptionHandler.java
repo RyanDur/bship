@@ -20,8 +20,9 @@ public class ShipExceptionHandler implements BShipExceptionHandler {
         shipError = error.apply("ship");
     }
 
+    @Override
     @ExceptionHandler({ShipExistsCheck.class, ShipCollisionCheck.class})
-    public ResponseEntity processShipValidationError(Exception check) {
+    public ResponseEntity processValidationError(Exception check) {
         return badRequest().body(getErrors(of(check).map(shipError).map(Stream::of).map(objectErrors)));
     }
 }
