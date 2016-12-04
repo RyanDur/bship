@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"errors\": [{\"objectValidation\": [{\"code\": \"ShipCollisionCheck\", \"type\": \"ship\", \"message\": \"Ship collision.\"}]}]}",
+    "body" : "{\"errors\": [{\"objectValidation\": [{\"code\": \"ShipCollisionCheck\", \"type\": \"board\", \"message\": \"Ship collision.\"}]}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

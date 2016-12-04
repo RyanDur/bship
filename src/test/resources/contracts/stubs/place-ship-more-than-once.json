@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"errors\": [{\"objectValidation\": [{\"code\": \"ShipExistsCheck\", \"type\": \"ship\", \"message\": \"Ship already exists on board.\"}]}]}",
+    "body" : "{\"errors\": [{\"objectValidation\": [{\"code\": \"ShipExistsCheck\", \"type\": \"board\", \"message\": \"Ship already exists on board.\"}]}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

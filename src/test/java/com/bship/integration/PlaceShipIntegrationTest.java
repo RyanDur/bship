@@ -195,7 +195,7 @@ public class PlaceShipIntegrationTest {
                 .andExpect(content().json("{\"errors\": " +
                         "[{\"objectValidation\": " +
                         "[{\"code\": \"ShipExistsCheck\", " +
-                        "\"type\": \"ship\", " +
+                        "\"type\": \"board\", " +
                         "\"message\": \"Ship already exists on board.\"}]}]}"))
                 .andDo(document("place-ship-more-than-once"));
     }
@@ -219,7 +219,7 @@ public class PlaceShipIntegrationTest {
                 .andExpect(content().json("{\"errors\": " +
                         "[{\"objectValidation\": " +
                         "[{\"code\": \"ShipCollisionCheck\", " +
-                        "\"type\": \"ship\", " +
+                        "\"type\": \"board\", " +
                         "\"message\": \"Ship collision.\"}]}]}"))
                 .andDo(document("place-ship-collision"));
     }
