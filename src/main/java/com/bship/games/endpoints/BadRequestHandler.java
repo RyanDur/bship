@@ -1,4 +1,4 @@
-package com.bship.games.exceptions;
+package com.bship.games.endpoints;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,7 +18,7 @@ import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.badRequest;
 
-public interface BShipExceptionHandler {
+public interface BadRequestHandler {
 
     ResponseEntity processValidationError(Exception check);
 

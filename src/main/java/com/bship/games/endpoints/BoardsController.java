@@ -2,7 +2,6 @@ package com.bship.games.endpoints;
 
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Ship;
-import com.bship.games.exceptions.BShipExceptionHandler;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.services.GameService;
@@ -27,7 +26,7 @@ import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-public class BoardsController implements BShipExceptionHandler {
+public class BoardsController implements BadRequestHandler {
 
     private GameService service;
 
