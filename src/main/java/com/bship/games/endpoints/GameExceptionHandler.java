@@ -2,7 +2,6 @@ package com.bship.games.endpoints;
 
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
-import com.bship.games.util.TriFunction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,12 +13,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 import static java.util.Arrays.stream;
-import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
@@ -39,9 +38,8 @@ public class GameExceptionHandler {
     @ExceptionHandler({ShipExistsCheck.class, ShipCollisionCheck.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity processShipValidationError(Exception check) {
-        return ResponseEntity.badRequest().body(getErrors(of(
-                singletonList(objectError.apply("ship", check.getClass().getSimpleName(), check.getMessage()))
-        ).map(globalErrors)));
+        return ResponseEntity.badRequest().body(getErrors(of(check)
+                .map(shipError).map(Arrays::asList).map(globalErrors)));
     }
 
     @SafeVarargs
@@ -62,8 +60,9 @@ public class GameExceptionHandler {
             "\"message\": \"" + err.getDefaultMessage() + "\"" +
             "}";
 
-    private TriFunction<String, String, String, ObjectError> objectError = (name, code, message) ->
-            new ObjectError(name, new String[]{code}, null, message);
+    private Function<Exception, ObjectError> shipError = error ->
+            new ObjectError("ship", new String[]{error.getClass().getSimpleName()},
+                    error.getStackTrace(), error.getMessage());
 
     private Function<List<ObjectError>, String> globalErrors = errors ->
             "{\"globalErrors\": " + errors.stream().map(globalError).collect(toList()) + "}";
