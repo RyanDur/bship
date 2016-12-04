@@ -34,22 +34,12 @@ public class GameExceptionHandler {
         return ResponseEntity.badRequest().body(getErrors(fieldErrors, globalErrors));
     }
 
-    @ExceptionHandler(ShipExistsCheck.class)
+    @ExceptionHandler({ShipExistsCheck.class, ShipCollisionCheck.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity processShipExistenceCheck(ShipExistsCheck check) {
+    public ResponseEntity processShipExistenceCheck(Exception check) {
         return ResponseEntity.badRequest().body(getErrors(getGlobalErrors(
                 singletonList(objectErrors.apply(
-                        objectError.apply("ship", "ShipExistenceCheck", check.getMessage())))
-                        .toString()
-        )));
-    }
-
-    @ExceptionHandler(ShipCollisionCheck.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity processShipCollisionCheck(ShipCollisionCheck check) {
-        return ResponseEntity.badRequest().body(getErrors(getGlobalErrors(
-                singletonList(objectErrors.apply(
-                        objectError.apply("ship", "ShipCollisionCheck", check.getMessage())))
+                        objectError.apply("ship", check.getClass().getSimpleName(), check.getMessage())))
                         .toString()
         )));
     }

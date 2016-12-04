@@ -194,7 +194,7 @@ public class PlaceShipIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
                         "[{\"globalErrors\": " +
-                        "[{\"code\": \"ShipExistenceCheck\", " +
+                        "[{\"code\": \"ShipExistsCheck\", " +
                         "\"type\": \"ship\", " +
                         "\"message\": \"Ship already exists on board.\"}]}]}"))
                 .andDo(document("place-ship-more-than-once"));

@@ -32,6 +32,7 @@ public class BoardRepository {
         this.template = template;
     }
 
+    @Transactional
     public List<Board> create(Game game) {
         return IntStream.range(0, NUM_OF_BOARDS)
                 .mapToObj(i -> save.apply(game))

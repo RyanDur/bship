@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 400 Bad Request
 Content-Type: application/json;charset=UTF-8
-Content-Length: 124
+Content-Length: 121
 
-{"errors": [{"globalErrors": [{"code": "ShipExistenceCheck", "type": "ship", "message": "Ship already exists on board."}]}]}
+{"errors": [{"globalErrors": [{"code": "ShipExistsCheck", "type": "ship", "message": "Ship already exists on board."}]}]}
 ----
