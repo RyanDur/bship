@@ -39,15 +39,14 @@ public class GameService {
     }
 
     public Board placeShip(Long boardId, Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
-        List<Ship> ships = shipRepository.getAll(boardId);
-        if (shipExists(ships, ship)) throw new ShipExistsCheck("Ship already exists on board.");
-        if (collision(ships, ship)) throw new ShipCollisionCheck("Ship collision.");
-
         Board board = boardRepository.get(boardId);
+        if (shipExists(board.getShips(), ship)) throw new ShipExistsCheck("Ship already exists on board.");
+        if (collision(board.getShips(), ship)) throw new ShipCollisionCheck("Ship collision.");
+
         Ship createdShip = shipRepository.create(ship, boardId);
 
-        ships.add(createdShip);
-        return board.copy().withShips(ships).isReady(ships.size() == Harbor.size()).build();
+        return board.copy().addShip(createdShip)
+                .isReady(board.getShips().size() + 1 == Harbor.size()).build();
     }
 
     private boolean collision(List<Ship> ships, Ship ship) {

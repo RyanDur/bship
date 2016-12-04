@@ -1,6 +1,6 @@
 {
   "request" : {
-    "url" : "/boards/1",
+    "url" : "/boards/2",
     "method" : "POST",
     "headers" : {
       "Content-Type" : {

@@ -3,6 +3,7 @@ package com.bship.games.repositories;
 import com.bship.DBHelper;
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
+import com.bship.games.domains.Ship;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -58,9 +59,13 @@ public class BoardRepositoryTest {
                 (rs, rowNum) -> Board.builder()
                         .withId(rs.getLong("id"))
                         .withGameId(rs.getLong("game_id")).build());
+        List<Ship> ships = template.query("SELECT * FROM ships WHERE board_id = ?", new Object[]{board1.getId()},
+                (rs, rowNum) -> Ship.builder()
+                        .withId(rs.getLong("id"))
+                        .withBoardId(rs.getLong("game_id")).build());
 
         Board actual = repository.get(board1.getId());
 
-        assertThat(actual, is(equalTo(expected)));
+        assertThat(actual, is(equalTo(expected.copy().withShips(ships).build())));
     }
 }

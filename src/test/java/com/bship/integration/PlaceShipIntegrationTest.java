@@ -178,14 +178,14 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAShipMoreThanOnce() throws Exception {
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(post("/boards/2")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": 0, \"y\": 0}, " +
                         "\"end\": {\"x\": 0, \"y\": 4}}"
                 )).andExpect(status().is(201));
 
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(post("/boards/2")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": 9, \"y\": 0}, " +

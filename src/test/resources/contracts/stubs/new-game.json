@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"boards\":[{\"id\":1,\"ships\":null},{\"id\":2,\"ships\":null}],\"id\":1}",
+    "body" : "{\"boards\":[{\"id\":1,\"ships\":null,\"ready\":false},{\"id\":2,\"ships\":null,\"ready\":false}],\"id\":1}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

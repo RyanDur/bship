@@ -111,4 +111,14 @@ public class Board {
         result = 31 * result + (ships != null ? ships.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "gameId=" + gameId +
+                ", id=" + id +
+                ", ships=" + ships +
+                ", ready=" + ready +
+                '}';
+    }
 }

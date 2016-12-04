@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -81,8 +82,7 @@ public class GameServiceTest {
     @Test
     public void placeShip_shouldPlaceAShipOnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
         long boardId = 1L;
-        Board board = Board.builder().build();
-
+        Board board = Board.builder().withShips(emptyList()).build();
         when(mockBoardRepository.get(boardId)).thenReturn(board);
         when(shipRepository.create(ship, boardId)).thenReturn(ship);
 
@@ -100,7 +100,8 @@ public class GameServiceTest {
 
         long boardId = 1L;
         List<Ship> ships = singletonList(ship.copy().build());
-        when(shipRepository.getAll(boardId)).thenReturn(ships);
+        Board board = Board.builder().withShips(ships).build();
+        when(mockBoardRepository.get(boardId)).thenReturn(board);
 
         gameService.placeShip(boardId, ship);
     }
@@ -115,7 +116,8 @@ public class GameServiceTest {
         Point endA = new Point(0, 2);
         Ship cruiser = ship.copy().withStart(startA).withEnd(endA).withType(Harbor.CRUISER).build();
         List<Ship> ships = singletonList(cruiser);
-        when(shipRepository.getAll(boardId)).thenReturn(ships);
+        Board board = Board.builder().withShips(ships).build();
+        when(mockBoardRepository.get(boardId)).thenReturn(board);
 
         Point startB = new Point(0, 1);
         Point endB = new Point(0, 3);
@@ -127,8 +129,7 @@ public class GameServiceTest {
     @Test
     public void placeShip_shouldSetTheBoardToReadyUntilItIs() throws ShipExistsCheck, ShipCollisionCheck {
         long boardId = 1L;
-        Board board = Board.builder().build();
-
+        Board board = Board.builder().withShips(emptyList()).build();
         when(mockBoardRepository.get(boardId)).thenReturn(board);
         when(shipRepository.create(ship, boardId)).thenReturn(ship);
 
@@ -143,15 +144,14 @@ public class GameServiceTest {
     public void placeShip_shouldSetTheBoardToReady() throws ShipExistsCheck, ShipCollisionCheck {
         long boardId = 1L;
         Point endA = new Point(0, 2);
-        Board board = Board.builder().build();
+        Board board = Board.builder().withShips(emptyList()).build();
         Ship cruiser = ship.copy().withStart(new Point(0, 0)).withEnd(endA).withType(Harbor.CRUISER).build();
         Ship carrier = ship.copy().withStart(new Point(1, 1)).withEnd(endA).withType(Harbor.AIRCRAFT_CARRIER).build();
         Ship battleship = ship.copy().withStart(new Point(2, 2)).withEnd(endA).withType(Harbor.BATTLESHIP).build();
         Ship destroyer = ship.copy().withStart(new Point(3, 3)).withEnd(endA).withType(Harbor.DESTROYER).build();
         List<Ship> ships = Stream.of(cruiser, carrier, battleship, destroyer).collect(toList());
 
-        when(shipRepository.getAll(boardId)).thenReturn(ships);
-        when(mockBoardRepository.get(boardId)).thenReturn(board);
+        when(mockBoardRepository.get(boardId)).thenReturn(board.copy().withShips(ships).build());
 
         Point startB = new Point(4, 1);
         Point endB = new Point(4, 3);
