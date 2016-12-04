@@ -17,10 +17,16 @@ public enum Harbor {
         return size;
     }
 
+    public static Integer size() {
+        return Harbor.values().length - 1;
+    }
+
     @JsonCreator
     public static Harbor create (String value) {
         return Arrays.stream(Harbor.values())
                 .filter(ship -> ship.name().equals(value))
                 .findFirst().orElse(INVALID_SHIP);
     }
+
+
 }

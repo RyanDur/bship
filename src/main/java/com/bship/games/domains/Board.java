@@ -21,11 +21,13 @@ public class Board {
 
     private Long id;
     private List<Ship> ships;
+    private boolean ready;
 
     private Board(Builder builder) {
         id = builder.id;
         gameId = builder.gameId;
         ships = builder.ships;
+        ready = builder.ready;
     }
 
     public Long getGameId() {
@@ -40,6 +42,10 @@ public class Board {
         return ships;
     }
 
+    public boolean isReady() {
+        return ready;
+    }
+
     public Builder copy() {
         return builder().withId(id).withGameId(gameId).withShips(ships);
     }
@@ -52,6 +58,7 @@ public class Board {
         private Long id;
         private Long gameId;
         private List<Ship> ships;
+        private boolean ready;
 
         public Builder withId(Long id) {
             this.id = id;
@@ -72,6 +79,11 @@ public class Board {
                     .flatMap(Collection::stream)
                     .collect(collectingAndThen(toList(), Collections::unmodifiableList)))
                     .orElse(unmodifiableList(ofNullable(shipList).orElse(emptyList())));
+            return this;
+        }
+
+        public Builder isReady(boolean ready) {
+            this.ready = ready;
             return this;
         }
 

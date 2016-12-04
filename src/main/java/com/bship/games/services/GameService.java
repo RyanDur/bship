@@ -2,6 +2,7 @@ package com.bship.games.services;
 
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
+import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Ship;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
@@ -46,7 +47,7 @@ public class GameService {
         Ship createdShip = shipRepository.create(ship, boardId);
 
         ships.add(createdShip);
-        return board.copy().withShips(ships).build();
+        return board.copy().withShips(ships).isReady(ships.size() == Harbor.size()).build();
     }
 
     private boolean collision(List<Ship> ships, Ship ship) {

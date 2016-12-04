@@ -223,4 +223,67 @@ public class PlaceShipIntegrationTest {
                         "\"message\": \"Ship collision.\"}]}]}"))
                 .andDo(document("place-ship-collision"));
     }
+
+    @Test
+    public void shouldKnowIfTheBoardIsReadyToPlay() throws Exception {
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
+                        "\"start\": {\"x\": 0, \"y\": 0}, " +
+                        "\"end\": {\"x\": 0, \"y\": 4}}"
+                )).andExpect(status().is(201));
+
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"BATTLESHIP\", " +
+                        "\"start\": {\"x\": 1, \"y\": 0}, " +
+                        "\"end\": {\"x\": 1, \"y\": 3}}"
+                )).andExpect(status().is(201));
+
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"SUBMARINE\", " +
+                        "\"start\": {\"x\": 2, \"y\": 0}, " +
+                        "\"end\": {\"x\": 2, \"y\": 2}}"
+                )).andExpect(status().is(201));
+
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"CRUISER\", " +
+                        "\"start\": {\"x\": 3, \"y\": 0}, " +
+                        "\"end\": {\"x\": 3, \"y\": 2}}"
+                )).andExpect(status().is(201));
+
+        mockMvc.perform(post("/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"type\": \"DESTROYER\", " +
+                        "\"start\": {\"x\": 4, \"y\": 0}, " +
+                        "\"end\": {\"x\": 4, \"y\": 1}}"
+                ))
+                .andExpect(status().is(201))
+                .andExpect(content().json("{\"id\":1," +
+                        "\"ready\": true," +
+                        "\"ships\":[" +
+                        "{\"start\":{\"x\":0,\"y\":0}," +
+                        "\"end\":{\"x\":0,\"y\":4}," +
+                        "\"type\":\"AIRCRAFT_CARRIER\"}," +
+
+                        "{\"start\":{\"x\":1,\"y\":0}," +
+                        "\"end\":{\"x\":1,\"y\":3}," +
+                        "\"type\":\"BATTLESHIP\"}," +
+
+                        "{\"start\":{\"x\":2,\"y\":0}," +
+                        "\"end\":{\"x\":2,\"y\":2}," +
+                        "\"type\":\"SUBMARINE\"}," +
+
+                        "{\"start\":{\"x\":3,\"y\":0}," +
+                        "\"end\":{\"x\":3,\"y\":2}," +
+                        "\"type\":\"CRUISER\"}," +
+
+                        "{\"start\":{\"x\":4,\"y\":0}," +
+                        "\"end\":{\"x\":4,\"y\":1}," +
+                        "\"type\":\"DESTROYER\"}" +
+                        "]}"))
+                .andDo(document("place-ship"));
+    }
 }

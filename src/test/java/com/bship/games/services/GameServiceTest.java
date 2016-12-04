@@ -15,10 +15,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
@@ -57,7 +59,7 @@ public class GameServiceTest {
                 .build();
 
         when(mockGameRepository.createGame()).thenReturn(game);
-        when(mockBoardRepository.create(game)).thenReturn(Arrays.asList(firstStubbedBoard, secondStubbedBoard));
+        when(mockBoardRepository.create(game)).thenReturn(asList(firstStubbedBoard, secondStubbedBoard));
 
         gameService = new GameService(mockBoardRepository, mockGameRepository, shipRepository);
     }
@@ -120,5 +122,42 @@ public class GameServiceTest {
         Ship sub = ship.copy().withStart(startB).withEnd(endB).withType(Harbor.SUBMARINE).build();
 
         gameService.placeShip(boardId, sub);
+    }
+
+    @Test
+    public void placeShip_shouldSetTheBoardToReadyUntilItIs() throws ShipExistsCheck, ShipCollisionCheck {
+        long boardId = 1L;
+        Board board = Board.builder().build();
+
+        when(mockBoardRepository.get(boardId)).thenReturn(board);
+        when(shipRepository.create(ship, boardId)).thenReturn(ship);
+
+        Board actual = gameService.placeShip(boardId, ship);
+
+        verify(mockBoardRepository).get(boardId);
+        verify(shipRepository).create(ship, boardId);
+        assertThat(actual.isReady(), is(false));
+    }
+
+    @Test
+    public void placeShip_shouldSetTheBoardToReady() throws ShipExistsCheck, ShipCollisionCheck {
+        long boardId = 1L;
+        Point endA = new Point(0, 2);
+        Board board = Board.builder().build();
+        Ship cruiser = ship.copy().withStart(new Point(0, 0)).withEnd(endA).withType(Harbor.CRUISER).build();
+        Ship carrier = ship.copy().withStart(new Point(1, 1)).withEnd(endA).withType(Harbor.AIRCRAFT_CARRIER).build();
+        Ship battleship = ship.copy().withStart(new Point(2, 2)).withEnd(endA).withType(Harbor.BATTLESHIP).build();
+        Ship destroyer = ship.copy().withStart(new Point(3, 3)).withEnd(endA).withType(Harbor.DESTROYER).build();
+        List<Ship> ships = Stream.of(cruiser, carrier, battleship, destroyer).collect(toList());
+
+        when(shipRepository.getAll(boardId)).thenReturn(ships);
+        when(mockBoardRepository.get(boardId)).thenReturn(board);
+
+        Point startB = new Point(4, 1);
+        Point endB = new Point(4, 3);
+        Ship sub = ship.copy().withStart(startB).withEnd(endB).withType(Harbor.SUBMARINE).build();
+
+        Board actual = gameService.placeShip(boardId, sub);
+        assertThat(actual.isReady(), is(true));
     }
 }
