@@ -41,24 +41,6 @@ public class BoardRepository {
     @Transactional(readOnly = true)
     public Board get(Long id) {
         return getBoard(id).copy().withShips(getShips(id)).build();
-//        return template.queryForObject("SELECT b.id, game_id, " +
-//                        "group_concat(s.id, ' ', game_id,' ', type,' ', start,' ', end) AS ship " +
-//                        "FROM boards b LEFT JOIN ships s ON b.id = s.board_id " +
-//                        "WHERE b.id = ?", new Object[]{id},
-//                (rs, rowNum) -> Board.builder()
-//                        .withId(rs.getLong("id"))
-//                        .withGameId(rs.getLong("game_id"))
-//                        .withShips(ofNullable(rs.getString("ship"))
-//                                .map(ship -> Arrays.stream(ship.split(","))
-//                                        .map(s -> s.split(" "))
-//                                        .map(list -> Ship.builder()
-//                                                .withId(new Long(list[0]))
-//                                                .withBoardId(new Long(list[1]))
-//                                                .withType(valueOf(list[2]))
-//                                                .withStart(toPoint(Integer.parseInt(list[3])))
-//                                                .withEnd(toPoint(Integer.parseInt(list[4])))
-//                                                .build())).orElse(Stream.empty())
-//                                .collect(toList())).build());
     }
 
     private List<Ship> getShips(Long id) {

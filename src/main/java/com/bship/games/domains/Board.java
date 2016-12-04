@@ -43,7 +43,7 @@ public class Board {
     }
 
     public boolean isReady() {
-        return ready;
+        return ofNullable(ships).orElse(emptyList()).size() == Harbor.size();
     }
 
     public Builder copy() {
