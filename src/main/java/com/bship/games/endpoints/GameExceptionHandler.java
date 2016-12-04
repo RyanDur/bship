@@ -21,6 +21,7 @@ import java.util.function.Function;
 import static java.util.Arrays.stream;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.ResponseEntity.badRequest;
 
 @ControllerAdvice
 public class GameExceptionHandler {
@@ -29,7 +30,7 @@ public class GameExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity processValidationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
-        return ResponseEntity.badRequest().body(getErrors(
+        return badRequest().body(getErrors(
                 of(result).filter(Errors::hasFieldErrors).map(Errors::getFieldErrors).map(fieldErrors),
                 of(result).filter(Errors::hasGlobalErrors).map(Errors::getGlobalErrors).map(globalErrors)
         ));
@@ -38,8 +39,7 @@ public class GameExceptionHandler {
     @ExceptionHandler({ShipExistsCheck.class, ShipCollisionCheck.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity processShipValidationError(Exception check) {
-        return ResponseEntity.badRequest().body(getErrors(of(check)
-                .map(shipError).map(Arrays::asList).map(globalErrors)));
+        return badRequest().body(getErrors(of(check).map(shipError).map(Arrays::asList).map(globalErrors)));
     }
 
     @SafeVarargs
