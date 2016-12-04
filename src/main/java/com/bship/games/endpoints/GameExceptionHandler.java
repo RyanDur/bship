@@ -2,7 +2,6 @@ package com.bship.games.endpoints;
 
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -11,7 +10,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,19 +25,17 @@ import static org.springframework.http.ResponseEntity.badRequest;
 public class GameExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity processValidationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         return badRequest().body(getErrors(
                 of(result).filter(Errors::hasFieldErrors).map(Errors::getFieldErrors).map(fieldErrors),
-                of(result).filter(Errors::hasGlobalErrors).map(Errors::getGlobalErrors).map(globalErrors)
+                of(result).filter(Errors::hasGlobalErrors).map(Errors::getGlobalErrors).map(objectErrors)
         ));
     }
 
     @ExceptionHandler({ShipExistsCheck.class, ShipCollisionCheck.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity processShipValidationError(Exception check) {
-        return badRequest().body(getErrors(of(check).map(shipError).map(Arrays::asList).map(globalErrors)));
+        return badRequest().body(getErrors(of(check).map(shipError).map(Arrays::asList).map(objectErrors)));
     }
 
     @SafeVarargs
@@ -47,7 +43,7 @@ public class GameExceptionHandler {
         return "{\"errors\": " + stream(errors).filter(Optional::isPresent).map(Optional::get).collect(toList()) + "}";
     }
 
-    private Function<ObjectError, String> globalError = err -> "{" +
+    private Function<ObjectError, String> objectError = err -> "{" +
             "\"code\": \"" + err.getCode() + "\", " +
             "\"type\": \"" + err.getObjectName() + "\", " +
             "\"message\": \"" + err.getDefaultMessage() + "\"" +
@@ -64,9 +60,9 @@ public class GameExceptionHandler {
             new ObjectError("ship", new String[]{error.getClass().getSimpleName()},
                     error.getStackTrace(), error.getMessage());
 
-    private Function<List<ObjectError>, String> globalErrors = errors ->
-            "{\"globalErrors\": " + errors.stream().map(globalError).collect(toList()) + "}";
+    private Function<List<ObjectError>, String> objectErrors = errors ->
+            "{\"objectValidation\": " + errors.stream().map(objectError).collect(toList()) + "}";
 
     private Function<List<FieldError>, String> fieldErrors = errors ->
-            "{\"fieldErrors\": " + errors.stream().map(fieldError).collect(toList()) + "}";
+            "{\"fieldValidation\": " + errors.stream().map(fieldError).collect(toList()) + "}";
 }

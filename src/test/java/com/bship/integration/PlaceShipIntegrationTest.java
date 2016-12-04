@@ -61,7 +61,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldErrors\": " +
+                        "[{\"fieldValidation\": " +
                         "[{\"code\": \"BoundsCheck\", " +
                         "\"field\": \"start\", " +
                         "\"value\": \"Point{x=-1, y=0}\", " +
@@ -79,7 +79,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldErrors\": " +
+                        "[{\"fieldValidation\": " +
                         "[{\"code\": \"BoundsCheck\", " +
                         "\"field\": \"end\", " +
                         "\"value\": \"Point{x=9, y=10}\", " +
@@ -97,7 +97,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"globalErrors\": " +
+                        "[{\"objectValidation\": " +
                         "[{\"code\": \"PlacementCheck\", " +
                         "\"type\": \"ship\", " +
                         "\"message\": \"Incorrect ship placement.\"}]}]}"))
@@ -114,7 +114,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldErrors\": " +
+                        "[{\"fieldValidation\": " +
                         "[{\"code\": \"ShipExists\", " +
                         "\"field\": \"type\", " +
                         "\"value\": \"INVALID_SHIP\", " +
@@ -132,7 +132,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldErrors\": " +
+                        "[{\"fieldValidation\": " +
                         "[{\"code\": \"NonEmpty\", " +
                         "\"field\": \"start\", " +
                         "\"value\": \"null\", " +
@@ -150,7 +150,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldErrors\": " +
+                        "[{\"fieldValidation\": " +
                         "[{\"code\": \"NonEmpty\", " +
                         "\"field\": \"end\", " +
                         "\"value\": \"null\", " +
@@ -168,7 +168,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldErrors\": " +
+                        "[{\"fieldValidation\": " +
                         "[{\"code\": \"NonEmpty\", " +
                         "\"field\": \"type\", " +
                         "\"value\": \"null\", " +
@@ -193,7 +193,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"globalErrors\": " +
+                        "[{\"objectValidation\": " +
                         "[{\"code\": \"ShipExistsCheck\", " +
                         "\"type\": \"ship\", " +
                         "\"message\": \"Ship already exists on board.\"}]}]}"))
@@ -217,7 +217,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"globalErrors\": " +
+                        "[{\"objectValidation\": " +
                         "[{\"code\": \"ShipCollisionCheck\", " +
                         "\"type\": \"ship\", " +
                         "\"message\": \"Ship collision.\"}]}]}"))

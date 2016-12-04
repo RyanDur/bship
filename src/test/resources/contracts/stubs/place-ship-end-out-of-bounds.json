@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"errors\": [{\"fieldErrors\": [{\"code\": \"BoundsCheck\", \"field\": \"end\", \"value\": \"Point{x=9, y=10}\", \"message\": \"out of bounds.\"}]}]}",
+    "body" : "{\"errors\": [{\"fieldValidation\": [{\"code\": \"BoundsCheck\", \"field\": \"end\", \"value\": \"Point{x=9, y=10}\", \"message\": \"out of bounds.\"}]}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }
