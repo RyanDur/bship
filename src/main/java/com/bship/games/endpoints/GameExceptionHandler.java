@@ -6,6 +6,7 @@ import com.bship.games.util.TriFunction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,12 +14,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
+import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.joining;
+import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
 @ControllerAdvice
@@ -28,57 +30,32 @@ public class GameExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity processValidationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
-        String fieldErrors = result.hasFieldErrors() ? collectFieldErrors(result) : null;
-        String globalErrors = result.hasGlobalErrors() ? collectGlobalErrors(result) : null;
-
-        return ResponseEntity.badRequest().body(getErrors(fieldErrors, globalErrors));
+        return ResponseEntity.badRequest().body(getErrors(
+                of(result).filter(Errors::hasFieldErrors).map(Errors::getFieldErrors).map(fieldErrors),
+                of(result).filter(Errors::hasGlobalErrors).map(Errors::getGlobalErrors).map(globalErrors)
+        ));
     }
 
     @ExceptionHandler({ShipExistsCheck.class, ShipCollisionCheck.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity processShipExistenceCheck(Exception check) {
-        return ResponseEntity.badRequest().body(getErrors(getGlobalErrors(
-                singletonList(objectErrors.apply(
-                        objectError.apply("ship", check.getClass().getSimpleName(), check.getMessage())))
-                        .toString()
-        )));
+    public ResponseEntity processShipValidationError(Exception check) {
+        return ResponseEntity.badRequest().body(getErrors(of(
+                singletonList(objectError.apply("ship", check.getClass().getSimpleName(), check.getMessage()))
+        ).map(globalErrors)));
     }
 
-    private String getErrors(String... errors) {
-        return "{\"errors\": " +
-                Arrays.stream(errors).filter(Objects::nonNull).collect(toList()) +
-                "}";
+    @SafeVarargs
+    private final String getErrors(Optional<String>... errors) {
+        return "{\"errors\": " + stream(errors).filter(Optional::isPresent).map(Optional::get).collect(toList()) + "}";
     }
 
-    private String getGlobalErrors(String... errors) {
-        return "{\"globalErrors\": " +
-                Arrays.stream(errors).filter(Objects::nonNull).collect(joining(",")) +
-                "}";
-    }
-
-    private String getFieldErrors(String... errors) {
-        return "{\"fieldErrors\": " +
-                Arrays.stream(errors).filter(Objects::nonNull).collect(joining(",")) +
-                "}";
-    }
-
-    private String collectFieldErrors(BindingResult result) {
-        return getFieldErrors(
-                result.getFieldErrors().stream().map(this.fieldErrors).collect(toList()).toString());
-    }
-
-    private String collectGlobalErrors(BindingResult result) {
-        return getGlobalErrors(
-                result.getGlobalErrors().stream().map(objectErrors).collect(toList()).toString());
-    }
-
-    private Function<ObjectError, String> objectErrors = err -> "{" +
+    private Function<ObjectError, String> globalError = err -> "{" +
             "\"code\": \"" + err.getCode() + "\", " +
             "\"type\": \"" + err.getObjectName() + "\", " +
             "\"message\": \"" + err.getDefaultMessage() + "\"" +
             "}";
 
-    private Function<FieldError, String> fieldErrors = err -> "{" +
+    private Function<FieldError, String> fieldError = err -> "{" +
             "\"code\": \"" + err.getCode() + "\", " +
             "\"field\": \"" + err.getField() + "\", " +
             "\"value\": \"" + err.getRejectedValue() + "\", " +
@@ -87,4 +64,10 @@ public class GameExceptionHandler {
 
     private TriFunction<String, String, String, ObjectError> objectError = (name, code, message) ->
             new ObjectError(name, new String[]{code}, null, message);
+
+    private Function<List<ObjectError>, String> globalErrors = errors ->
+            "{\"globalErrors\": " + errors.stream().map(globalError).collect(toList()) + "}";
+
+    private Function<List<FieldError>, String> fieldErrors = errors ->
+            "{\"fieldErrors\": " + errors.stream().map(fieldError).collect(toList()) + "}";
 }
