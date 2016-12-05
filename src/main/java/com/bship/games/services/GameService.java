@@ -39,8 +39,8 @@ public class GameService {
 
     public Board placeShip(Long boardId, Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
         Board board = boardRepository.get(boardId);
-        if (shipExists(board.getShips(), ship)) throw new ShipExistsCheck("Ship already exists on board.");
-        if (collision(board.getShips(), ship)) throw new ShipCollisionCheck("Ship collision.");
+        if (shipExists(board.getShips(), ship)) throw new ShipExistsCheck();
+        if (collision(board.getShips(), ship)) throw new ShipCollisionCheck();
 
         Ship createdShip = shipRepository.create(ship, boardId);
 
