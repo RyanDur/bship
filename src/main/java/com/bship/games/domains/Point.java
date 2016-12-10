@@ -4,21 +4,21 @@ import com.bship.games.domains.validations.BoundsCheck;
 
 @BoundsCheck
 public class Point {
-    private int x;
-    private int y;
+    private Integer x;
+    private Integer y;
 
     public Point() {}
 
-    public Point(int x, int y) {
+    public Point(Integer x, Integer y) {
         this.x = x;
         this.y = y;
     }
 
-    public int getX() {
+    public Integer getX() {
         return x;
     }
 
-    public int getY() {
+    public Integer getY() {
         return y;
     }
 
@@ -29,14 +29,14 @@ public class Point {
 
         Point point = (Point) o;
 
-        if (x != point.x) return false;
-        return y == point.y;
+        if (x != null ? !x.equals(point.x) : point.x != null) return false;
+        return y != null ? y.equals(point.y) : point.y == null;
     }
 
     @Override
     public int hashCode() {
-        int result = x;
-        result = 31 * result + y;
+        int result = x != null ? x.hashCode() : 0;
+        result = 31 * result + (y != null ? y.hashCode() : 0);
         return result;
     }
 

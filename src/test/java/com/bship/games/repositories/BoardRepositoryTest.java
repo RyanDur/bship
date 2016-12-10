@@ -59,7 +59,7 @@ public class BoardRepositoryTest {
                 (rs, rowNum) -> Board.builder()
                         .withId(rs.getLong("id"))
                         .withGameId(rs.getLong("game_id")).build());
-        List<Ship> ships = template.query("SELECT * FROM ships WHERE board_id = ?", new Object[]{board1.getId()},
+        List<Ship> ships = template.query("SELECT * FROM ships WHERE ship_board_id = ?", new Object[]{board1.getId()},
                 (rs, rowNum) -> Ship.builder()
                         .withId(rs.getLong("id"))
                         .withBoardId(rs.getLong("game_id")).build());

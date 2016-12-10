@@ -1,0 +1,21 @@
+{
+  "request" : {
+    "url" : "/games/1/boards/1",
+    "method" : "POST",
+    "headers" : {
+      "Content-Type" : {
+        "equalTo" : "application/json;charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalTo" : "{\"x\": 0, \"y\": -5}"
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"errors\": [{\"objectValidation\": [{\"code\": \"BoundsCheck\", \"type\": \"point\", \"message\": \"out of bounds.\"}]}]}",
+    "headers" : {
+      "Content-Type" : "application/json;charset=UTF-8"
+    }
+  }
+}

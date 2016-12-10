@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,7 +77,8 @@ public class PlaceMoveIntegrationTest {
                 .andExpect(status().is(201))
                 .andExpect(content().json("{" +
                         "\"status\": \"MISS\", " +
-                        "\"point\": {\"x\": 0, \"y\": 5}}"));
+                        "\"point\": {\"x\": 0, \"y\": 5}}"))
+                .andDo(document("place-move"));
     }
 
     @Test
@@ -90,7 +92,8 @@ public class PlaceMoveIntegrationTest {
                         "[{\"objectValidation\": " +
                         "[{\"code\": \"BoundsCheck\", " +
                         "\"type\": \"point\", " +
-                        "\"message\": \"out of bounds.\"}]}]}"));
+                        "\"message\": \"out of bounds.\"}]}]}"))
+                .andDo(document("place-move-outside-lower-bounds"));
     }
 
     @Test
@@ -104,6 +107,37 @@ public class PlaceMoveIntegrationTest {
                         "[{\"objectValidation\": " +
                         "[{\"code\": \"BoundsCheck\", " +
                         "\"type\": \"point\", " +
-                        "\"message\": \"out of bounds.\"}]}]}"));
+                        "\"message\": \"out of bounds.\"}]}]}"))
+                .andDo(document("place-move-outside-upper-bounds"));
+    }
+
+    @Test
+    public void shouldNotBeAbleToPlaceAMoveOnTheBoardWhereXDoesNotExist() throws Exception {
+        mockMvc.perform(post("/games/1/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"x\": null, \"y\": 1}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"objectValidation\": " +
+                        "[{\"code\": \"BoundsCheck\", " +
+                        "\"type\": \"point\", " +
+                        "\"message\": \"out of bounds.\"}]}]}"))
+                .andDo(document("place-move-null-x"));
+    }
+
+    @Test
+    public void shouldNotBeAbleToPlaceAMoveOnTheBoardWhereYDoesNotExist() throws Exception {
+        mockMvc.perform(post("/games/1/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"x\": 1, \"y\": null}"
+                ))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{\"errors\": " +
+                        "[{\"objectValidation\": " +
+                        "[{\"code\": \"BoundsCheck\", " +
+                        "\"type\": \"point\", " +
+                        "\"message\": \"out of bounds.\"}]}]}"))
+                .andDo(document("place-move-null-y"));
     }
 }

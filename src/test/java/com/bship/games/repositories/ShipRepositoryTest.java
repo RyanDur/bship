@@ -52,7 +52,7 @@ public class ShipRepositoryTest {
     @Test
     public void create_shouldPersistTheShip() {
         Ship expected = template
-                .queryForObject("SELECT * FROM ships WHERE board_id = " + board.getId(), shipRowMapper);
+                .queryForObject("SELECT * FROM ships WHERE ship_board_id = " + board.getId(), shipRowMapper);
 
         assertThat(savedBattleship, is(equalTo(expected)));
     }
@@ -88,5 +88,5 @@ public class ShipRepositoryTest {
             .withType(Harbor.valueOf(rs.getString("type")))
             .withStart(toPoint(rs.getInt("start")))
             .withEnd(toPoint(rs.getInt("end")))
-            .withBoardId(rs.getLong("board_id")).build();
+            .withBoardId(rs.getLong("ship_board_id")).build();
 }

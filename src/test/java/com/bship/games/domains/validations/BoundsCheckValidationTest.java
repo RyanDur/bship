@@ -51,4 +51,20 @@ public class BoundsCheckValidationTest {
 
         assertThat(validation.isValid(point, null), is(false));
     }
+
+    @Test
+    public void isValid_shouldNotAllowANullX() {
+        Point point = new Point(null, 1);
+
+        assertThat(validation.isValid(point, null), is(false));
+    }
+
+    @Test
+    public void isValid_shouldNotAllowANullY() {
+        Point point = new Point(1, null);
+
+        assertThat(validation.isValid(point, null), is(false));
+    }
+
+
 }

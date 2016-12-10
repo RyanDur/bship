@@ -13,6 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -53,10 +56,11 @@ public class BoardsControllerTest {
         verify(mockService).placeShip(eq(9L), captor.capture());
         Ship capturedShip = captor.getValue();
         assertEquals(Harbor.BATTLESHIP, capturedShip.getType());
-        assertEquals(4, capturedShip.getStart().getX());
-        assertEquals(5, capturedShip.getStart().getY());
-        assertEquals(1, capturedShip.getEnd().getX());
-        assertEquals(5, capturedShip.getEnd().getY());
+
+        assertThat(4, is(equalTo(capturedShip.getStart().getX())));
+        assertThat(5, is(equalTo(capturedShip.getStart().getY())));
+        assertThat(1, is(equalTo(capturedShip.getEnd().getX())));
+        assertThat(5, is(equalTo(capturedShip.getEnd().getY())));
     }
 
     @Test

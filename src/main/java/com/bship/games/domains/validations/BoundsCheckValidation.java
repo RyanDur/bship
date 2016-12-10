@@ -17,7 +17,7 @@ public class BoundsCheckValidation implements ConstraintValidator<BoundsCheck, P
         return Optional.ofNullable(point).map(p -> {
             Integer x = p.getX();
             Integer y = p.getY();
-            return x >= 0 && y >= 0 && x < SIDE && y < SIDE;
+            return x != null && y != null && x >= 0 && y >= 0 && x < SIDE && y < SIDE;
         }).orElse(true);
     }
 }

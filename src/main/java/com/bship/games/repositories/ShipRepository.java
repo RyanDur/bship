@@ -43,13 +43,13 @@ public class ShipRepository {
     }
 
     public List<Ship> getAll(long boardId) {
-        return template.query("SELECT * FROM ships WHERE board_id = ?",
+        return template.query("SELECT * FROM ships WHERE ship_board_id = ?",
                 new Object[]{boardId},
                 (rs, rowNum) -> Ship.builder()
                         .withId(rs.getLong("id"))
                         .withType(Harbor.valueOf(rs.getString("type")))
                         .withStart(toPoint(rs.getInt("start")))
                         .withEnd(toPoint(rs.getInt("end")))
-                        .withBoardId(rs.getLong("board_id")).build());
+                        .withBoardId(rs.getLong("ship_board_id")).build());
     }
 }
