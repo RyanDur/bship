@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 
-@Target({ElementType.FIELD, ANNOTATION_TYPE})
+@Target({ElementType.FIELD, ElementType.TYPE, ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = BoundsCheckValidation.class)
 public @interface BoundsCheck {

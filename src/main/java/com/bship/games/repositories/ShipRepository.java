@@ -33,7 +33,7 @@ public class ShipRepository {
     }
 
     private PreparedStatement prepareInsertStatement(Ship ship, Connection con) throws SQLException {
-        PreparedStatement statement = con.prepareStatement("INSERT INTO ships(type, start, end, board_id) VALUE(?,?,?,?)",
+        PreparedStatement statement = con.prepareStatement("INSERT INTO ships(type, start, end, ship_board_id) VALUE(?,?,?,?)",
                 RETURN_GENERATED_KEYS);
         statement.setString(1, ship.getType().name());
         statement.setInt(2, toIndex(ship.getStart()));

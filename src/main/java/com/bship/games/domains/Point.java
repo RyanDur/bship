@@ -1,5 +1,8 @@
 package com.bship.games.domains;
 
+import com.bship.games.domains.validations.BoundsCheck;
+
+@BoundsCheck
 public class Point {
     private int x;
     private int y;

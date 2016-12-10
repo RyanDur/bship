@@ -3,12 +3,14 @@ package com.bship.games.services;
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Harbor;
+import com.bship.games.domains.Move;
 import com.bship.games.domains.Point;
 import com.bship.games.domains.Ship;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.repositories.BoardRepository;
 import com.bship.games.repositories.GameRepository;
+import com.bship.games.repositories.MoveRepository;
 import com.bship.games.repositories.ShipRepository;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,6 +26,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -38,14 +41,16 @@ public class GameServiceTest {
     private GameService gameService;
     private Board firstStubbedBoard;
     private Board secondStubbedBoard;
-    private BoardRepository mockBoardRepository;
+    private BoardRepository boardRepository;
     private ShipRepository shipRepository;
+    private MoveRepository moveRepository;
     private Ship ship;
 
     @Before
     public void setup() {
-        mockBoardRepository = mock(BoardRepository.class);
-        GameRepository mockGameRepository = mock(GameRepository.class);
+        moveRepository = mock(MoveRepository.class);
+        boardRepository = mock(BoardRepository.class);
+        GameRepository gameRepository = mock(GameRepository.class);
         shipRepository = mock(ShipRepository.class);
         Game game = Game.builder().build();
         firstStubbedBoard = Board.builder().build();
@@ -59,10 +64,10 @@ public class GameServiceTest {
                 .withEnd(end)
                 .build();
 
-        when(mockGameRepository.createGame()).thenReturn(game);
-        when(mockBoardRepository.create(game)).thenReturn(asList(firstStubbedBoard, secondStubbedBoard));
+        when(gameRepository.createGame()).thenReturn(game);
+        when(boardRepository.create(game)).thenReturn(asList(firstStubbedBoard, secondStubbedBoard));
 
-        gameService = new GameService(mockBoardRepository, mockGameRepository, shipRepository);
+        gameService = new GameService(boardRepository, gameRepository, shipRepository, moveRepository);
     }
 
     @Test
@@ -83,12 +88,12 @@ public class GameServiceTest {
     public void placeShip_shouldPlaceAShipOnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
         long boardId = 1L;
         Board board = Board.builder().withShips(emptyList()).build();
-        when(mockBoardRepository.get(boardId)).thenReturn(board);
+        when(boardRepository.get(boardId)).thenReturn(board);
         when(shipRepository.create(ship, boardId)).thenReturn(ship);
 
         Board actual = gameService.placeShip(boardId, ship);
 
-        verify(mockBoardRepository).get(boardId);
+        verify(boardRepository).get(boardId);
         verify(shipRepository).create(ship, boardId);
         assertThat(actual.getShips(), contains(ship));
     }
@@ -101,7 +106,7 @@ public class GameServiceTest {
         long boardId = 1L;
         List<Ship> ships = singletonList(ship.copy().build());
         Board board = Board.builder().withShips(ships).build();
-        when(mockBoardRepository.get(boardId)).thenReturn(board);
+        when(boardRepository.get(boardId)).thenReturn(board);
 
         gameService.placeShip(boardId, ship);
     }
@@ -117,7 +122,7 @@ public class GameServiceTest {
         Ship cruiser = ship.copy().withStart(startA).withEnd(endA).withType(Harbor.CRUISER).build();
         List<Ship> ships = singletonList(cruiser);
         Board board = Board.builder().withShips(ships).build();
-        when(mockBoardRepository.get(boardId)).thenReturn(board);
+        when(boardRepository.get(boardId)).thenReturn(board);
 
         Point startB = new Point(0, 1);
         Point endB = new Point(0, 3);
@@ -130,12 +135,12 @@ public class GameServiceTest {
     public void placeShip_shouldSetTheBoardToReadyUntilItIs() throws ShipExistsCheck, ShipCollisionCheck {
         long boardId = 1L;
         Board board = Board.builder().withShips(emptyList()).build();
-        when(mockBoardRepository.get(boardId)).thenReturn(board);
+        when(boardRepository.get(boardId)).thenReturn(board);
         when(shipRepository.create(ship, boardId)).thenReturn(ship);
 
         Board actual = gameService.placeShip(boardId, ship);
 
-        verify(mockBoardRepository).get(boardId);
+        verify(boardRepository).get(boardId);
         verify(shipRepository).create(ship, boardId);
         assertThat(actual.isReady(), is(false));
     }
@@ -151,7 +156,7 @@ public class GameServiceTest {
         Ship destroyer = ship.copy().withStart(new Point(3, 3)).withEnd(endA).withType(Harbor.DESTROYER).build();
         List<Ship> ships = Stream.of(cruiser, carrier, battleship, destroyer).collect(toList());
 
-        when(mockBoardRepository.get(boardId)).thenReturn(board.copy().withShips(ships).build());
+        when(boardRepository.get(boardId)).thenReturn(board.copy().withShips(ships).build());
 
         Point startB = new Point(4, 1);
         Point endB = new Point(4, 3);
@@ -159,5 +164,16 @@ public class GameServiceTest {
 
         Board actual = gameService.placeShip(boardId, sub);
         assertThat(actual.isReady(), is(true));
+    }
+
+    @Test
+    public void placeMove_shouldPlaceAMoveOnTheBoard() {
+        long boardId = 1L;
+        Point point = new Point();
+        Move move = new Move();
+        when(moveRepository.create(boardId, point)).thenReturn(move);
+
+        Move actual = gameService.placeMove(boardId, 1L, point);
+        assertThat(actual, is(equalTo(move)));
     }
 }

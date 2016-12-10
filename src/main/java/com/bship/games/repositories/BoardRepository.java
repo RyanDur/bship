@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toList;
 
 @Repository
 public class BoardRepository {
-    public static final int NUM_OF_BOARDS = 2;
+    static final int NUM_OF_BOARDS = 2;
     private JdbcTemplate template;
 
     @Autowired
@@ -45,7 +45,7 @@ public class BoardRepository {
     }
 
     private List<Ship> getShips(Long id) {
-        return template.query("SELECT * FROM ships WHERE board_id = ?", new Object[]{id}, shipRowMapper);
+        return template.query("SELECT * FROM ships WHERE ship_board_id = ?", new Object[]{id}, shipRowMapper);
     }
 
     private Board getBoard(Long id) {
@@ -76,7 +76,7 @@ public class BoardRepository {
 
     private RowMapper<Ship> shipRowMapper = (rs, rowNum) -> Ship.builder()
             .withId(rs.getLong("id"))
-            .withBoardId(rs.getLong("board_id"))
+            .withBoardId(rs.getLong("ship_board_id"))
             .withStart(toPoint(rs.getInt("start")))
             .withEnd(toPoint(rs.getInt("end")))
             .withType(valueOf(rs.getString("type")))

@@ -1,6 +1,8 @@
 package com.bship.games;
 
 import com.bship.games.domains.Game;
+import com.bship.games.domains.Move;
+import com.bship.games.domains.Point;
 import com.bship.games.endpoints.GameController;
 import com.bship.games.services.GameService;
 import org.junit.Before;
@@ -11,6 +13,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,5 +48,16 @@ public class GameControllerTest {
         Game actual = createGameController.createGame();
 
         assertThat(actual, is(sameInstance(expected)));
+    }
+
+    @Test
+    public void placeMove_shouldBeAbleToPlaceAMoveOnTheBoard() {
+        Move move = new Move();
+        Point point = new Point();
+        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class))).thenReturn(move);
+
+        Move actual = createGameController.placeMove(1L, 1L, point);
+
+        assertThat(actual, is(equalTo(move)));
     }
 }
