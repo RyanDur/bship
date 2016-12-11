@@ -3,7 +3,6 @@ package com.bship.games.repositories;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.MoveStatus;
 import com.bship.games.domains.Point;
-import com.bship.games.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static com.bship.games.util.Util.toIndex;
+import static com.bship.games.util.Util.toPoint;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 @Component
@@ -29,16 +30,24 @@ public class MoveRepository {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         Move move = Move.builder().withBoardId(boardId).withPoint(point).build();
         template.update(con -> prepareInsertStatement(move, con), holder);
-        return move.copy().withId(holder.getKey().longValue())
-                .withStatus(MoveStatus.MISS)
-                .build();
+        return getMove(holder.getKey().longValue());
+    }
+
+    private Move getMove(Long id) {
+        return template.queryForObject("SELECT * FROM moves WHERE id = ?",
+                new Object[]{id}, (rs, rowNum) -> Move.builder()
+                        .withStatus(MoveStatus.valueOf(rs.getString("status")))
+                        .withId(rs.getLong("id"))
+                        .withBoardId(rs.getLong("move_board_id"))
+                        .withPoint(toPoint(rs.getInt("point"))).build());
     }
 
     private PreparedStatement prepareInsertStatement(Move move, Connection con) throws SQLException {
-        PreparedStatement statement = con.prepareStatement("INSERT INTO moves(move_board_id, point) VALUE(?, ?)",
+        PreparedStatement statement = con.prepareStatement(
+                "INSERT INTO moves(move_board_id, point) VALUE(?, ?)",
                 RETURN_GENERATED_KEYS);
         statement.setLong(1, move.getBoardId());
-        statement.setInt(2, Util.toIndex(move.getPoint()));
+        statement.setInt(2, toIndex(move.getPoint()));
         return statement;
     }
 }
