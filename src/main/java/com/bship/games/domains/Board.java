@@ -5,12 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.Collections.unmodifiableList;
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
@@ -21,11 +19,13 @@ public class Board {
 
     private Long id;
     private List<Ship> ships;
+    private List<Move> moves;
 
     private Board(Builder builder) {
         id = builder.id;
         gameId = builder.gameId;
         ships = builder.ships;
+        moves = builder.moves;
     }
 
     public Long getGameId() {
@@ -40,12 +40,16 @@ public class Board {
         return ships;
     }
 
-    public boolean isReady() {
-        return ofNullable(ships).orElse(emptyList()).size() == Harbor.size();
+    public List<Move> getMoves() {
+        return moves;
     }
 
     public Builder copy() {
-        return builder().withId(id).withGameId(gameId).withShips(ships);
+        return builder()
+                .withId(id)
+                .withGameId(gameId)
+                .withShips(ships)
+                .withMoves(moves);
     }
 
     public static Builder builder() {
@@ -56,6 +60,7 @@ public class Board {
         private Long id;
         private Long gameId;
         private List<Ship> ships;
+        private List<Move> moves;
 
         public Builder withId(Long id) {
             this.id = id;
@@ -72,15 +77,28 @@ public class Board {
         }
 
         public Builder withShips(List<Ship> shipList) {
-            ships = ofNullable(ships).map(list -> Stream.of(list, shipList)
-                    .flatMap(Collection::stream)
-                    .collect(collectingAndThen(toList(), Collections::unmodifiableList)))
-                    .orElse(unmodifiableList(ofNullable(shipList).orElse(emptyList())));
+            ships = toImmutableList(ships, shipList);
+            return this;
+        }
+
+        public Builder addMove(Move move) {
+            return withMoves(singletonList(move));
+        }
+
+        public Builder withMoves(List<Move> moveList) {
+            moves = toImmutableList(moves, moveList);
             return this;
         }
 
         public Board build() {
             return new Board(this);
+        }
+
+        private <T> List<T> toImmutableList(List<T> originalList, List<T> newList) {
+            return Stream.of(originalList, newList)
+                    .filter(Objects::nonNull)
+                    .flatMap(Collection::stream)
+                    .collect(collectingAndThen(toList(), Collections::unmodifiableList));
         }
     }
 
@@ -110,7 +128,6 @@ public class Board {
                 "gameId=" + gameId +
                 ", id=" + id +
                 ", ships=" + ships +
-                ", ready=" + isReady() +
                 '}';
     }
 }

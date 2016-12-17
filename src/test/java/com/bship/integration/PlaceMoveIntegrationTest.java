@@ -76,9 +76,10 @@ public class PlaceMoveIntegrationTest {
                 ))
                 .andExpect(status().is(201))
                 .andExpect(content().json("{" +
-                        "\"status\": \"MISS\", " +
-                        "\"point\": {\"x\": 0, \"y\": 5}}"))
-                .andDo(document("place-move"));
+                        "\"id\":1," +
+                        "\"ships\":[]," +
+                        "\"moves\":[{\"point\":{\"x\":0,\"y\":5},\"status\":\"MISS\"}]}"))
+                .andDo(document("place-move-miss"));
     }
 
     @Test
@@ -127,17 +128,67 @@ public class PlaceMoveIntegrationTest {
     }
 
     @Test
-    public void shouldNotBeAbleToPlaceAMoveOnTheBoardWhereYDoesNotExist() throws Exception {
+    public void shouldNotBeAbleToPlaceAMoveOnTheBoardWhereMoveAlreadyExists() throws Exception {
         mockMvc.perform(post("/games/1/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
-                .content("{\"x\": 1, \"y\": null}"
+                .content("{\"x\": 0, \"y\": 5}"
+                ))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/games/1/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"x\": 0, \"y\": 5}"
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
                         "[{\"objectValidation\": " +
-                        "[{\"code\": \"BoundsCheck\", " +
-                        "\"type\": \"point\", " +
-                        "\"message\": \"out of bounds.\"}]}]}"))
-                .andDo(document("place-move-null-y"));
+                        "[{\"code\": \"MoveCollision\", " +
+                        "\"type\": \"game\", " +
+                        "\"message\": \"Move already exists on board.\"}]}]}"))
+                .andDo(document("place-move-exists"));
+    }
+
+    @Test
+    public void shouldBeAbleToPlaceAMoveOnTheBoardThatHits() throws Exception {
+        mockMvc.perform(post("/games/1/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"x\": 0, \"y\": 4}"
+                ))
+                .andExpect(status().is(201))
+                .andExpect(content().json("{" +
+                        "\"id\":1," +
+                        "\"ships\":[]," +
+                        "\"moves\":[{\"point\":{\"x\":0,\"y\":4},\"status\":\"HIT\"}]}"))
+                .andDo(document("place-move-hit"));
+    }
+
+    @Test
+    public void shouldBeAbleToPlaceAMoveOnTheBoardThatSinksAShip() throws Exception {
+        mockMvc.perform(post("/games/1/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"x\": 4, \"y\": 0}"
+                ))
+                .andExpect(status().is(201));
+        mockMvc.perform(post("/games/1/boards/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content("{\"x\": 4, \"y\": 1}"
+                ))
+                .andExpect(status().is(201))
+                .andExpect(content().json("{" +
+                        "\"id\": 1," +
+                        "\"ships\": [{" +
+                        "\"type\": \"DESTROYER\"," +
+                        "\"start\": {\"x\": 4,\"y\": 0}," +
+                        "\"end\": {\"x\": 4,\"y\": 1}," +
+                        "\"sunk\": true" +
+                        "}]," +
+                        "\"moves\": [{" +
+                        "\"point\": {\"x\": 4,\"y\": 0}," +
+                        "\"status\": \"HIT\"" +
+                        "},{" +
+                        "\"point\": {\"x\": 4,\"y\": 1}," +
+                        "\"status\": \"HIT\"" +
+                        "}]}"))
+                .andDo(document("place-move-hit"));
     }
 }

@@ -1,6 +1,6 @@
 {
   "request" : {
-    "url" : "/boards/1",
+    "url" : "/games/1/boards/1",
     "method" : "POST",
     "headers" : {
       "Content-Type" : {
@@ -8,12 +8,12 @@
       }
     },
     "bodyPatterns" : [ {
-      "equalTo" : "{\"type\": \"AIRCRAFT_CARRIER\", \"start\": {\"x\": 0, \"y\": 0}, \"end\": {\"x\": 0, \"y\": 4}}"
+      "equalTo" : "{\"x\": 0, \"y\": 4}"
     } ]
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"id\":1,\"ships\":[{\"type\":\"AIRCRAFT_CARRIER\",\"start\":{\"x\":0,\"y\":0},\"end\":{\"x\":0,\"y\":4},\"sunk\":false,\"id\":1}],\"moves\":[]}",
+    "body" : "{\"id\":1,\"ships\":[],\"moves\":[{\"point\":{\"x\":0,\"y\":4},\"status\":\"HIT\"}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

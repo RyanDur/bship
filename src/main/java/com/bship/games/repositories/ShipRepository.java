@@ -4,6 +4,8 @@ import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Ship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +21,10 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 @Repository
 public class ShipRepository {
 
+    private static final String INSERT_NEW_SHIP = "INSERT INTO ships(type, start, end, ship_board_id) VALUE(?,?,?,?)";
+    private static final String UPDATE_SHIP_SET_SUNK = "UPDATE ships SET sunk = ? WHERE id = ?";
+    private static final String GET_SHIP = "SELECT * FROM ships WHERE id = ?";
+    private static final String GET_SHIPS_FOR_BOARD = "SELECT * FROM ships WHERE ship_board_id = ?";
     private final JdbcTemplate template;
 
     @Autowired
@@ -28,13 +34,23 @@ public class ShipRepository {
 
     public Ship create(Ship ship, Long boardId) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
-        template.update(con -> prepareInsertStatement(ship.copy().withBoardId(boardId).build(), con), holder);
+        PreparedStatementCreator preparedStatementCreator = con ->
+                prepareInsertStatement(ship.copy().withBoardId(boardId).build(), con);
+        template.update(preparedStatementCreator, holder);
         return ship.copy().withBoardId(boardId).withId(holder.getKey().longValue()).build();
     }
 
+    public List<Ship> getAll(long boardId) {
+        return template.query(GET_SHIPS_FOR_BOARD, new Object[]{boardId}, shipRowMapper);
+    }
+
+    public Ship update(Ship ship) {
+        template.update(con -> prepareUpdateStatement(ship, con));
+        return template.queryForObject(GET_SHIP, new Object[]{ship.getId()}, shipRowMapper);
+    }
+
     private PreparedStatement prepareInsertStatement(Ship ship, Connection con) throws SQLException {
-        PreparedStatement statement = con.prepareStatement("INSERT INTO ships(type, start, end, ship_board_id) VALUE(?,?,?,?)",
-                RETURN_GENERATED_KEYS);
+        PreparedStatement statement = con.prepareStatement(INSERT_NEW_SHIP, RETURN_GENERATED_KEYS);
         statement.setString(1, ship.getType().name());
         statement.setInt(2, toIndex(ship.getStart()));
         statement.setInt(3, toIndex(ship.getEnd()));
@@ -42,14 +58,18 @@ public class ShipRepository {
         return statement;
     }
 
-    public List<Ship> getAll(long boardId) {
-        return template.query("SELECT * FROM ships WHERE ship_board_id = ?",
-                new Object[]{boardId},
-                (rs, rowNum) -> Ship.builder()
-                        .withId(rs.getLong("id"))
-                        .withType(Harbor.valueOf(rs.getString("type")))
-                        .withStart(toPoint(rs.getInt("start")))
-                        .withEnd(toPoint(rs.getInt("end")))
-                        .withBoardId(rs.getLong("ship_board_id")).build());
+    private PreparedStatement prepareUpdateStatement(Ship ship, Connection con) throws SQLException {
+        PreparedStatement statement = con.prepareStatement(UPDATE_SHIP_SET_SUNK);
+        statement.setBoolean(1, ship.isSunk());
+        statement.setLong(2, ship.getId());
+        return statement;
     }
+
+    private RowMapper<Ship> shipRowMapper = (rs, rowNum) -> Ship.builder()
+            .withId(rs.getLong("id"))
+            .withType(Harbor.valueOf(rs.getString("type")))
+            .withStart(toPoint(rs.getInt("start")))
+            .withEnd(toPoint(rs.getInt("end")))
+            .withSunk(rs.getBoolean("sunk"))
+            .withBoardId(rs.getLong("ship_board_id")).build();
 }

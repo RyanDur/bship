@@ -5,11 +5,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
 
 public class BoardTest {
 
@@ -62,24 +60,6 @@ public class BoardTest {
         Board board = Board.builder().withShips(singletonList(battleship)).build();
 
         board.getShips().add(aircraftCarrier);
-    }
-
-    @Test
-    public void isReady_shouldNotBeIfThereAreNotEnoughShips() {
-        Board board = Board.builder().build();
-        assertThat(board.isReady(), is(false));
-    }
-
-    @Test
-    public void isReady_shouldBeIfThereAreEnoughShips() {
-        Board board = Board.builder().withShips(asList(
-                Ship.builder().build(),
-                Ship.builder().build(),
-                Ship.builder().build(),
-                Ship.builder().build(),
-                Ship.builder().build()
-                )).build();
-        assertThat(board.isReady(), is(true));
     }
 
 }

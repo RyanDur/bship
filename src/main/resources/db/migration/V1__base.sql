@@ -15,6 +15,7 @@ CREATE TABLE ships(
   type VARCHAR(50),
   start INT NOT NULL,
   end INT NOT NULL,
+  sunk BOOL DEFAULT FALSE,
   ship_board_id INT NOT NULL,
   CONSTRAINT ship_boards_id_fk
   FOREIGN KEY (ship_board_id)

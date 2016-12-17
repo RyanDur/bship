@@ -1,0 +1,8 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 201 Created
+Content-Type: application/json;charset=UTF-8
+Content-Length: 68
+
+{"id":1,"ships":[],"moves":[{"point":{"x":0,"y":4},"status":"HIT"}]}
+----

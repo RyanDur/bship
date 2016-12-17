@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 201 Created
 Content-Type: application/json;charset=UTF-8
-Content-Length: 352
+Content-Length: 119
 
-{"id":1,"ships":[{"type":"AIRCRAFT_CARRIER","start":{"x":0,"y":0},"end":{"x":0,"y":4}},{"type":"BATTLESHIP","start":{"x":1,"y":0},"end":{"x":1,"y":3}},{"type":"SUBMARINE","start":{"x":2,"y":0},"end":{"x":2,"y":2}},{"type":"CRUISER","start":{"x":3,"y":0},"end":{"x":3,"y":2}},{"type":"DESTROYER","start":{"x":4,"y":0},"end":{"x":4,"y":1}}],"ready":true}
+{"id":1,"ships":[{"type":"AIRCRAFT_CARRIER","start":{"x":0,"y":0},"end":{"x":0,"y":4},"sunk":false,"id":1}],"moves":[]}
 ----

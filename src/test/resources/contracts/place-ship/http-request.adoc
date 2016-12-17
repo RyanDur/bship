@@ -3,7 +3,7 @@
 POST /boards/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Host: localhost:8080
-Content-Length: 73
+Content-Length: 80
 
-{"type": "DESTROYER", "start": {"x": 4, "y": 0}, "end": {"x": 4, "y": 1}}
+{"type": "AIRCRAFT_CARRIER", "start": {"x": 0, "y": 0}, "end": {"x": 0, "y": 4}}
 ----

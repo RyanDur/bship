@@ -89,7 +89,6 @@ public class Move {
 
         if (boardId != null ? !boardId.equals(move.boardId) : move.boardId != null) return false;
         if (id != null ? !id.equals(move.id) : move.id != null) return false;
-        if (status != move.status) return false;
         return this.point != null ? this.point.equals(move.point) : move.point == null;
     }
 

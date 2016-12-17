@@ -24,6 +24,7 @@ public class Ship {
     @JsonIgnore
     private Long boardId;
 
+    private boolean sunk;
     private Long id;
 
     public Ship() {}
@@ -34,6 +35,7 @@ public class Ship {
         this.end = builder.end;
         this.boardId = builder.boardId;
         this.id = builder.id;
+        this.sunk = builder.sunk;
     }
 
     public Harbor getType() {
@@ -48,6 +50,14 @@ public class Ship {
         return end;
     }
 
+    public boolean isSunk() {
+        return sunk;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public Long getBoardId() {
         return boardId;
     }
@@ -58,7 +68,8 @@ public class Ship {
                 .withType(type)
                 .withStart(start)
                 .withEnd(end)
-                .withBoardId(boardId);
+                .withBoardId(boardId)
+                .withSunk(sunk);
     }
 
     public static Builder builder() {
@@ -71,6 +82,7 @@ public class Ship {
         private Point end;
         private Long boardId;
         private Long id;
+        private boolean sunk;
 
         public Builder withType(Harbor shipType) {
             this.type = shipType;
@@ -97,6 +109,11 @@ public class Ship {
             return this;
         }
 
+        public Builder withSunk(boolean sunk) {
+            this.sunk = sunk;
+            return this;
+        }
+
         public Ship build() {
             return new Ship(this);
         }
@@ -109,6 +126,7 @@ public class Ship {
 
         Ship ship = (Ship) o;
 
+        if (sunk != ship.sunk) return false;
         if (type != ship.type) return false;
         if (start != null ? !start.equals(ship.start) : ship.start != null) return false;
         if (end != null ? !end.equals(ship.end) : ship.end != null) return false;
@@ -122,6 +140,7 @@ public class Ship {
         result = 31 * result + (start != null ? start.hashCode() : 0);
         result = 31 * result + (end != null ? end.hashCode() : 0);
         result = 31 * result + (boardId != null ? boardId.hashCode() : 0);
+        result = 31 * result + (sunk ? 1 : 0);
         result = 31 * result + (id != null ? id.hashCode() : 0);
         return result;
     }
@@ -133,6 +152,7 @@ public class Ship {
                 ", start=" + start +
                 ", end=" + end +
                 ", boardId=" + boardId +
+                ", sunk=" + sunk +
                 ", id=" + id +
                 '}';
     }

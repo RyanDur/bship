@@ -1,9 +1,11 @@
 package com.bship.games;
 
+import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.Point;
 import com.bship.games.endpoints.GameController;
+import com.bship.games.exceptions.MoveCollision;
 import com.bship.games.services.GameService;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.contains;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
@@ -36,8 +38,7 @@ public class GameControllerTest {
     public void createGame_shouldDefineRequestMappingForPostingToGamesEndpoint() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(createGameController).build();
 
-        mockMvc
-                .perform(post("/games"))
+        mockMvc.perform(post("/games"))
                 .andExpect(status().isCreated());
     }
 
@@ -51,13 +52,14 @@ public class GameControllerTest {
     }
 
     @Test
-    public void placeMove_shouldBeAbleToPlaceAMoveOnTheBoard() {
+    public void placeMove_shouldBeAbleToPlaceAMoveOnTheBoard() throws MoveCollision {
         Move move = new Move();
         Point point = new Point();
-        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class))).thenReturn(move);
+        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class)))
+                .thenReturn(Board.builder().addMove(move).build());
 
-        Move actual = createGameController.placeMove(1L, 1L, point);
+        Board actual = createGameController.placeMove(1L, 1L, point);
 
-        assertThat(actual, is(equalTo(move)));
+        assertThat(actual.getMoves(), contains(move));
     }
 }
