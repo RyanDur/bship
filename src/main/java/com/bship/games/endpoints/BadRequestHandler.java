@@ -42,17 +42,10 @@ public interface BadRequestHandler {
     }
 
     Function<ObjectError, ValidationObjectError> objectError = err ->
-            ValidationObjectError.builder()
-                    .withCode(err.getCode())
-                    .withType(err.getObjectName())
-                    .withMessage(err.getDefaultMessage()).build();
+            ValidationObjectError.builder().withError(err).build();
 
     Function<FieldError, ValidationFieldError> fieldError = err ->
-            ValidationFieldError.builder()
-                    .withCode(err.getCode())
-                    .withField(err.getField())
-                    .withValue(err.getRejectedValue())
-                    .withMessage(err.getDefaultMessage()).build();
+            ValidationFieldError.builder().withError(err).build();
 
     Function<String, Function<Exception, ObjectError>> error = name -> error ->
             new ObjectError(name, new String[]{error.getClass().getSimpleName()},

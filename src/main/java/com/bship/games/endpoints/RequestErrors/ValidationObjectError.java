@@ -1,5 +1,7 @@
 package com.bship.games.endpoints.RequestErrors;
 
+import org.springframework.validation.ObjectError;
+
 public class ValidationObjectError {
 
     private String code;
@@ -46,6 +48,10 @@ public class ValidationObjectError {
         public Builder withMessage(String message) {
             this.message = message;
             return this;
+        }
+
+        public Builder withError(ObjectError err) {
+            return withCode(err.getCode()).withType(err.getObjectName()).withMessage(err.getDefaultMessage());
         }
 
         public ValidationObjectError build() {

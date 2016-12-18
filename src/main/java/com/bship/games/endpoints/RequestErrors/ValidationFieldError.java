@@ -1,5 +1,7 @@
 package com.bship.games.endpoints.RequestErrors;
 
+import org.springframework.validation.FieldError;
+
 public class ValidationFieldError {
     private String code;
     private String field;
@@ -57,6 +59,11 @@ public class ValidationFieldError {
         public Builder withMessage(String message) {
             this.message = message;
             return this;
+        }
+
+        public Builder withError(FieldError err) {
+            return withCode(err.getCode()).withField(err.getField())
+                    .withValue(err.getRejectedValue()).withMessage(err.getDefaultMessage());
         }
 
         public ValidationFieldError build() {
