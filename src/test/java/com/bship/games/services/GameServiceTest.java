@@ -20,6 +20,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
@@ -38,7 +39,6 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,9 +55,35 @@ public class GameServiceTest {
     private ShipRepository shipRepository;
     private MoveRepository moveRepository;
     private Ship ship;
+    private Ship floating;
+    private List<Ship> ships;
 
     @Before
     public void setup() {
+        Ship sunk = Ship.builder()
+                .withStart(new Point(0, 0))
+                .withEnd(new Point(0, 4))
+                .withSunk(true)
+                .build();
+
+        floating = Ship.builder()
+                .withStart(new Point(3, 0))
+                .withEnd(new Point(3, 2))
+                .build();
+
+        ships = Arrays.asList(
+                sunk, sunk.copy()
+                        .withStart(new Point(1, 0))
+                        .withEnd(new Point(1, 3))
+                        .build(), sunk.copy()
+                        .withStart(new Point(2, 0))
+                        .withEnd(new Point(2, 2))
+                        .build(),
+                floating, floating.copy()
+                        .withStart(new Point(4, 0))
+                        .withEnd(new Point(4, 1))
+                        .build()
+        );
         moveRepository = mock(MoveRepository.class);
         boardRepository = mock(BoardRepository.class);
         GameRepository gameRepository = mock(GameRepository.class);
@@ -99,7 +125,7 @@ public class GameServiceTest {
         long boardId = 1L;
         Board board = Board.builder().withShips(emptyList()).build();
         when(boardRepository.get(boardId)).thenReturn(board);
-        when(shipRepository.create(ship, boardId)).thenReturn(ship);
+        when(shipRepository.create(ship, boardId)).thenReturn(of(ship));
 
         Board actual = gameService.placeShip(boardId, ship);
 
@@ -144,14 +170,15 @@ public class GameServiceTest {
     @Test
     public void placeMove_shouldPlaceAMoveOnTheBoard() throws MoveCollision {
         long boardId = 1L;
-        Point point = new Point();
-        Move move = Move.builder().withId(boardId).withPoint(point).build();
+        Point point = new Point(5, 0);
+        Move move = Move.builder().withId(boardId).withPoint(point).withStatus(MISS).build();
 
+        when(shipRepository.getAll(anyLong())).thenReturn(of(ships));
         when(moveRepository.getAll(anyLong())).thenReturn(empty());
         when(moveRepository.create(boardId, point, MISS)).thenReturn(of(move));
 
-        Board actual = gameService.placeMove(boardId, 1L, point);
-        assertThat(actual.getMoves().get(0), is(equalTo(move)));
+        Optional<Board> actual = gameService.placeMove(boardId, 1L, point);
+        assertThat(actual.get().getMoves().get(0), is(equalTo(move)));
     }
 
     @Test
@@ -161,14 +188,7 @@ public class GameServiceTest {
 
         Point point = new Point(0, 4);
         Move move = Move.builder().withPoint(point).withStatus(MISS).build();
-        when(moveRepository.create(anyLong(), any(Point.class), eq(HIT))).thenReturn(of(move));
-        List<Point> points = pointsRange(toPoint(0), toPoint(4));
-        List<Move> moves = points.stream().map(p -> Move.builder()
-                .withPoint(p)
-                .withStatus(MISS)
-                .build()).collect(toList());
-
-        when(moveRepository.getAll(anyLong())).thenReturn(of(moves));
+        when(moveRepository.getAll(anyLong())).thenReturn(of(singletonList(move)));
 
         gameService.placeMove(1L, 1L, point);
     }
@@ -191,42 +211,17 @@ public class GameServiceTest {
                         .build()).collect(toList());
 
         when(moveRepository.getAll(anyLong())).thenReturn(of(moves));
-        when(shipRepository.getAll(anyLong())).thenReturn(singletonList(ship));
+        when(shipRepository.getAll(anyLong())).thenReturn(of(singletonList(ship)));
         when(moveRepository.create(1L, point, MISS)).thenReturn(of(moveMiss));
         when(moveRepository.create(1L, point, HIT)).thenReturn(of(moveHit));
 
-        Board actual = gameService.placeMove(1L, 1L, point);
+        Optional<Board> actual = gameService.placeMove(1L, 1L, point);
 
-        assertThat(actual.getMoves().contains(moveHit), is(true));
+        assertThat(actual.get().getMoves().contains(moveHit), is(true));
     }
 
     @Test
     public void placeMove_shouldReturnTheSunkenShips() throws MoveCollision {
-        Ship sunk = Ship.builder()
-                .withStart(new Point(0, 0))
-                .withEnd(new Point(0, 4))
-                .withSunk(true)
-                .build();
-
-        Ship floating = Ship.builder()
-                .withStart(new Point(3, 0))
-                .withEnd(new Point(3, 2))
-                .build();
-
-        List<Ship> ships = Arrays.asList(
-                sunk, sunk.copy()
-                        .withStart(new Point(1, 0))
-                        .withEnd(new Point(1, 3))
-                        .build(), sunk.copy()
-                        .withStart(new Point(2, 0))
-                        .withEnd(new Point(2, 2))
-                        .build(),
-                floating, floating.copy()
-                        .withStart(new Point(4, 0))
-                        .withEnd(new Point(4, 1))
-                        .build()
-        );
-
         List<Point> points = pointsRange(new Point(0, 0), new Point(0, 4));
         points.addAll(pointsRange(new Point(1, 0), new Point(1, 3)));
         points.addAll(pointsRange(new Point(2, 0), new Point(2, 2)));
@@ -242,13 +237,13 @@ public class GameServiceTest {
         when(moveRepository.create(1L, point, MISS)).thenReturn(of(moveMiss));
         when(moveRepository.create(1L, point, HIT)).thenReturn(of(moveHit));
         when(moveRepository.getAll(anyLong())).thenReturn(of(moves));
-        when(shipRepository.getAll(anyLong())).thenReturn(ships);
-        when(shipRepository.update(any(Ship.class))).thenReturn(ship);
+        when(shipRepository.getAll(anyLong())).thenReturn(of(ships));
+        when(shipRepository.update(any(Ship.class))).thenReturn(of(ship));
 
-        Board actual = gameService.placeMove(1L, 1L, point);
+        Optional<Board> actual = gameService.placeMove(1L, 1L, point);
 
         verify(shipRepository).update(any(Ship.class));
-        assertThat(actual.getShips().size(), is(4));
+        assertThat(actual.get().getShips().size(), is(4));
     }
 
 }

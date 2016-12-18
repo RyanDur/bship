@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Optional;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -56,7 +58,7 @@ public class GameControllerTest {
         Move move = new Move();
         Point point = new Point();
         when(mockService.placeMove(anyLong(), anyLong(), any(Point.class)))
-                .thenReturn(Board.builder().addMove(move).build());
+                .thenReturn(Optional.of(Board.builder().addMove(move).build()));
 
         Board actual = createGameController.placeMove(1L, 1L, point);
 

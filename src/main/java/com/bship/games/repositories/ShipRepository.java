@@ -13,10 +13,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static com.bship.games.util.Util.toIndex;
 import static com.bship.games.util.Util.toPoint;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.util.Optional.ofNullable;
 
 @Repository
 public class ShipRepository {
@@ -32,21 +35,26 @@ public class ShipRepository {
         this.template = template;
     }
 
-    public Ship create(Ship ship, Long boardId) {
+    public Optional<Ship> create(Ship ship, Long boardId) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         PreparedStatementCreator preparedStatementCreator = con ->
                 prepareInsertStatement(ship.copy().withBoardId(boardId).build(), con);
         template.update(preparedStatementCreator, holder);
-        return ship.copy().withBoardId(boardId).withId(holder.getKey().longValue()).build();
+        return ofNullable(get(holder.getKey().longValue()));
     }
 
-    public List<Ship> getAll(long boardId) {
-        return template.query(GET_SHIPS_FOR_BOARD, new Object[]{boardId}, shipRowMapper);
+    public Optional<List<Ship>> getAll(long boardId) {
+        return ofNullable(template.query(GET_SHIPS_FOR_BOARD, new Object[]{boardId}, shipRowMapper))
+                .filter(Objects::nonNull);
     }
 
-    public Ship update(Ship ship) {
+    public Optional<Ship> update(Ship ship) {
         template.update(con -> prepareUpdateStatement(ship, con));
-        return template.queryForObject(GET_SHIP, new Object[]{ship.getId()}, shipRowMapper);
+        return ofNullable(get(ship.getId()));
+    }
+
+    private Ship get(Long id) {
+        return template.queryForObject(GET_SHIP, new Object[]{id}, shipRowMapper);
     }
 
     private PreparedStatement prepareInsertStatement(Ship ship, Connection con) throws SQLException {

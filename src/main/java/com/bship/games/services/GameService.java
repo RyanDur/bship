@@ -16,25 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
+import static com.bship.games.util.Util.addTo;
 import static com.bship.games.util.Util.detectCollision;
 import static com.bship.games.util.Util.pointsRange;
 import static java.util.Collections.emptyList;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
-import static java.util.stream.Stream.empty;
 
 @Service
 public class GameService {
@@ -65,60 +60,62 @@ public class GameService {
         if (shipExists(board.getShips(), ship)) throw new ShipExistsCheck();
         if (collision(board.getShips(), ship)) throw new ShipCollisionCheck();
 
-        Ship createdShip = shipRepository.create(ship, boardId);
-
-        return board.copy().addShip(createdShip).build();
+        Optional<Ship> createdShip = shipRepository.create(ship, boardId);
+        return createdShip.map(newShip -> board.copy().addShip(newShip).build()).orElse(null);
     }
 
-    public Board placeMove(Long gameId, Long boardId, Point point) throws MoveCollision {
+    public Optional<Board> placeMove(Long gameId, Long boardId, Point point) throws MoveCollision {
         Optional<List<Move>> moves = moveRepository.getAll(boardId);
-        if (isPresent(pointEquals.apply(point), moves.orElse(emptyList()))) throw new MoveCollision();
+        if (isPresent(point, moves.orElse(emptyList()))) throw new MoveCollision();
 
-        List<Ship> ships = shipRepository.getAll(boardId);
-        Optional<Move> move = getMove(boardId, point, ships);
-        List<Move> newMoveList = addTo(moves.orElse(emptyList()), move.orElse(null));
-        Optional<List<Ship>> sunk = of(newMoveList).map(newMoves -> getSunkenShips(newMoves, ships));
-
-        return Board.builder()
-                .withMoves(newMoveList)
-                .withShips(sunk.orElse(emptyList()))
-                .withId(boardId).build();
+        return shipRepository.getAll(boardId)
+                .map(getBoard(boardId, point, moves.orElse(null)))
+                .orElse(empty());
     }
 
-    private <T> List<T> addTo(List<T> list, T elem) {
-        return concat(ofNullable(list).map(Collection::stream).orElse(empty()), Stream.of(elem))
-                .filter(Objects::nonNull)
-                .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+    private boolean isPresent(Point point, List<Move> moves) {
+        return moves.stream().map(Move::getPoint).anyMatch(point::equals);
     }
 
-    private <T> boolean isPresent(Predicate<T> predicate, List<T> list) {
-        return list.stream().filter(predicate).count() > 0;
+    private Function<List<Ship>, Optional<Board>> getBoard(Long boardId, Point point, List<Move> moves) {
+        return ships -> of(ships).map(getNewMoveSet(boardId, point, moves))
+                .flatMap(playNewMoveSet(boardId, newMoves -> getSunkenShips(newMoves, ships).orElse(emptyList())));
     }
 
-    private Function<Point, Predicate<Move>> pointEquals = point -> move ->
-            point.equals(move.getPoint());
+    private Function<List<Ship>, List<Move>> getNewMoveSet(Long boardId, Point point, List<Move> moves) {
+        return ships -> getMove(boardId, point, ships)
+                .flatMap(move -> of(move).map(m -> addTo(moves, m)))
+                .orElse(emptyList());
+    }
 
-    private List<Ship> getSunkenShips(List<Move> moves, List<Ship> ships) {
-        List<Point> points = moves.stream().map(Move::getPoint).collect(toList());
-        Optional<Ship> newSunk = ships.stream()
-                .filter(notSunk)
-                .filter(getSunkenShip(points))
-                .map(updateShip).findFirst();
-        List<Ship> sunk = ships.stream().filter(Ship::isSunk).collect(toList());
-        newSunk.ifPresent(sunk::add);
-        return sunk;
+    private Function<List<Move>, Optional<Board>> playNewMoveSet(Long boardId, Function<List<Move>, List<Ship>> sunkenShips) {
+        return newMoves -> of(Board.builder().withMoves(newMoves)
+                .withShips(sunkenShips.apply(newMoves)).withId(boardId).build());
     }
 
     private Optional<Move> getMove(Long boardId, Point point, List<Ship> ships) {
         return moveRepository.create(boardId, point, ships.stream()
-                .map(shipRange)
+                .map(getRange)
                 .flatMap(Collection::stream)
                 .filter(point::equals)
                 .findAny().map(p -> HIT).orElse(MISS));
     }
 
-    private Function<Ship, List<Point>> shipRange = ship ->
-            pointsRange(ship.getStart(), ship.getEnd());
+    private Optional<List<Ship>> getSunkenShips(List<Move> moves, List<Ship> ships) {
+        List<Point> points = moves.stream().map(Move::getPoint).collect(toList());
+        return ships.stream().filter(notSunk).map(sinkingShip(points))
+                .filter(Optional::isPresent).map(Optional::get).findFirst()
+                .map(sunk -> addTo(ships.stream().filter(Ship::isSunk).collect(toList()), sunk));
+    }
+
+    private Function<Ship, Optional<Ship>> sinkingShip(List<Point> points) {
+        return ship -> of(points).filter(pts -> isSunk(pts, ship))
+                .flatMap(p -> shipRepository.update(ship.copy().withSunk(true).build()));
+    }
+
+    private boolean isSunk(List<Point> points, Ship ship) {
+        return of(ship).map(getRange).filter(points::containsAll).isPresent();
+    }
 
     private boolean shipExists(List<Ship> ships, Ship ship) {
         return ships.stream().anyMatch(savedShip -> savedShip.getType().equals(ship.getType()));
@@ -126,19 +123,12 @@ public class GameService {
 
     private boolean collision(List<Ship> ships, Ship ship) {
         return ships.stream().anyMatch(savedShip -> detectCollision(
-                shipRange.apply(savedShip), shipRange.apply(ship)));
+                getRange.apply(savedShip), getRange.apply(ship)));
     }
-
-    private Function<Ship, Ship> updateShip = ship -> shipRepository
-            .update(ship.copy().withSunk(true).build());
 
     private Function<Ship, List<Point>> getRange = s ->
             pointsRange(s.getStart(), s.getEnd());
 
     private Predicate<Ship> notSunk = ship ->
             !ship.isSunk();
-
-    private Predicate<Ship> getSunkenShip(List<Point> points) {
-        return ship -> of(ship).map(getRange).filter(points::containsAll).isPresent();
-    }
 }

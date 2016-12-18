@@ -2,12 +2,20 @@ package com.bship.games.util;
 
 import com.bship.games.domains.Point;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.rangeClosed;
+import static java.util.stream.Stream.concat;
+import static java.util.stream.Stream.empty;
 
 public class Util {
 
@@ -40,8 +48,14 @@ public class Util {
         return range.mapToObj(mapper).collect(toList());
     }
 
-
     public static Boolean detectCollision(List<Point> a, List<Point> b) {
         return a.stream().anyMatch(b::contains);
+    }
+
+
+    public static  <T> List<T> addTo(List<T> list, T elem) {
+        return concat(ofNullable(list).map(Collection::stream).orElse(empty()), Stream.of(elem))
+                .filter(Objects::nonNull)
+                .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 }
