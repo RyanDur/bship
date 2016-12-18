@@ -27,6 +27,7 @@ public class ShipRepositoryTest {
     private Board board;
     private Ship battleship;
     private Ship savedBattleship;
+
     @Before
     public void setup() {
         template = new JdbcTemplate(DBHelper.reset());
@@ -58,7 +59,7 @@ public class ShipRepositoryTest {
     }
 
     @Test
-    public void getAll_shouldGetAllShipsForTheAssociatedBoard(){
+    public void getAll_shouldGetAllShipsForTheAssociatedBoard() {
         Point start = new Point(9, 0);
         Point end = new Point(9, 4);
         Harbor type = Harbor.AIRCRAFT_CARRIER;
@@ -81,6 +82,25 @@ public class ShipRepositoryTest {
         List<Ship> ships = repository.getAll(board.getId());
 
         assertThat(ships, is(empty()));
+    }
+
+    @Test
+    public void update_shouldUpdateTheShipToSunk() {
+        Game game = Game.builder().withId(2L).build();
+        Board board = Board.builder().withId(3L).withGameId(game.getId()).build();
+        template.update("INSERT INTO games(id) VALUE(?) ", game.getId());
+        template.update("INSERT INTO boards(id, game_id) VALUE(?, ?) ", board.getId(), board.getGameId());
+        Ship ship = Ship.builder()
+                .withType(Harbor.SUBMARINE)
+                .withStart(new Point(0, 0))
+                .withEnd(new Point(0, 4))
+                .withBoardId(board.getId()).build();
+        Ship savedShip = repository.create(ship, board.getId());
+        Ship updatedShip = repository.update(savedShip.copy().withSunk(true).build());
+
+        assertThat(savedShip.isSunk(), is(false));
+        assertThat(updatedShip.isSunk(), is(true));
+        assertThat(savedShip.getId(), is(equalTo(updatedShip.getId())));
     }
 
     private RowMapper<Ship> shipRowMapper = (rs, rowNum) -> Ship.builder()
