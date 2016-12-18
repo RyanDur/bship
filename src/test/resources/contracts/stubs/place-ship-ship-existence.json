@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"errors\": [{\"fieldValidation\": [{\"code\": \"ShipExists\", \"field\": \"type\", \"value\": \"INVALID_SHIP\", \"message\": \"Ship does not exist.\"}]}]}",
+    "body" : "{\"errors\":[{\"fieldValidations\":[{\"code\":\"ShipExists\",\"field\":\"type\",\"value\":\"INVALID_SHIP\",\"message\":\"Ship does not exist.\"}]}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

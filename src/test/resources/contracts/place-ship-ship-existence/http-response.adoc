@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 400 Bad Request
 Content-Type: application/json;charset=UTF-8
-Content-Length: 136
+Content-Length: 128
 
-{"errors": [{"fieldValidation": [{"code": "ShipExists", "field": "type", "value": "INVALID_SHIP", "message": "Ship does not exist."}]}]}
+{"errors":[{"fieldValidations":[{"code":"ShipExists","field":"type","value":"INVALID_SHIP","message":"Ship does not exist."}]}]}
 ----

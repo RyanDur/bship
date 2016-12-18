@@ -60,12 +60,12 @@ public class PlaceShipIntegrationTest {
                         "\"end\": {\"x\": 3, \"y\": 0}}"
                 ))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldValidation\": " +
-                        "[{\"code\": \"BoundsCheck\", " +
-                        "\"field\": \"start\", " +
-                        "\"value\": \"Point{x=-1, y=0}\", " +
-                        "\"message\": \"out of bounds.\"}]}]}"))
+                .andExpect(content().json("{\"errors\":[" +
+                        "{\"fieldValidations\":[" +
+                        "{\"code\":\"BoundsCheck\"," +
+                        "\"field\":\"start\"," +
+                        "\"value\":{\"x\":-1,\"y\":0}," +
+                        "\"message\":\"out of bounds.\"}]}]}"))
                 .andDo(document("place-ship-start-out-of-bounds"));
     }
 
@@ -78,12 +78,12 @@ public class PlaceShipIntegrationTest {
                         "\"end\": {\"x\": 9, \"y\": 10}}"
                 ))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldValidation\": " +
-                        "[{\"code\": \"BoundsCheck\", " +
-                        "\"field\": \"end\", " +
-                        "\"value\": \"Point{x=9, y=10}\", " +
-                        "\"message\": \"out of bounds.\"}]}]}"))
+                .andExpect(content().json("{\"errors\":[" +
+                        "{\"fieldValidations\":[" +
+                        "{\"code\":\"BoundsCheck\"," +
+                        "\"field\":\"end\"," +
+                        "\"value\":{\"x\":9,\"y\":10}," +
+                        "\"message\":\"out of bounds.\"}]}]}"))
                 .andDo(document("place-ship-end-out-of-bounds"));
     }
 
@@ -97,7 +97,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidation\": " +
+                        "[{\"objectValidations\": " +
                         "[{\"code\": \"PlacementCheck\", " +
                         "\"type\": \"ship\", " +
                         "\"message\": \"Incorrect ship placement.\"}]}]}"))
@@ -114,7 +114,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldValidation\": " +
+                        "[{\"fieldValidations\": " +
                         "[{\"code\": \"ShipExists\", " +
                         "\"field\": \"type\", " +
                         "\"value\": \"INVALID_SHIP\", " +
@@ -131,12 +131,12 @@ public class PlaceShipIntegrationTest {
                         "\"end\": {\"x\": 0, \"y\": 1}}"
                 ))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldValidation\": " +
-                        "[{\"code\": \"NonEmpty\", " +
-                        "\"field\": \"start\", " +
-                        "\"value\": \"null\", " +
-                        "\"message\": \"Cannot be empty or null.\"}]}]}"))
+                .andExpect(content().json("{\"errors\":[" +
+                        "{\"fieldValidations\":[" +
+                        "{\"code\":\"NonEmpty\"," +
+                        "\"field\":\"start\"," +
+                        "\"value\":null," +
+                        "\"message\":\"Cannot be empty or null.\"}]}]}"))
                 .andDo(document("place-ship-of-null-start"));
     }
 
@@ -149,12 +149,12 @@ public class PlaceShipIntegrationTest {
                         "\"end\": null}"
                 ))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldValidation\": " +
-                        "[{\"code\": \"NonEmpty\", " +
-                        "\"field\": \"end\", " +
-                        "\"value\": \"null\", " +
-                        "\"message\": \"Cannot be empty or null.\"}]}]}"))
+                .andExpect(content().json("{\"errors\":[" +
+                        "{\"fieldValidations\":[" +
+                        "{\"code\":\"NonEmpty\"," +
+                        "\"field\":\"end\"," +
+                        "\"value\":null," +
+                        "\"message\":\"Cannot be empty or null.\"}]}]}"))
                 .andDo(document("place-ship-of-null-start"));
     }
 
@@ -167,12 +167,12 @@ public class PlaceShipIntegrationTest {
                         "\"end\": {\"x\": 0, \"y\": 1}}"
                 ))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"errors\": " +
-                        "[{\"fieldValidation\": " +
-                        "[{\"code\": \"NonEmpty\", " +
-                        "\"field\": \"type\", " +
-                        "\"value\": \"null\", " +
-                        "\"message\": \"Cannot be empty or null.\"}]}]}"))
+                .andExpect(content().json("{\"errors\":[" +
+                        "{\"fieldValidations\":[" +
+                        "{\"code\":\"NonEmpty\"," +
+                        "\"field\":\"type\"," +
+                        "\"value\":null," +
+                        "\"message\":\"Cannot be empty or null.\"}]}]}"))
                 .andDo(document("place-ship-of-null-start"));
     }
 
@@ -193,7 +193,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidation\": " +
+                        "[{\"objectValidations\": " +
                         "[{\"code\": \"ShipExistsCheck\", " +
                         "\"type\": \"board\", " +
                         "\"message\": \"Ship already exists on board.\"}]}]}"))
@@ -217,7 +217,7 @@ public class PlaceShipIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidation\": " +
+                        "[{\"objectValidations\": " +
                         "[{\"code\": \"ShipCollisionCheck\", " +
                         "\"type\": \"board\", " +
                         "\"message\": \"Ship collision.\"}]}]}"))

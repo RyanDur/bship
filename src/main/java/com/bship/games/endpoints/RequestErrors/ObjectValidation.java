@@ -4,14 +4,14 @@ import java.util.List;
 
 public class ObjectValidation {
 
-    private List<String> errors;
+    private List<ValidationObjectError> objectValidations;
 
     private ObjectValidation(Builder builder) {
-        errors = builder.errors;
+        objectValidations = builder.errors;
     }
 
-    public List<String> getErrors() {
-        return errors;
+    public List<ValidationObjectError> getObjectValidations() {
+        return objectValidations;
     }
 
     public static Builder builder() {
@@ -19,9 +19,9 @@ public class ObjectValidation {
     }
 
     public static class Builder {
-        private List<String> errors;
+        private List<ValidationObjectError> errors;
 
-        public Builder withErrors(List<String> errors) {
+        public Builder withErrors(List<ValidationObjectError> errors) {
             this.errors = errors;
             return this;
         }
@@ -33,6 +33,6 @@ public class ObjectValidation {
 
     @Override
     public String toString() {
-        return "{\"objectValidation\": " + errors + "}";
+        return "{\"objectValidation\": " + objectValidations + "}";
     }
 }

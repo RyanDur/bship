@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 400 Bad Request
 Content-Type: application/json;charset=UTF-8
-Content-Length: 134
+Content-Length: 122
 
-{"errors": [{"fieldValidation": [{"code": "BoundsCheck", "field": "end", "value": "Point{x=9, y=10}", "message": "out of bounds."}]}]}
+{"errors":[{"fieldValidations":[{"code":"BoundsCheck","field":"end","value":{"x":9,"y":10},"message":"out of bounds."}]}]}
 ----

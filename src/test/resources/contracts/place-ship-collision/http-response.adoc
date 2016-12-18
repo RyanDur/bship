@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 400 Bad Request
 Content-Type: application/json;charset=UTF-8
-Content-Length: 115
+Content-Length: 109
 
-{"errors": [{"objectValidation": [{"code": "ShipCollisionCheck", "type": "board", "message": "Ship collision."}]}]}
+{"errors":[{"objectValidations":[{"code":"ShipCollisionCheck","type":"board","message":"Ship collision."}]}]}
 ----

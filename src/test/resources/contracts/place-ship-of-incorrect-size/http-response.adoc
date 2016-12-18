@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 400 Bad Request
 Content-Type: application/json;charset=UTF-8
-Content-Length: 120
+Content-Length: 114
 
-{"errors": [{"objectValidation": [{"code": "PlacementCheck", "type": "ship", "message": "Incorrect ship placement."}]}]}
+{"errors":[{"objectValidations":[{"code":"PlacementCheck","type":"ship","message":"Incorrect ship placement."}]}]}
 ----

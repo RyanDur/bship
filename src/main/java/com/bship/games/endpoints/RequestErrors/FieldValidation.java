@@ -3,14 +3,14 @@ package com.bship.games.endpoints.RequestErrors;
 import java.util.List;
 
 public class FieldValidation {
-    private List<String> errors;
+    private List<ValidationFieldError> fieldValidations;
 
     private FieldValidation(Builder builder) {
-        errors = builder.errors;
+        fieldValidations = builder.errors;
     }
 
-    public List<String> getErrors() {
-        return errors;
+    public List<ValidationFieldError> getFieldValidations() {
+        return fieldValidations;
     }
 
     public static Builder builder() {
@@ -18,9 +18,9 @@ public class FieldValidation {
     }
 
     public static class Builder {
-        private List<String> errors;
+        private List<ValidationFieldError> errors;
 
-        public Builder withErrors(List<String> errors) {
+        public Builder withErrors(List<ValidationFieldError> errors) {
             this.errors = errors;
             return this;
         }
@@ -32,6 +32,6 @@ public class FieldValidation {
 
     @Override
     public String toString() {
-        return "{\"fieldValidation\": " + errors + "}";
+        return "{\"fieldValidation\": " + fieldValidations + "}";
     }
 }

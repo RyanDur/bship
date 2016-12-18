@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"errors\": [{\"objectValidation\": [{\"code\": \"PlacementCheck\", \"type\": \"ship\", \"message\": \"Incorrect ship placement.\"}]}]}",
+    "body" : "{\"errors\":[{\"objectValidations\":[{\"code\":\"PlacementCheck\",\"type\":\"ship\",\"message\":\"Incorrect ship placement.\"}]}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

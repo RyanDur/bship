@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"errors\": [{\"fieldValidation\": [{\"code\": \"NonEmpty\", \"field\": \"start\", \"value\": \"null\", \"message\": \"Cannot be empty or null.\"}]}]}",
+    "body" : "{\"errors\":[{\"fieldValidations\":[{\"code\":\"NonEmpty\",\"field\":\"start\",\"value\":null,\"message\":\"Cannot be empty or null.\"}]}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

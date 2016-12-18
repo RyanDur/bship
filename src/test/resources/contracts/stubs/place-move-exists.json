@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"errors\": [{\"objectValidation\": [{\"code\": \"MoveCollision\", \"type\": \"game\", \"message\": \"Move already exists on board.\"}]}]}",
+    "body" : "{\"errors\":[{\"objectValidations\":[{\"code\":\"MoveCollision\",\"type\":\"game\",\"message\":\"Move already exists on board.\"}]}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

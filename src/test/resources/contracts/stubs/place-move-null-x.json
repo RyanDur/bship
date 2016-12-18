@@ -13,7 +13,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"errors\": [{\"objectValidation\": [{\"code\": \"BoundsCheck\", \"type\": \"point\", \"message\": \"out of bounds.\"}]}]}",
+    "body" : "{\"errors\":[{\"objectValidations\":[{\"code\":\"BoundsCheck\",\"type\":\"point\",\"message\":\"out of bounds.\"}]}]}",
     "headers" : {
       "Content-Type" : "application/json;charset=UTF-8"
     }

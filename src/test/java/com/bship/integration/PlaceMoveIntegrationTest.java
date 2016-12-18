@@ -90,7 +90,7 @@ public class PlaceMoveIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidation\": " +
+                        "[{\"objectValidations\": " +
                         "[{\"code\": \"BoundsCheck\", " +
                         "\"type\": \"point\", " +
                         "\"message\": \"out of bounds.\"}]}]}"))
@@ -105,7 +105,7 @@ public class PlaceMoveIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidation\": " +
+                        "[{\"objectValidations\": " +
                         "[{\"code\": \"BoundsCheck\", " +
                         "\"type\": \"point\", " +
                         "\"message\": \"out of bounds.\"}]}]}"))
@@ -120,7 +120,7 @@ public class PlaceMoveIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidation\": " +
+                        "[{\"objectValidations\": " +
                         "[{\"code\": \"BoundsCheck\", " +
                         "\"type\": \"point\", " +
                         "\"message\": \"out of bounds.\"}]}]}"))
@@ -141,7 +141,7 @@ public class PlaceMoveIntegrationTest {
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidation\": " +
+                        "[{\"objectValidations\": " +
                         "[{\"code\": \"MoveCollision\", " +
                         "\"type\": \"game\", " +
                         "\"message\": \"Move already exists on board.\"}]}]}"))

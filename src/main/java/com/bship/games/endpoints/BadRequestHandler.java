@@ -31,38 +31,36 @@ public interface BadRequestHandler {
     default ResponseEntity processArgumentError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         return badRequest().body(getErrors(
-                of(result).filter(Errors::hasFieldErrors).map(Errors::getFieldErrors)
-                        .map(Collection::stream).map(fieldErrors),
-                of(result).filter(Errors::hasGlobalErrors).map(Errors::getGlobalErrors)
-                        .map(Collection::stream).map(objectErrors)
+                of(result).filter(Errors::hasFieldErrors).map(Errors::getFieldErrors).map(Collection::stream).map(fieldErrors),
+                of(result).filter(Errors::hasGlobalErrors).map(Errors::getGlobalErrors).map(Collection::stream).map(objectErrors)
         ));
     }
 
-    default String getErrors(Optional... errors) {
+    default GameErrors getErrors(Optional... errors) {
         return GameErrors.builder().withErrors(stream(errors).filter(Optional::isPresent)
-                .map(Optional::get).collect(toList())).build().toString();
+                .map(Optional::get).collect(toList())).build();
     }
 
-    Function<ObjectError, String> objectError = err ->
+    Function<ObjectError, ValidationObjectError> objectError = err ->
             ValidationObjectError.builder()
                     .withCode(err.getCode())
                     .withType(err.getObjectName())
-                    .withMessage(err.getDefaultMessage()).build().toString();
+                    .withMessage(err.getDefaultMessage()).build();
 
-    Function<FieldError, String> fieldError = err ->
+    Function<FieldError, ValidationFieldError> fieldError = err ->
             ValidationFieldError.builder()
                     .withCode(err.getCode())
                     .withField(err.getField())
                     .withValue(err.getRejectedValue())
-                    .withMessage(err.getDefaultMessage()).build().toString();
+                    .withMessage(err.getDefaultMessage()).build();
 
     Function<String, Function<Exception, ObjectError>> error = name -> error ->
             new ObjectError(name, new String[]{error.getClass().getSimpleName()},
                     error.getStackTrace(), error.getMessage());
 
-    Function<Stream<ObjectError>, String> objectErrors = errors ->
-            ObjectValidation.builder().withErrors(errors.map(objectError).collect(toList())).build().toString();
+    Function<Stream<ObjectError>, ObjectValidation> objectErrors = errors ->
+            ObjectValidation.builder().withErrors(errors.map(objectError).collect(toList())).build();
 
-    Function<Stream<FieldError>, String> fieldErrors = errors ->
-            FieldValidation.builder().withErrors(errors.map(fieldError).collect(toList())).build().toString();
+    Function<Stream<FieldError>, FieldValidation> fieldErrors = errors ->
+            FieldValidation.builder().withErrors(errors.map(fieldError).collect(toList())).build();
 }
