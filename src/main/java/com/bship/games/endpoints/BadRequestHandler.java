@@ -1,5 +1,10 @@
 package com.bship.games.endpoints;
 
+import com.bship.games.endpoints.RequestErrors.FieldValidation;
+import com.bship.games.endpoints.RequestErrors.GameErrors;
+import com.bship.games.endpoints.RequestErrors.ObjectValidation;
+import com.bship.games.endpoints.RequestErrors.ValidationFieldError;
+import com.bship.games.endpoints.RequestErrors.ValidationObjectError;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -34,29 +39,30 @@ public interface BadRequestHandler {
     }
 
     default String getErrors(Optional... errors) {
-        return "{\"errors\": " + stream(errors).filter(Optional::isPresent).map(Optional::get).collect(toList()) + "}";
+        return GameErrors.builder().withErrors(stream(errors).filter(Optional::isPresent)
+                .map(Optional::get).collect(toList())).build().toString();
     }
 
-    Function<ObjectError, String> objectError = err -> "{" +
-            "\"code\": \"" + err.getCode() + "\", " +
-            "\"type\": \"" + err.getObjectName() + "\", " +
-            "\"message\": \"" + err.getDefaultMessage() + "\"" +
-            "}";
+    Function<ObjectError, String> objectError = err ->
+            ValidationObjectError.builder()
+                    .withCode(err.getCode())
+                    .withType(err.getObjectName())
+                    .withMessage(err.getDefaultMessage()).build().toString();
 
-    Function<FieldError, String> fieldError = err -> "{" +
-            "\"code\": \"" + err.getCode() + "\", " +
-            "\"field\": \"" + err.getField() + "\", " +
-            "\"value\": \"" + err.getRejectedValue() + "\", " +
-            "\"message\": \"" + err.getDefaultMessage() + "\"" +
-            "}";
+    Function<FieldError, String> fieldError = err ->
+            ValidationFieldError.builder()
+                    .withCode(err.getCode())
+                    .withField(err.getField())
+                    .withValue(err.getRejectedValue())
+                    .withMessage(err.getDefaultMessage()).build().toString();
 
     Function<String, Function<Exception, ObjectError>> error = name -> error ->
             new ObjectError(name, new String[]{error.getClass().getSimpleName()},
                     error.getStackTrace(), error.getMessage());
 
     Function<Stream<ObjectError>, String> objectErrors = errors ->
-            "{\"objectValidation\": " + errors.map(objectError).collect(toList()) + "}";
+            ObjectValidation.builder().withErrors(errors.map(objectError).collect(toList())).build().toString();
 
     Function<Stream<FieldError>, String> fieldErrors = errors ->
-            "{\"fieldValidation\": " + errors.map(fieldError).collect(toList()) + "}";
+            FieldValidation.builder().withErrors(errors.map(fieldError).collect(toList())).build().toString();
 }

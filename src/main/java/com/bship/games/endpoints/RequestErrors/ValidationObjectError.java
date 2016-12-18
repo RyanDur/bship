@@ -1,0 +1,64 @@
+package com.bship.games.endpoints.RequestErrors;
+
+public class ValidationObjectError {
+
+    private String code;
+    private String type;
+    private String message;
+
+    private ValidationObjectError(Builder builder) {
+        code = builder.code;
+        type = builder.type;
+        message = builder.message;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String code;
+        private String type;
+        private String message;
+
+        public Builder withCode(String code) {
+            this.code = code;
+            return this;
+        }
+
+        public Builder withType(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder withMessage(String message) {
+            this.message = message;
+            return this;
+        }
+
+        public ValidationObjectError build() {
+            return new ValidationObjectError(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"code\": \"" + code + "\", " +
+                "\"type\": \"" + type + "\", " +
+                "\"message\": \"" + message + "\"" +
+                '}';
+    }
+}
