@@ -2,15 +2,10 @@ package com.bship.games.domains;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
+import static com.bship.games.util.Util.addTo;
+import static com.bship.games.util.Util.concat;
 
 public class Board {
 
@@ -73,20 +68,22 @@ public class Board {
         }
 
         public Builder addShip(Ship ship) {
-            return withShips(singletonList(ship));
+            ships = addTo(ships, ship);
+            return this;
         }
 
         public Builder withShips(List<Ship> shipList) {
-            ships = toImmutableList(ships, shipList);
+            ships = concat(ships, shipList);
             return this;
         }
 
         public Builder addMove(Move move) {
-            return withMoves(singletonList(move));
+            moves = addTo(moves, move);
+            return this;
         }
 
         public Builder withMoves(List<Move> moveList) {
-            moves = toImmutableList(moves, moveList);
+            moves = concat(moves, moveList);
             return this;
         }
 
@@ -94,12 +91,6 @@ public class Board {
             return new Board(this);
         }
 
-        private <T> List<T> toImmutableList(List<T> originalList, List<T> newList) {
-            return Stream.of(originalList, newList)
-                    .filter(Objects::nonNull)
-                    .flatMap(Collection::stream)
-                    .collect(collectingAndThen(toList(), Collections::unmodifiableList));
-        }
     }
 
     @Override

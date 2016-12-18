@@ -2,20 +2,18 @@ package com.bship.games.util;
 
 import com.bship.games.domains.Point;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static java.util.Optional.ofNullable;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.rangeClosed;
-import static java.util.stream.Stream.concat;
-import static java.util.stream.Stream.empty;
 
 public class Util {
 
@@ -52,10 +50,26 @@ public class Util {
         return a.stream().anyMatch(b::contains);
     }
 
+    public static <T> Function<T, List<T>> addTo(List<T> list) {
+        return elem -> addTo(list, elem);
+    }
 
-    public static  <T> List<T> addTo(List<T> list, T elem) {
-        return concat(ofNullable(list).map(Collection::stream).orElse(empty()), Stream.of(elem))
+    public static <T> List<T> addTo(List<T> list, T elem) {
+        return concat(list, singletonList(elem));
+    }
+
+    public static <T> Function<List<T>, List<T>> concat(List<T> listB) {
+        return listA -> concat(listA, listB);
+    }
+
+    public static <T> List<T> concat(List<T> listA, List<T> listB) {
+        return toImmutableList(listA, listB);
+    }
+
+    private static <T> List<T> toImmutableList(List<T> originalList, List<T> newList) {
+        return Stream.of(originalList, newList)
                 .filter(Objects::nonNull)
+                .flatMap(list -> list.stream().filter(Objects::nonNull))
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 }
