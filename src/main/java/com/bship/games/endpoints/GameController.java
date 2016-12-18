@@ -55,7 +55,7 @@ public class GameController implements BadRequestHandler {
     public Board placeMove(@PathVariable Long gameId,
                            @PathVariable Long boardId,
                            @Valid @RequestBody Point point) throws MoveCollision {
-        return service.placeMove(gameId, boardId, point).orElse(null);
+        return service.placeMove(gameId, boardId, point);
     }
 
     @Override

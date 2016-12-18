@@ -20,7 +20,6 @@ import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
@@ -177,8 +176,8 @@ public class GameServiceTest {
         when(moveRepository.getAll(anyLong())).thenReturn(empty());
         when(moveRepository.create(boardId, point, MISS)).thenReturn(of(move));
 
-        Optional<Board> actual = gameService.placeMove(boardId, 1L, point);
-        assertThat(actual.get().getMoves().get(0), is(equalTo(move)));
+        Board actual = gameService.placeMove(boardId, 1L, point);
+        assertThat(actual.getMoves().get(0), is(equalTo(move)));
     }
 
     @Test
@@ -215,9 +214,9 @@ public class GameServiceTest {
         when(moveRepository.create(1L, point, MISS)).thenReturn(of(moveMiss));
         when(moveRepository.create(1L, point, HIT)).thenReturn(of(moveHit));
 
-        Optional<Board> actual = gameService.placeMove(1L, 1L, point);
+        Board actual = gameService.placeMove(1L, 1L, point);
 
-        assertThat(actual.get().getMoves().contains(moveHit), is(true));
+        assertThat(actual.getMoves().contains(moveHit), is(true));
     }
 
     @Test
@@ -240,10 +239,10 @@ public class GameServiceTest {
         when(shipRepository.getAll(anyLong())).thenReturn(of(ships));
         when(shipRepository.update(any(Ship.class))).thenReturn(of(ship));
 
-        Optional<Board> actual = gameService.placeMove(1L, 1L, point);
+        Board actual = gameService.placeMove(1L, 1L, point);
 
         verify(shipRepository).update(any(Ship.class));
-        assertThat(actual.get().getShips().size(), is(4));
+        assertThat(actual.getShips().size(), is(4));
     }
 
 }

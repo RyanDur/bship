@@ -27,7 +27,8 @@ public class Ship {
     private boolean sunk;
     private Long id;
 
-    public Ship() {}
+    public Ship() {
+    }
 
     private Ship(Builder builder) {
         this.type = builder.type;
@@ -126,12 +127,7 @@ public class Ship {
 
         Ship ship = (Ship) o;
 
-        if (sunk != ship.sunk) return false;
-        if (type != ship.type) return false;
-        if (start != null ? !start.equals(ship.start) : ship.start != null) return false;
-        if (end != null ? !end.equals(ship.end) : ship.end != null) return false;
-        if (boardId != null ? !boardId.equals(ship.boardId) : ship.boardId != null) return false;
-        return id != null ? id.equals(ship.id) : ship.id == null;
+        return type == ship.type;
     }
 
     @Override

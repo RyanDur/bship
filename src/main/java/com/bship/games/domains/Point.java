@@ -29,8 +29,8 @@ public class Point {
 
         Point point = (Point) o;
 
-        if (x != null ? !x.equals(point.x) : point.x != null) return false;
-        return y != null ? y.equals(point.y) : point.y == null;
+        return (x != null ? x.equals(point.x) : point.x == null) &&
+                (y != null ? y.equals(point.y) : point.y == null);
     }
 
     @Override
