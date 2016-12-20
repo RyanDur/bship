@@ -98,8 +98,7 @@ public class GameService {
     }
 
     private Function<List<Ship>, Optional<Ship>> sinkingShip(List<Move> moves) {
-        return ships -> ships.stream()
-                .map(ship -> of(ship).filter(isSunk(moves)).flatMap(updateSunkShip))
+        return ships -> ships.stream().filter(isSunk(moves)).map(updateSunkShip)
                 .filter(Optional::isPresent).map(Optional::get).findFirst();
     }
 
