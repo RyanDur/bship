@@ -1,0 +1,18 @@
+resources:
+#  - name: java-mysql-docker
+#    type: docker-image
+#    source:
+#      repository: quay.io/ukhomeofficedigital/mysql
+
+  - name: bship
+    type: git
+    source:
+      uri: https://github.com/RyanDur/bship
+      branch: master
+
+jobs:
+  - name: ryan's favorite job
+    plan:
+      - get: bship
+      - task: test
+        file: bship/ci/build.yml

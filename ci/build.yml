@@ -1,0 +1,13 @@
+platform: linux
+
+image_resource:
+  type: java-mysql-docker
+
+inputs:
+- name: bship
+
+outputs:
+- name: compiled-jar
+
+run:
+  path: ./bship/ci/run.sh
