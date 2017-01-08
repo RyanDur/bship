@@ -3,7 +3,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: quay.io/ukhomeofficedigital/mysql
+    repository: ismail0352/mysql-java
 
 inputs:
 - name: bship
