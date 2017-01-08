@@ -1,9 +1,4 @@
 resources:
-#  - name: java-mysql-docker
-#    type: docker-image
-#    source:
-#      repository: quay.io/ukhomeofficedigital/mysql
-
   - name: bship
     type: git
     source:

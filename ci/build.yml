@@ -1,7 +1,9 @@
 platform: linux
 
 image_resource:
-  type: java-mysql-docker
+  type: docker-image
+  source:
+    repository: quay.io/ukhomeofficedigital/mysql
 
 inputs:
 - name: bship
@@ -10,4 +12,4 @@ outputs:
 - name: compiled-jar
 
 run:
-  path: ./bship/ci/run.sh
+  path: ./bship/ci/test.sh
