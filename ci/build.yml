@@ -3,7 +3,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: ismail0352/mysql-java
+    repository: rafaat/java-gradle-mysql
 
 inputs:
 - name: bship
