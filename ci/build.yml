@@ -3,7 +3,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: rafaat/java-gradle-mysql
+    repository: asami/mysql-java-embulk-docker
 
 inputs:
 - name: bship
