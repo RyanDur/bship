@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
@@ -90,16 +91,15 @@ public class GameService {
     }
 
     private Function<List<Ship>, Optional<List<Ship>>> getSunkenShips(List<Move> moves) {
-        return ships -> of(ships).map(unSunk).flatMap(sinkingShip(moves)).map(addTo(sunken(ships)));
+        return ships -> of(ships).map(unSunk).flatMap(collectFirst(sinkingShip(moves))).map(addTo(sunken(ships)));
     }
 
     private List<Ship> sunken(List<Ship> ships) {
         return ships.stream().filter(Ship::isSunk).collect(toList());
     }
 
-    private Function<List<Ship>, Optional<Ship>> sinkingShip(List<Move> moves) {
-        return ships -> ships.stream().filter(isSunk(moves)).map(updateSunkShip)
-                .filter(Optional::isPresent).map(Optional::get).findFirst();
+    private Function<Ship, Optional<Ship>> sinkingShip(List<Move> moves) {
+        return ship -> of(ship).filter(isSunk(moves)).flatMap(updateSunkShip);
     }
 
     private Predicate<Ship> isSunk(List<Move> moves) {
@@ -119,12 +119,16 @@ public class GameService {
                 detectCollision(getRange.apply(savedShip), getRange.apply(ship)));
     }
 
+    private <T> Function<Stream<T>, Optional<T>> collectFirst(Function<T, Optional<T>> function) {
+        return stream -> stream.map(function).filter(Optional::isPresent).map(Optional::get).findFirst();
+    }
+
     private Function<Ship, Optional<Ship>> updateSunkShip =
             ship -> shipRepository.update(ship.copy().withSunk(true).build());
 
     private Function<Ship, List<Point>> getRange =
             ship -> pointsRange(ship.getStart(), ship.getEnd());
 
-    private Function<List<Ship>, List<Ship>> unSunk =
-            ships -> ships.stream().filter(ship -> !ship.isSunk()).collect(toList());
+    private Function<List<Ship>, Stream<Ship>> unSunk =
+            ships -> ships.stream().filter(ship -> !ship.isSunk());
 }
