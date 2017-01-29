@@ -10,16 +10,16 @@ Contract.make {
     response {
         status 201
         body([id    : 1,
-              boards: [{
-                           id: 1
-                           ships: []
-                           moves: []
-                       },
-                       {
-                           id: 2
-                           ships: []
-                           moves: []
-                       }
+              boards: [[
+                               id   : 1,
+                               ships: [],
+                               moves: []
+                       ],
+                       [
+                               id   : 2,
+                               ships: [],
+                               moves: []
+                       ]
               ]])
         headers {
             header('Content-Type': value(
