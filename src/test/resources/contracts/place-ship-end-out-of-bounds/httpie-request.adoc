@@ -1,4 +1,0 @@
-[source,bash]
-----
-$ echo '{"type": "AIRCRAFT_CARRIER", "start": {"x": 9, "y": 6}, "end": {"x": 9, "y": 10}}' | http PUT 'http://localhost:8080/boards/1' 'Content-Type:application/json;charset=UTF-8'
-----

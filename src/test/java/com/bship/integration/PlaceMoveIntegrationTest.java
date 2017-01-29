@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@AutoConfigureRestDocs(outputDir = "src/test/resources/contracts")
+@AutoConfigureRestDocs(outputDir = "build/snippets")
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
 public class PlaceMoveIntegrationTest {

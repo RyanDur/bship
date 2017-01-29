@@ -1,4 +1,0 @@
-[source,bash]
-----
-$ echo '{"x": 0, "y": -5}' | http POST 'http://localhost:8080/games/1/boards/1' 'Content-Type:application/json;charset=UTF-8'
-----

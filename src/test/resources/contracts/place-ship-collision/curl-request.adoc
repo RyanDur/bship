@@ -1,4 +1,0 @@
-[source,bash]
-----
-$ curl 'http://localhost:8080/boards/1' -i -X PUT -H 'Content-Type: application/json;charset=UTF-8' -d '{"type": "BATTLESHIP", "start": {"x": 4, "y": 2}, "end": {"x": 4, "y": 5}}'
-----
