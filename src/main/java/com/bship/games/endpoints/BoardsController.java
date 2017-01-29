@@ -20,10 +20,10 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.Optional.of;
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.badRequest;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
 public class BoardsController implements BadRequestHandler {
@@ -40,10 +40,10 @@ public class BoardsController implements BadRequestHandler {
 
     @RequestMapping(
             value = "/boards/{boardId}",
-            method = POST,
+            method = PUT,
             consumes = APPLICATION_JSON_VALUE,
             produces = APPLICATION_JSON_VALUE)
-    @ResponseStatus(CREATED)
+    @ResponseStatus(OK)
     public Board placeShip(@PathVariable Long boardId,
                            @Valid @RequestBody Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
         return service.placeShip(boardId, ship);

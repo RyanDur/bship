@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.cloud.contract.wiremock.restdocs.WireMockRestDocs.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
@@ -22,6 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,21 +42,21 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldBeAbleToPlaceAShipOnTheBoard() throws Exception {
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(put("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": 0, \"y\": 0}, " +
                         "\"end\": {\"x\": 0, \"y\": 4}}"
                 ))
 
-                .andExpect(status().is(201))
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(content().json("{\"id\":1," +
                         "\"ships\":[" +
                         "{\"start\":{\"x\":0,\"y\":0}," +
                         "\"end\":{\"x\":0,\"y\":4}," +
                         "\"type\":\"AIRCRAFT_CARRIER\"}]}"))
-                .andDo(verify().wiremock(post(WireMock
+                .andDo(verify().wiremock(WireMock.put(WireMock
                         .urlMatching("/boards/(\\d+)"))
 
                         .withRequestBody(matchingJsonPath("$[?(@.type == 'AIRCRAFT_CARRIER')]"))
@@ -71,7 +71,7 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAShipsStartOutsideTheBoard() throws Exception {
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(put("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": -1, \"y\": 0}, " +
@@ -89,7 +89,7 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAShipsEndOutsideTheBoard() throws Exception {
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(put("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": 9, \"y\": 6}, " +
@@ -107,7 +107,7 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAShipOfIncorrectSize() throws Exception {
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(put("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": 0, \"y\": 0}, " +
@@ -124,7 +124,7 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAShipThatDoesNotExist() throws Exception {
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(put("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"SCHOONER\", " +
                         "\"start\": {\"x\": 0, \"y\": 0}, " +
@@ -142,7 +142,7 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAShipWithANullStart() throws Exception {
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(put("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\"," +
                         "\"start\": null," +
@@ -160,7 +160,7 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAShipWithANullEnd() throws Exception {
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(put("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\"," +
                         "\"start\": {\"x\": 0, \"y\": 1}," +
@@ -178,7 +178,7 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAShipWithANullType() throws Exception {
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(put("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": null," +
                         "\"start\": {\"x\": 0, \"y\": 1}," +
@@ -196,14 +196,14 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAShipMoreThanOnce() throws Exception {
-        mockMvc.perform(post("/boards/2")
+        mockMvc.perform(put("/boards/2")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": 0, \"y\": 0}, " +
                         "\"end\": {\"x\": 0, \"y\": 4}}"
-                )).andExpect(status().is(201));
+                )).andExpect(status().is(200));
 
-        mockMvc.perform(post("/boards/2")
+        mockMvc.perform(put("/boards/2")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": 9, \"y\": 0}, " +
@@ -220,14 +220,14 @@ public class PlaceShipIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAShipUponAnotherShip() throws Exception {
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(put("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"AIRCRAFT_CARRIER\", " +
                         "\"start\": {\"x\": 3, \"y\": 3}, " +
                         "\"end\": {\"x\": 7, \"y\": 3}}"
-                )).andExpect(status().is(201));
+                )).andExpect(status().is(200));
 
-        mockMvc.perform(post("/boards/1")
+        mockMvc.perform(put("/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"type\": \"BATTLESHIP\", " +
                         "\"start\": {\"x\": 4, \"y\": 2}, " +

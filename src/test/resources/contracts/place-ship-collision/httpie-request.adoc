@@ -1,4 +1,4 @@
 [source,bash]
 ----
-$ echo '{"type": "BATTLESHIP", "start": {"x": 4, "y": 2}, "end": {"x": 4, "y": 5}}' | http POST 'http://localhost:8080/boards/1' 'Content-Type:application/json;charset=UTF-8'
+$ echo '{"type": "BATTLESHIP", "start": {"x": 4, "y": 2}, "end": {"x": 4, "y": 5}}' | http PUT 'http://localhost:8080/boards/1' 'Content-Type:application/json;charset=UTF-8'
 ----

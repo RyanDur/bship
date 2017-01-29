@@ -1,11 +1,14 @@
-package contracts.boards.endpoint
+package contracts.games.endpoint
 
 import org.springframework.cloud.contract.spec.Contract
 
 Contract.make {
     request {
         method 'POST'
-        url '/games'
+        urlPath '/games'
+        headers {
+            contentType(applicationJson())
+        }
     }
     response {
         status 201

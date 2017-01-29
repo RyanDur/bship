@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 public class BoardsControllerTest {
 
@@ -36,7 +36,7 @@ public class BoardsControllerTest {
     @Test
     public void placeShip_methodSignatureBindToPathParamsAndRequestBody() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(boardsController).build();
-        mockMvc.perform(post("/boards/9")
+        mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"type\": \"BATTLESHIP\",\n" +

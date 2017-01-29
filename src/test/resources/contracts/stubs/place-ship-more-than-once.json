@@ -1,7 +1,7 @@
 {
   "request" : {
     "url" : "/boards/2",
-    "method" : "POST",
+    "method" : "PUT",
     "headers" : {
       "Content-Type" : {
         "equalTo" : "application/json;charset=UTF-8"
