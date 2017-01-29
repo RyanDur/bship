@@ -12,6 +12,9 @@ Contract.make {
     }
     response {
         status 201
+        headers {
+            contentType(applicationJson())
+        }
         body([id    : 1,
               boards: [[
                                id   : 1,
@@ -24,11 +27,5 @@ Contract.make {
                                moves: []
                        ]
               ]])
-        headers {
-            header('Content-Type': value(
-                    producer('application/json;charset=UTF-8'),
-                    consumer('application/json')
-            ))
-        }
     }
 }

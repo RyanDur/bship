@@ -1,12 +1,13 @@
 package com.bship.contracts.boards;
 
+import com.bship.contracts.BoardsEndpointBase;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import com.jayway.restassured.response.ResponseOptions;
 import org.junit.Test;
 
-import static com.jayway.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static com.jayway.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static com.toomuchcoding.jsonassert.JsonAssertion.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 

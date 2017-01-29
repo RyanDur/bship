@@ -1,12 +1,13 @@
 package com.bship.contracts.games;
 
+import com.bship.contracts.GamesEndpointBase;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import com.jayway.restassured.response.ResponseOptions;
 import org.junit.Test;
 
-import static com.jayway.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static com.jayway.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static com.toomuchcoding.jsonassert.JsonAssertion.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,7 +25,7 @@ public class EndpointTest extends GamesEndpointBase {
 
 		// then:
 			assertThat(response.statusCode()).isEqualTo(201);
-			assertThat(response.header("Content-Type")).isEqualTo("application/json;charset=UTF-8");
+			assertThat(response.header("Content-Type")).matches("application/json.*");
 		// and:
 			DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
 			assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(1);
