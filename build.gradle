@@ -4,25 +4,13 @@ version '1.0-SNAPSHOT'
 buildscript {
     repositories {
         mavenCentral()
-        mavenLocal()
         maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "http://repo.spring.io/snapshot" }
-        maven { url "http://repo.spring.io/milestone" }
-        maven { url "http://repo.spring.io/release" }
     }
     dependencies {
         classpath "gradle.plugin.com.boxfuse.client:flyway-release:4.0.3"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE"
-        classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:1.0.1.RELEASE"
+        classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:1.0.3.RELEASE"
     }
-}
-
-repositories {
-    mavenCentral()
-    mavenLocal()
-    maven { url "http://repo.spring.io/snapshot" }
-    maven { url "http://repo.spring.io/milestone" }
-    maven { url "http://repo.spring.io/release" }
 }
 
 apply plugin: "org.flywaydb.flyway"
@@ -34,9 +22,13 @@ apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
 
+repositories {
+    mavenCentral()
+}
+
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-contract-dependencies:1.0.1.RELEASE'
+        mavenBom "org.springframework.cloud:spring-cloud-contract-dependencies:1.0.3.RELEASE"
     }
 }
 
@@ -51,10 +43,10 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.6.1'
 
     testCompile "org.springframework.cloud:spring-cloud-contract-wiremock"
-    testCompile "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.2.RELEASE'
-    testCompile 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.6'
+    testCompile 'org.springframework.cloud:spring-cloud-starter-contract-verifier:1.0.3.RELEASE'
 }
 
 contracts {
@@ -78,5 +70,5 @@ test {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.2.1'
+    gradleVersion = '3.3'
 }

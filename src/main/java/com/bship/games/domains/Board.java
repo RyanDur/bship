@@ -6,6 +6,8 @@ import java.util.List;
 
 import static com.bship.games.util.Util.addTo;
 import static com.bship.games.util.Util.concat;
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 
 public class Board {
 
@@ -32,11 +34,11 @@ public class Board {
     }
 
     public List<Ship> getShips() {
-        return ships;
+        return ofNullable(ships).orElse(emptyList());
     }
 
     public List<Move> getMoves() {
-        return moves;
+        return ofNullable(moves).orElse(emptyList());
     }
 
     public Builder copy() {

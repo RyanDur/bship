@@ -1,4 +1,0 @@
-[source,bash]
-----
-$ curl 'http://localhost:8080/games/1/boards/1' -i -X POST -H 'Content-Type: application/json;charset=UTF-8' -d '{"x": 1, "y": null}'
-----

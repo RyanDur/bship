@@ -1,6 +1,7 @@
 package com.bship.integration;
 
 import com.bship.DBHelper;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.cloud.contract.wiremock.restdocs.WireMockRestDocs.verify;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,12 +50,23 @@ public class PlaceShipIntegrationTest {
                 ))
 
                 .andExpect(status().is(201))
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
                 .andExpect(content().json("{\"id\":1," +
                         "\"ships\":[" +
                         "{\"start\":{\"x\":0,\"y\":0}," +
                         "\"end\":{\"x\":0,\"y\":4}," +
                         "\"type\":\"AIRCRAFT_CARRIER\"}]}"))
-                .andDo(document("place-ship"));
+                .andDo(verify().wiremock(post(WireMock
+                        .urlMatching("/boards/(\\d+)"))
+
+                        .withRequestBody(matchingJsonPath("$[?(@.type == 'AIRCRAFT_CARRIER')]"))
+                        .withRequestBody(matchingJsonPath("$.start[?(@.x == 0)]"))
+                        .withRequestBody(matchingJsonPath("$.start[?(@.y == 0)]"))
+                        .withRequestBody(matchingJsonPath("$.end[?(@.x == 0)]"))
+                        .withRequestBody(matchingJsonPath("$.end[?(@.y == 4)]"))
+                        .withHeader("Content-Type", equalTo(APPLICATION_JSON_UTF8_VALUE))
+                ).stub("place-ship"));
+
     }
 
     @Test
