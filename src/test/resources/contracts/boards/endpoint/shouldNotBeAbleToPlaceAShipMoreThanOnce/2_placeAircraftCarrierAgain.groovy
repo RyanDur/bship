@@ -28,12 +28,12 @@ Contract.make {
     }
     body([
         errors: [[
-            objectValidations: [[
-                                    code   : 'ShipExistsCheck',
-                                    type   : 'board',
-                                    message: 'Ship already exists on board.'
-                                ]]
-        ]]
+                     objectValidations: [[
+                                             code   : 'ShipExistsCheck',
+                                             type   : 'board',
+                                             message: 'Ship already exists on board.'
+                                         ]]
+                 ]]
     ])
   }
 }
