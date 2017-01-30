@@ -29,6 +29,7 @@ public class ShouldNotBeAbleToPlaceAShipMoreThanOnceTest extends EndpointShouldN
 
 		// then:
 			assertThat(response.statusCode()).isEqualTo(200);
+			assertThat(response.header("Content-Type")).matches("application/json.*");
 		// and:
 			DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
 			assertThatJson(parsedJson).array("ships").field("start").field("x").isEqualTo(0);
