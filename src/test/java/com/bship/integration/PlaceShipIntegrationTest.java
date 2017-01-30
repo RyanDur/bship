@@ -58,7 +58,6 @@ public class PlaceShipIntegrationTest {
                         "\"type\":\"AIRCRAFT_CARRIER\"}]}"))
                 .andDo(verify().wiremock(WireMock.put(WireMock
                         .urlMatching("/boards/(\\d+)"))
-
                         .withRequestBody(matchingJsonPath("$[?(@.type == 'AIRCRAFT_CARRIER')]"))
                         .withRequestBody(matchingJsonPath("$.start[?(@.x == 0)]"))
                         .withRequestBody(matchingJsonPath("$.start[?(@.y == 0)]"))
