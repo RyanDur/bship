@@ -1,2 +1,4 @@
 rootProject.name = 'bship'
+include 'game'
+include 'test-support'
 

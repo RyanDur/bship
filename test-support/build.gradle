@@ -1,13 +1,13 @@
 group 'com.bship'
 version '1.0-SNAPSHOT'
 
-bootRepackage.enabled = false
-
-sourceCompatibility = 1.8
+//bootRepackage.enabled = false
 
 apply plugin: 'maven-publish'
 apply plugin: 'java'
 apply plugin: "io.spring.dependency-management"
+
+sourceCompatibility = 1.8
 
 dependencyManagement {
     imports {

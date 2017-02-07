@@ -2,6 +2,8 @@ package contracts.boards.endpoint
 
 import org.springframework.cloud.contract.spec.Contract
 
+import static com.example.PatternUtils.anything
+
 Contract.make {
   request {
     method 'PUT'
@@ -12,7 +14,7 @@ Contract.make {
     body([
         type : 'AIRCRAFT_CARRIER',
         start: [
-            x: 0,
+            x: $(anything()),
             y: 0
         ],
         end  : [

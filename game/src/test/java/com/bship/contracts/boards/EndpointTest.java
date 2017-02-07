@@ -18,7 +18,7 @@ public class EndpointTest extends BoardsEndpointBase {
 		// given:
 			MockMvcRequestSpecification request = given()
 					.header("Content-Type", "application/json")
-					.body("{\"type\":\"AIRCRAFT_CARRIER\",\"start\":{\"x\":\"\",\"y\":0},\"end\":{\"x\":0,\"y\":4}}");
+					.body("{\"type\":\"AIRCRAFT_CARRIER\",\"start\":{\"x\":0,\"y\":0},\"end\":{\"x\":0,\"y\":4}}");
 
 		// when:
 			ResponseOptions response = given().spec(request)
