@@ -26,4 +26,18 @@ subprojects {
   task wrapper(type: Wrapper) {
     gradleVersion = '3.3'
   }
+
+  // you need this to have code completion:
+  
+  apply plugin: 'java'
+
+  sourceSets {
+    buildScriptSources {
+      java.srcDir "${project.rootDir}/buildSrc/src/main/java"
+    }
+    test {
+      compileClasspath += sourceSets.buildScriptSources.output
+      runtimeClasspath += sourceSets.buildScriptSources.output
+    }
+  }
 }
