@@ -2,7 +2,7 @@ package contracts.boards.endpoint
 
 import org.springframework.cloud.contract.spec.Contract
 
-import static com.bship.contracts.utils.PatternUtils.anything
+import static com.bship.games.util.PatternUtils.anything
 
 Contract.make {
   request {

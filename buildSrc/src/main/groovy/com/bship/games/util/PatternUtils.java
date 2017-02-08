@@ -1,4 +1,4 @@
-package com.bship.contracts.utils;
+package com.bship.games.util;
 
 import java.util.regex.Pattern;
 
