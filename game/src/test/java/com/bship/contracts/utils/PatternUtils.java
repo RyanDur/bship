@@ -1,4 +1,4 @@
-package com.example;
+package com.bship.contracts.utils;
 
 import java.util.regex.Pattern;
 

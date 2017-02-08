@@ -1,4 +1,4 @@
-package com.example;
+package com.bship.contracts.utils;
 
 import org.junit.Test;
 
@@ -9,28 +9,27 @@ import static org.junit.Assert.assertThat;
 
 public class PatternUtilsTest {
 
-
     @Test
     public void anything_shouldReturnTrueForEmptyString() {
-        Matcher matcher = PatternUtils.anything().matcher("");
+        Matcher matcher = com.example.PatternUtils.anything().matcher("");
         assertThat(matcher.matches(), is(true));
     }
 
     @Test
     public void anything_shouldReturnTrueForACharacter() {
-        Matcher matcher = PatternUtils.anything().matcher("A");
+        Matcher matcher = com.example.PatternUtils.anything().matcher("A");
         assertThat(matcher.matches(), is(true));
     }
 
     @Test
     public void anything_shouldReturnTrueForADigit() {
-        Matcher matcher = PatternUtils.anything().matcher("9");
+        Matcher matcher = com.example.PatternUtils.anything().matcher("9");
         assertThat(matcher.matches(), is(true));
     }
 
     @Test
     public void anything_shouldReturnTrueForAWhitespace() {
-        Matcher matcher = PatternUtils.anything().matcher(" ");
+        Matcher matcher = com.example.PatternUtils.anything().matcher(" ");
         assertThat(matcher.matches(), is(true));
     }
 
