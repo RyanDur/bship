@@ -11,9 +11,6 @@ buildscript {
     classpath group: 'gradle.plugin.com.boxfuse.client', name: 'flyway-release', version: '4.0.3'
     classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '1.4.2.RELEASE'
     classpath group: 'org.springframework.cloud', name: 'spring-cloud-contract-gradle-plugin', version: '1.0.3.RELEASE'
-    // tag::test_dep_in_plugin[]
-    classpath 'com.bship:test-support:1.0-SNAPSHOT'
-    // end::test_dep_in_plugin[]
   }
 }
 
@@ -47,9 +44,6 @@ dependencies {
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.2.RELEASE'
   testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.6'
   testCompile group: 'org.springframework.cloud', name: 'spring-cloud-starter-contract-verifier', version: '1.0.3.RELEASE'
-  // tag::test_dep[]
-  testCompile 'com.bship:test-support:1.0-SNAPSHOT'
-  // end::test_dep[]
 }
 
 contracts {
