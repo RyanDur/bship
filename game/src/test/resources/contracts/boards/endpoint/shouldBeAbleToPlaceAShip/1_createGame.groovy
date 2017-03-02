@@ -1,4 +1,4 @@
-package contracts.boards.endpoint
+package contracts.boards.endpoint.shouldBeAbleToPlaceAShip
 
 import org.springframework.cloud.contract.spec.Contract
 
