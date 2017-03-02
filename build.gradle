@@ -13,7 +13,12 @@ buildscript {
   }
   dependencies {
     classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: springBootVersion
-    classpath group: 'io.spring.gradle', name: 'dependency-management-plugin', version: dependencyManagementVersion
+  }
+}
+
+allprojects {
+  task wrapper(type: Wrapper) {
+    gradleVersion = '3.4'
   }
 }
 
@@ -21,9 +26,5 @@ subprojects {
   repositories {
     mavenLocal()
     mavenCentral()
-  }
-
-  task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
   }
 }

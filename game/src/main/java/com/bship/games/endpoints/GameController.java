@@ -49,7 +49,6 @@ public class GameController implements BadRequestHandler {
     @RequestMapping(
             value = "/games/{gameId}/boards/{boardId}",
             method = POST,
-            consumes = APPLICATION_JSON_VALUE,
             produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(CREATED)
     public Board placeMove(@PathVariable Long gameId,

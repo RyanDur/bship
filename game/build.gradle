@@ -53,6 +53,6 @@ contracts {
 }
 
 flyway {
-  url = 'jdbc:mysql://localhost/bs'
+  url = 'jdbc:mysql://localhost:3306/bs'
   user = 'root'
 }

@@ -10,7 +10,7 @@ public class DBHelper {
         dataSource.setUrl("jdbc:mysql://localhost/bs");
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUsername("root");
-        dataSource.setPassword("password");
+        dataSource.setPassword("");
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
         flyway.clean();
