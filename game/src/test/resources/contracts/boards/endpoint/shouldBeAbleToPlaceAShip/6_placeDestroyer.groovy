@@ -1,4 +1,4 @@
-package contracts.boards.endpoint
+package contracts.boards.endpoint.shouldBeAbleToPlaceAShip
 
 import org.springframework.cloud.contract.spec.Contract
 
@@ -10,14 +10,14 @@ Contract.make {
       contentType(applicationJson())
     }
     body([
-        type : 'AIRCRAFT_CARRIER',
+        type : 'DESTROYER',
         start: [
-            x: 0,
+            x: 4,
             y: 0
         ],
         end  : [
-            x: 0,
-            y: 4
+            x: 4,
+            y: 1
         ]
     ])
   }
@@ -28,14 +28,14 @@ Contract.make {
     }
     body([id   : 1,
           ships: [[
-                      type : 'AIRCRAFT_CARRIER',
+                      type : 'DESTROYER',
                       start: [
-                          x: 0,
+                          x: 4,
                           y: 0
                       ],
                       end  : [
-                          x: 0,
-                          y: 4
+                          x: 4,
+                          y: 1
                       ],
                       sunk : false,
                       id   : 1
@@ -44,4 +44,3 @@ Contract.make {
     ])
   }
 }
-

@@ -49,7 +49,7 @@ dependencies {
 contracts {
   packageWithBaseClasses = "com.bship.contracts"
   basePackageForTests = "com.bship.contracts"
-  generatedTestSourcesDir = project.file("${project.rootDir}/src/test/java")
+  generatedTestSourcesDir = project.file("${project.rootDir}/game/src/test/java")
 }
 
 flyway {
