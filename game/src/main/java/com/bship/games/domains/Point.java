@@ -7,7 +7,8 @@ public class Point {
     private Integer x;
     private Integer y;
 
-    public Point() {}
+    public Point() {
+    }
 
     public Point(Integer x, Integer y) {
         this.x = x;
@@ -42,9 +43,9 @@ public class Point {
 
     @Override
     public String toString() {
-        return "Point{" +
-                "x=" + x +
-                ", y=" + y +
+        return "{" +
+                "\"x\":" + x +
+                ", \"y\":" + y +
                 '}';
     }
 }

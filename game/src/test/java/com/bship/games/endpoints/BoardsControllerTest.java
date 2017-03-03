@@ -26,16 +26,17 @@ public class BoardsControllerTest {
 
     private BoardsController boardsController;
     private GameService mockService;
+    private MockMvc mockMvc;
 
     @Before
     public void setup() {
         mockService = mock(GameService.class);
         boardsController = new BoardsController(mockService);
+        mockMvc = MockMvcBuilders.standaloneSetup(boardsController).build();
     }
 
     @Test
     public void placeShip_methodSignatureBindToPathParamsAndRequestBody() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(boardsController).build();
         mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +

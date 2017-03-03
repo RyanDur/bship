@@ -1,7 +1,10 @@
 package com.bship.games.endpoints.RequestErrors;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import org.springframework.validation.ObjectError;
 
+@JsonDeserialize(builder = ValidationObjectError.Builder.class)
 public class ValidationObjectError {
 
     private String code;
@@ -30,6 +33,7 @@ public class ValidationObjectError {
         return new Builder();
     }
 
+    @JsonPOJOBuilder
     public static class Builder {
         private String code;
         private String type;

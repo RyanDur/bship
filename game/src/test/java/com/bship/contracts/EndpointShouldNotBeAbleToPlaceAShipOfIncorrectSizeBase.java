@@ -1,4 +1,4 @@
 package com.bship.contracts;
 
-abstract public class EndpointShouldNotBeAbleToPlaceAShipOfIncorrectSizeBase extends BoardsEndpointBase {
+abstract public class EndpointShouldNotBeAbleToPlaceAShipOfIncorrectSizeBase extends ScenarioEndpointBase {
 }

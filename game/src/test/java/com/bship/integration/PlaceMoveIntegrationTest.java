@@ -71,11 +71,11 @@ public class PlaceMoveIntegrationTest {
 
     @Test
     public void shouldBeAbleToPlaceAMoveOnTheBoard() throws Exception {
-        mockMvc.perform(post("/games/1/boards/1")
+        mockMvc.perform(put("/games/1/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"x\": 0, \"y\": 5}"
                 ))
-                .andExpect(status().is(201))
+                .andExpect(status().is(200))
                 .andExpect(content().json("{" +
                         "\"id\":1," +
                         "\"ships\":[]," +
@@ -85,13 +85,13 @@ public class PlaceMoveIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAMoveOnTheBoardPastLowerBounds() throws Exception {
-        mockMvc.perform(post("/games/1/boards/1")
+        mockMvc.perform(put("/games/1/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"x\": 0, \"y\": -5}"
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidations\": " +
+                        "[{\"validations\": " +
                         "[{\"code\": \"BoundsCheck\", " +
                         "\"type\": \"point\", " +
                         "\"message\": \"out of bounds.\"}]}]}"))
@@ -100,13 +100,13 @@ public class PlaceMoveIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAMoveOnTheBoardPastUpperBounds() throws Exception {
-        mockMvc.perform(post("/games/1/boards/1")
+        mockMvc.perform(put("/games/1/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"x\": 0, \"y\": 15}"
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidations\": " +
+                        "[{\"validations\": " +
                         "[{\"code\": \"BoundsCheck\", " +
                         "\"type\": \"point\", " +
                         "\"message\": \"out of bounds.\"}]}]}"))
@@ -115,13 +115,13 @@ public class PlaceMoveIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAMoveOnTheBoardWhereXDoesNotExist() throws Exception {
-        mockMvc.perform(post("/games/1/boards/1")
+        mockMvc.perform(put("/games/1/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"x\": null, \"y\": 1}"
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidations\": " +
+                        "[{\"validations\": " +
                         "[{\"code\": \"BoundsCheck\", " +
                         "\"type\": \"point\", " +
                         "\"message\": \"out of bounds.\"}]}]}"))
@@ -130,19 +130,19 @@ public class PlaceMoveIntegrationTest {
 
     @Test
     public void shouldNotBeAbleToPlaceAMoveOnTheBoardWhereMoveAlreadyExists() throws Exception {
-        mockMvc.perform(post("/games/1/boards/1")
+        mockMvc.perform(put("/games/1/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"x\": 0, \"y\": 5}"
                 ))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
 
-        mockMvc.perform(post("/games/1/boards/1")
+        mockMvc.perform(put("/games/1/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"x\": 0, \"y\": 5}"
                 ))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"errors\": " +
-                        "[{\"objectValidations\": " +
+                        "[{\"validations\": " +
                         "[{\"code\": \"MoveCollision\", " +
                         "\"type\": \"game\", " +
                         "\"message\": \"Move already exists on board.\"}]}]}"))
@@ -151,11 +151,11 @@ public class PlaceMoveIntegrationTest {
 
     @Test
     public void shouldBeAbleToPlaceAMoveOnTheBoardThatHits() throws Exception {
-        mockMvc.perform(post("/games/1/boards/1")
+        mockMvc.perform(put("/games/1/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"x\": 0, \"y\": 4}"
                 ))
-                .andExpect(status().is(201))
+                .andExpect(status().is(200))
                 .andExpect(content().json("{" +
                         "\"id\":1," +
                         "\"ships\":[]," +
@@ -165,16 +165,16 @@ public class PlaceMoveIntegrationTest {
 
     @Test
     public void shouldBeAbleToPlaceAMoveOnTheBoardThatSinksAShip() throws Exception {
-        mockMvc.perform(post("/games/1/boards/1")
+        mockMvc.perform(put("/games/1/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"x\": 4, \"y\": 0}"
                 ))
-                .andExpect(status().is(201));
-        mockMvc.perform(post("/games/1/boards/1")
+                .andExpect(status().is(200));
+        mockMvc.perform(put("/games/1/boards/1")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content("{\"x\": 4, \"y\": 1}"
                 ))
-                .andExpect(status().is(201))
+                .andExpect(status().is(200))
                 .andExpect(content().json("{" +
                         "\"id\": 1," +
                         "\"ships\": [{" +

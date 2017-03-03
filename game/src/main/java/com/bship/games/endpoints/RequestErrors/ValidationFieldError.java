@@ -1,7 +1,10 @@
 package com.bship.games.endpoints.RequestErrors;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import org.springframework.validation.FieldError;
 
+@JsonDeserialize(builder = ValidationFieldError.Builder.class)
 public class ValidationFieldError {
     private String code;
     private String field;
@@ -35,6 +38,7 @@ public class ValidationFieldError {
         return new Builder();
     }
 
+    @JsonPOJOBuilder
     public static class Builder {
         private String code;
         private String field;

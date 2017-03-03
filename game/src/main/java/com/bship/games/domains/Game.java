@@ -1,11 +1,16 @@
 package com.bship.games.domains;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Optional.ofNullable;
 
+@JsonDeserialize(builder = Game.Builder.class)
 public class Game {
     private List<Board> boards;
     private Long id;
@@ -16,7 +21,7 @@ public class Game {
     }
 
     public List<Board> getBoards() {
-        return boards;
+        return Optional.ofNullable(boards).orElse(emptyList());
     }
 
     public Long getId() {
@@ -31,6 +36,7 @@ public class Game {
         return new Builder();
     }
 
+    @JsonPOJOBuilder
     public static final class Builder {
         private Long id;
         private List<Board> boards;
@@ -66,5 +72,13 @@ public class Game {
         int result = boards != null ? boards.hashCode() : 0;
         result = 31 * result + (id != null ? id.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "boards=" + boards +
+                ", id=" + id +
+                '}';
     }
 }

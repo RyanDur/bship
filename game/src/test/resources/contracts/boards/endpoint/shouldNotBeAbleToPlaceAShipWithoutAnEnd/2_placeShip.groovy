@@ -10,8 +10,8 @@ Contract.make {
       contentType(applicationJson())
     }
     body([
-        type: 'AIRCRAFT_CARRIER',
-        start : [
+        type : 'AIRCRAFT_CARRIER',
+        start: [
             x: 0,
             y: 1
         ]
@@ -24,12 +24,12 @@ Contract.make {
     }
     body([
         errors: [[
-                     fieldValidations: [[
-                                            code   : 'NonEmpty',
-                                            field  : 'end',
-                                            value  : null,
-                                            message: 'Cannot be empty or null.'
-                                        ]]
+                     validations: [[
+                                       code   : 'NonEmpty',
+                                       field  : 'end',
+                                       value  : null,
+                                       message: 'Cannot be empty or null.'
+                                   ]]
                  ]]
     ])
   }

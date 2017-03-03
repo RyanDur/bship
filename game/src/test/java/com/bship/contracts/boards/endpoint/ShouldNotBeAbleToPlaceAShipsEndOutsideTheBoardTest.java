@@ -52,11 +52,11 @@ assertThat(response.statusCode()).isEqualTo(400);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("errors").array("fieldValidations").field("value").field("y").isEqualTo(10);
-assertThatJson(parsedJson).array("errors").array("fieldValidations").contains("field").isEqualTo("end");
-assertThatJson(parsedJson).array("errors").array("fieldValidations").field("value").field("x").isEqualTo(9);
-assertThatJson(parsedJson).array("errors").array("fieldValidations").contains("message").isEqualTo("out of bounds.");
-assertThatJson(parsedJson).array("errors").array("fieldValidations").contains("code").isEqualTo("BoundsCheck");
+assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("end");
+assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("out of bounds.");
+assertThatJson(parsedJson).array("errors").array("validations").field("value").field("x").isEqualTo(9);
+assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("BoundsCheck");
+assertThatJson(parsedJson).array("errors").array("validations").field("value").field("y").isEqualTo(10);
 }
 
 }

@@ -28,11 +28,11 @@ Contract.make {
     }
     body([
         errors: [[
-                     objectValidations: [[
-                                             code   : 'ShipCollisionCheck',
-                                             type   : 'board',
-                                             message: 'Ship collision.'
-                                         ]]
+                     validations: [[
+                                       code   : 'ShipCollisionCheck',
+                                       type   : 'board',
+                                       message: 'Ship collision.'
+                                   ]]
                  ]]
     ])
   }

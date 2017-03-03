@@ -52,10 +52,10 @@ assertThat(response.statusCode()).isEqualTo(400);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("errors").array("fieldValidations").contains("code").isEqualTo("ShipExists");
-assertThatJson(parsedJson).array("errors").array("fieldValidations").contains("message").isEqualTo("Ship does not exist.");
-assertThatJson(parsedJson).array("errors").array("fieldValidations").contains("field").isEqualTo("type");
-assertThatJson(parsedJson).array("errors").array("fieldValidations").contains("value").isEqualTo("INVALID_SHIP");
+assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Ship does not exist.");
+assertThatJson(parsedJson).array("errors").array("validations").contains("value").isEqualTo("INVALID_SHIP");
+assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("type");
+assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("ShipExists");
 }
 
 }

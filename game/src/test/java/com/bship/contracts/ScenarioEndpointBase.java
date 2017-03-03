@@ -16,7 +16,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BattleshipApplication.class,
         webEnvironment = RANDOM_PORT)
-abstract public class BoardsEndpointBase {
+abstract public class ScenarioEndpointBase {
 
     @Autowired
     private WebApplicationContext context;

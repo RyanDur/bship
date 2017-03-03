@@ -28,11 +28,11 @@ Contract.make {
     }
     body([
         errors: [[
-                     objectValidations: [[
-                                             code   : 'PlacementCheck',
-                                             type   : 'ship',
-                                             message: 'Incorrect ship placement.'
-                                         ]]
+                     validations: [[
+                                       code   : 'PlacementCheck',
+                                       type   : 'ship',
+                                       message: 'Incorrect ship placement.'
+                                   ]]
                  ]]
     ])
   }

@@ -1,6 +1,8 @@
 package com.bship.games.domains;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import java.util.List;
 
@@ -9,6 +11,7 @@ import static com.bship.games.util.Util.concat;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 
+@JsonDeserialize(builder = Board.Builder.class)
 public class Board {
 
     @JsonIgnore
@@ -53,6 +56,7 @@ public class Board {
         return new Builder();
     }
 
+    @JsonPOJOBuilder
     public static final class Builder {
         private Long id;
         private Long gameId;

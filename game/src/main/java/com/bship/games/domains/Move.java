@@ -1,7 +1,10 @@
 package com.bship.games.domains;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+@JsonDeserialize(builder = Move.Builder.class)
 public class Move {
 
     @JsonIgnore
@@ -49,6 +52,7 @@ public class Move {
                 .withStatus(status);
     }
 
+    @JsonPOJOBuilder
     public static class Builder {
         private Point point;
         private MoveStatus status;

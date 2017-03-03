@@ -1,28 +1,33 @@
 package com.bship.games.endpoints.RequestErrors;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import java.util.List;
 
+@JsonDeserialize(builder = ObjectValidation.Builder.class)
 public class ObjectValidation {
 
-    private List<ValidationObjectError> objectValidations;
+    private List<ValidationObjectError> validations;
 
     private ObjectValidation(Builder builder) {
-        objectValidations = builder.errors;
+        validations = builder.validations;
     }
 
-    public List<ValidationObjectError> getObjectValidations() {
-        return objectValidations;
+    public List<ValidationObjectError> getValidations() {
+        return validations;
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
+    @JsonPOJOBuilder
     public static class Builder {
-        private List<ValidationObjectError> errors;
+        private List<ValidationObjectError> validations;
 
-        public Builder withErrors(List<ValidationObjectError> errors) {
-            this.errors = errors;
+        public Builder withValidations(List<ValidationObjectError> validations) {
+            this.validations = validations;
             return this;
         }
 
@@ -33,6 +38,6 @@ public class ObjectValidation {
 
     @Override
     public String toString() {
-        return "{\"objectValidation\": " + objectValidations + "}";
+        return "{\"objectValidation\": " + validations + "}";
     }
 }

@@ -24,12 +24,12 @@ Contract.make {
     }
     body([
         errors: [[
-                     fieldValidations: [[
-                                            code   : 'NonEmpty',
-                                            field  : 'start',
-                                            value  : null,
-                                            message: 'Cannot be empty or null.'
-                                        ]]
+                     validations: [[
+                                       code   : 'NonEmpty',
+                                       field  : 'start',
+                                       value  : null,
+                                       message: 'Cannot be empty or null.'
+                                   ]]
                  ]]
     ])
   }

@@ -1,4 +1,4 @@
 package com.bship.contracts;
 
-abstract public class EndpointShouldNotBeAbleToPlaceAShipWithoutAStartBase extends BoardsEndpointBase {
+abstract public class EndpointShouldNotBeAbleToPlaceAShipWithoutAStartBase extends ScenarioEndpointBase {
 }

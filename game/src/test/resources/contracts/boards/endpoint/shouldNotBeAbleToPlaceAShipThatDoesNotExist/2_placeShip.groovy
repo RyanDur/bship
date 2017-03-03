@@ -29,7 +29,7 @@ Contract.make {
     body([
         errors:
             [[
-                 fieldValidations:
+                 validations:
                      [[
                           code   : 'ShipExists',
                           field  : 'type',

@@ -78,9 +78,9 @@ assertThat(response.statusCode()).isEqualTo(400);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("errors").array("objectValidations").contains("type").isEqualTo("board");
-assertThatJson(parsedJson).array("errors").array("objectValidations").contains("message").isEqualTo("Ship collision.");
-assertThatJson(parsedJson).array("errors").array("objectValidations").contains("code").isEqualTo("ShipCollisionCheck");
+assertThatJson(parsedJson).array("errors").array("validations").contains("type").isEqualTo("board");
+assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("ShipCollisionCheck");
+assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Ship collision.");
 }
 
 }

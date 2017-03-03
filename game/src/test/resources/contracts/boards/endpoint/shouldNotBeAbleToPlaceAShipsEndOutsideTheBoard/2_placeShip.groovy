@@ -28,15 +28,15 @@ Contract.make {
     }
     body([
         errors: [[
-                     fieldValidations: [[
-                                            code   : 'BoundsCheck',
-                                            field  : 'end',
-                                            value  : [
-                                                x: 9,
-                                                y: 10
-                                            ],
-                                            message: 'out of bounds.'
-                                        ]]
+                     validations: [[
+                                       code   : 'BoundsCheck',
+                                       field  : 'end',
+                                       value  : [
+                                           x: 9,
+                                           y: 10
+                                       ],
+                                       message: 'out of bounds.'
+                                   ]]
                  ]]
     ])
   }

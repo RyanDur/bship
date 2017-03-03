@@ -5,7 +5,10 @@ import com.bship.games.domains.validations.NonEmpty;
 import com.bship.games.domains.validations.PlacementCheck;
 import com.bship.games.domains.validations.ShipExists;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+@JsonDeserialize(builder = Ship.Builder.class)
 @PlacementCheck
 public class Ship {
 
@@ -77,6 +80,7 @@ public class Ship {
         return new Builder();
     }
 
+    @JsonPOJOBuilder
     public static final class Builder {
         private Harbor type;
         private Point start;

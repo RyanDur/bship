@@ -52,7 +52,7 @@ public interface BadRequestHandler {
                     error.getStackTrace(), error.getMessage());
 
     Function<Stream<ObjectError>, ObjectValidation> objectErrors = errors ->
-            ObjectValidation.builder().withErrors(errors.map(objectError).collect(toList())).build();
+            ObjectValidation.builder().withValidations(errors.map(objectError).collect(toList())).build();
 
     Function<Stream<FieldError>, FieldValidation> fieldErrors = errors ->
             FieldValidation.builder().withErrors(errors.map(fieldError).collect(toList())).build();

@@ -1,7 +1,11 @@
 package com.bship.games.endpoints.RequestErrors;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import java.util.List;
 
+@JsonDeserialize(builder = GameErrors.Builder.class)
 public class GameErrors {
     private List errors;
 
@@ -17,6 +21,7 @@ public class GameErrors {
         return new Builder();
     }
 
+    @JsonPOJOBuilder
     public static class Builder {
         private List errors;
 

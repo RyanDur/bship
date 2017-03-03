@@ -1,4 +1,4 @@
 package com.bship.contracts;
 
-abstract public class EndpointShouldNotBeAbleToPlaceAShipMoreThanOnceBase extends BoardsEndpointBase {
+abstract public class EndpointShouldNotBeAbleToPlaceAShipMoreThanOnceBase extends ScenarioEndpointBase {
 }
