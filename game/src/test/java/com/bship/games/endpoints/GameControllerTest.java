@@ -6,6 +6,7 @@ import com.bship.games.domains.Move;
 import com.bship.games.domains.Point;
 import com.bship.games.endpoints.RequestErrors.GameErrors;
 import com.bship.games.endpoints.RequestErrors.ObjectValidation;
+import com.bship.games.exceptions.MoveCollision;
 import com.bship.games.services.GameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -16,7 +17,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -24,6 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -35,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @EnableWebMvc
 public class GameControllerTest {
 
-    private GameController gameController;
     private GameService mockService;
     private MockMvc mockMvc;
     private ObjectMapper mapper;
@@ -43,8 +43,9 @@ public class GameControllerTest {
     @Before
     public void setup() {
         mockService = mock(GameService.class);
-        gameController = new GameController(mockService);
+        GameController gameController = new GameController(mockService);
         mockMvc = MockMvcBuilders.standaloneSetup(gameController).build();
+        mapper = new ObjectMapper();
         mapper = new ObjectMapper();
     }
 
@@ -104,7 +105,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void placeMove_shouldNotAllowTheXToBeLessThanTheWithOfTheBoard() throws Exception {
+    public void placeMove_shouldNotAllowTheXToBeLessThanTheWidthOfTheBoard() throws Exception {
         Move move = new Move();
         Point point = new Point(-1,0);
 
@@ -118,10 +119,82 @@ public class GameControllerTest {
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
-        ObjectMapper mapper = new ObjectMapper();
-
-        List errors = actual.getErrors();
-        ObjectValidation error = mapper.convertValue(errors.get(0), ObjectValidation.class);
+        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
         assertThat(error.getValidations().get(0).getMessage(), is("out of bounds."));
+    }
+
+    @Test
+    public void placeMove_shouldNotAllowTheXToBeGreaterThanTheHeightOfTheBoard() throws Exception {
+        Move move = new Move();
+        Point point = new Point(10,0);
+
+        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class)))
+                .thenReturn(Board.builder().addMove(move).build());
+
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(point.toString()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), GameErrors.class);
+
+        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), is("out of bounds."));
+    }
+
+    @Test
+    public void placeMove_shouldNotAllowTheYToBeLessThanTheWidthOfTheBoard() throws Exception {
+        Move move = new Move();
+        Point point = new Point(0,-1);
+
+        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class)))
+                .thenReturn(Board.builder().addMove(move).build());
+
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(point.toString()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), GameErrors.class);
+
+        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), is("out of bounds."));
+    }
+
+    @Test
+    public void placeMove_shouldNotAllowTheYToBeGreaterThanTheHeightOfTheBoard() throws Exception {
+        Move move = new Move();
+        Point point = new Point(0,10);
+
+        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class)))
+                .thenReturn(Board.builder().addMove(move).build());
+
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(point.toString()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), GameErrors.class);
+
+        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), is("out of bounds."));
+    }
+
+    @Test
+    public void placeMove_shouldHandleMoveCollisions() throws Exception {
+        Point point = new Point(0,0);
+
+        doThrow(new MoveCollision())
+                .when(mockService).placeMove(anyLong(), anyLong(), any(Point.class));
+
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(point.toString()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), GameErrors.class);
+
+        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), is("Move already exists on board."));
     }
 }

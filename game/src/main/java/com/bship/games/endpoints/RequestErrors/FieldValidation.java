@@ -25,7 +25,7 @@ public class FieldValidation {
     public static class Builder {
         private List<ValidationFieldError> validations;
 
-        public Builder withErrors(List<ValidationFieldError> validations) {
+        public Builder withValidations(List<ValidationFieldError> validations) {
             this.validations = validations;
             return this;
         }

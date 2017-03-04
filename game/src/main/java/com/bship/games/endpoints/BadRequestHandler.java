@@ -55,5 +55,5 @@ public interface BadRequestHandler {
             ObjectValidation.builder().withValidations(errors.map(objectError).collect(toList())).build();
 
     Function<Stream<FieldError>, FieldValidation> fieldErrors = errors ->
-            FieldValidation.builder().withErrors(errors.map(fieldError).collect(toList())).build();
+            FieldValidation.builder().withValidations(errors.map(fieldError).collect(toList())).build();
 }
