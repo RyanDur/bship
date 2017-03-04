@@ -10,7 +10,7 @@ params:
   MYSQL_ALLOW_EMPTY_PASSWORD: yes
 
 inputs:
-- name: bship_repo
+- name: bship
 
 run:
   path: ./bship/ci/test.sh

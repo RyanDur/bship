@@ -1,5 +1,5 @@
 resources:
-- name: bship_repo
+- name: bship
   type: git
   source:
     uri: https://github.com/RyanDur/bship.git
@@ -8,7 +8,7 @@ resources:
 jobs:
 - name: test
   plan:
-  - get: bship_repo
+  - get: bship
   - task: tests
     file: bship/ci/build.yml
 
