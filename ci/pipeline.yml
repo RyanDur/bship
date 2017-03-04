@@ -1,0 +1,14 @@
+resources:
+- name: bship_repo
+  type: git
+  source:
+    uri: https://github.com/RyanDur/bship.git
+    branch: master
+
+jobs:
+- name: test
+  plan:
+  - get: bship_repo
+  - task: tests
+    file: ./bship/ci/build.yml
+
