@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,9 +21,8 @@ import java.util.stream.Stream;
 
 import static java.util.Optional.of;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.ResponseEntity.badRequest;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
 public class BoardsController implements BadRequestHandler {
@@ -38,11 +37,9 @@ public class BoardsController implements BadRequestHandler {
         this.service = service;
     }
 
-    @RequestMapping(
+    @PutMapping(
             value = "/boards/{boardId}",
-            method = PUT,
-            consumes = APPLICATION_JSON_VALUE,
-            produces = APPLICATION_JSON_VALUE)
+            produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(OK)
     public Board placeShip(@PathVariable Long boardId,
                            @Valid @RequestBody Ship ship) throws ShipExistsCheck, ShipCollisionCheck {

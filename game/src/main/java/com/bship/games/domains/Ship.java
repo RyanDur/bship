@@ -147,13 +147,13 @@ public class Ship {
 
     @Override
     public String toString() {
-        return "Ship{" +
-                "type=" + type +
-                ", start=" + start +
-                ", end=" + end +
-                ", boardId=" + boardId +
-                ", sunk=" + sunk +
-                ", id=" + id +
+        return "{" +
+                "\"type\":" + type +
+                ", \"start\":" + start +
+                ", \"end\":" + end +
+                ", \"boardId\":" + boardId +
+                ", \"sunk\":" + sunk +
+                ", \"id\":" + id +
                 '}';
     }
 }
