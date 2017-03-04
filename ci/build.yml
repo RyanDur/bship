@@ -13,4 +13,4 @@ inputs:
 - name: bship
 
 run:
-  path: bship/ci/test.sh
+  path: ./bship/ci/test.sh
