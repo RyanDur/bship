@@ -10,5 +10,5 @@ jobs:
   plan:
   - get: bship_repo
   - task: tests
-    file: ./bship/ci/build.yml
+    file: bship/ci/build.yml
 
