@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.List;
 
 import static com.bship.games.util.Util.addTo;
-import static com.bship.games.util.Util.concat;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 
@@ -19,13 +18,17 @@ public class Board {
 
     private Long id;
     private List<Ship> ships;
+    private List<Ship> opponentShips;
     private List<Move> moves;
+    private List<Move> opponentMoves;
 
     private Board(Builder builder) {
         id = builder.id;
         gameId = builder.gameId;
         ships = builder.ships;
+        opponentShips = builder.opponentShips;
         moves = builder.moves;
+        opponentMoves = builder.opponentMoves;
     }
 
     public Long getGameId() {
@@ -40,16 +43,26 @@ public class Board {
         return ofNullable(ships).orElse(emptyList());
     }
 
+    public List<Ship> getOpponentShips() {
+        return ofNullable(opponentShips).orElse(emptyList());
+    }
+
     public List<Move> getMoves() {
         return ofNullable(moves).orElse(emptyList());
     }
 
+    public List<Move> getOpponentMoves() {
+        return ofNullable(opponentMoves).orElse(emptyList());
+    }
+
     public Builder copy() {
         return builder()
-                .withId(id)
-                .withGameId(gameId)
-                .withShips(ships)
-                .withMoves(moves);
+                .withId(getId())
+                .withGameId(getGameId())
+                .withShips(getShips())
+                .withShips(getOpponentShips())
+                .withMoves(getMoves())
+                .withMoves(getOpponentMoves());
     }
 
     public static Builder builder() {
@@ -61,7 +74,9 @@ public class Board {
         private Long id;
         private Long gameId;
         private List<Ship> ships;
+        private List<Ship> opponentShips;
         private List<Move> moves;
+        private List<Move> opponentMoves;
 
         public Builder withId(Long id) {
             this.id = id;
@@ -78,8 +93,18 @@ public class Board {
             return this;
         }
 
-        public Builder withShips(List<Ship> shipList) {
-            ships = concat(ships, shipList);
+        public Builder withShips(List<Ship> ships) {
+            this.ships = ships;
+            return this;
+        }
+
+        public Builder withOpponentShips(List<Ship> opponentShips) {
+            this.opponentShips = opponentShips;
+            return this;
+        }
+
+        public Builder addOpponentShip(Ship ship) {
+            opponentShips = addTo(opponentShips, ship);
             return this;
         }
 
@@ -88,15 +113,24 @@ public class Board {
             return this;
         }
 
-        public Builder withMoves(List<Move> moveList) {
-            moves = concat(moves, moveList);
+        public Builder withMoves(List<Move> moves) {
+            this.moves = moves;
+            return this;
+        }
+
+        public Builder withOpponentMoves(List<Move> opponentMoves) {
+            this.opponentMoves = opponentMoves;
+            return this;
+        }
+
+        public Builder addOpponentMove(Move move) {
+            opponentMoves = addTo(opponentMoves, move);
             return this;
         }
 
         public Board build() {
             return new Board(this);
         }
-
     }
 
     @Override
@@ -106,25 +140,35 @@ public class Board {
 
         Board board = (Board) o;
 
-        if (id != null ? !id.equals(board.id) : board.id != null) return false;
         if (gameId != null ? !gameId.equals(board.gameId) : board.gameId != null) return false;
-        return ships != null ? ships.equals(board.ships) : board.ships == null;
+        if (id != null ? !id.equals(board.id) : board.id != null) return false;
+        if (ships != null ? !ships.equals(board.ships) : board.ships != null) return false;
+        if (opponentShips != null ? !opponentShips.equals(board.opponentShips) : board.opponentShips != null)
+            return false;
+        if (moves != null ? !moves.equals(board.moves) : board.moves != null) return false;
+        return opponentMoves != null ? opponentMoves.equals(board.opponentMoves) : board.opponentMoves == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (gameId != null ? gameId.hashCode() : 0);
+        int result = gameId != null ? gameId.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (ships != null ? ships.hashCode() : 0);
+        result = 31 * result + (opponentShips != null ? opponentShips.hashCode() : 0);
+        result = 31 * result + (moves != null ? moves.hashCode() : 0);
+        result = 31 * result + (opponentMoves != null ? opponentMoves.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "Board{" +
-                "gameId=" + gameId +
-                ", id=" + id +
-                ", ships=" + ships +
+                "gameId=" + getGameId() +
+                ", id=" + getId() +
+                ", ships=" + getShips() +
+                ", opponentShips=" + getOpponentShips() +
+                ", moves=" + getMoves() +
+                ", opponentMoves=" + getOpponentMoves() +
                 '}';
     }
 }

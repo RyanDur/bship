@@ -81,4 +81,8 @@ public class BoardRepository {
             .withEnd(toPoint(rs.getInt("end")))
             .withType(valueOf(rs.getString("type")))
             .build();
+
+    public Board save(Board board) {
+        return null;
+    }
 }

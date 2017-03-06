@@ -7,6 +7,7 @@ import com.bship.games.domains.Point;
 import com.bship.games.endpoints.RequestErrors.GameErrors;
 import com.bship.games.endpoints.RequestErrors.ObjectValidation;
 import com.bship.games.exceptions.MoveCollision;
+import com.bship.games.exceptions.TurnCheck;
 import com.bship.games.services.GameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -89,28 +90,25 @@ public class GameControllerTest {
     @Test
     public void placeMove_shouldBeAbleToPlaceAMoveOnTheBoard() throws Exception {
         Move move = new Move();
-        Point point = new Point(0,0);
+        Point point = new Point(0, 0);
 
-        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class)))
-                .thenReturn(Board.builder().addMove(move).build());
+        when(mockService.placeMove(anyLong(), anyLong(), any(Move.class)))
+                .thenReturn(Game.builder()
+                        .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
-        Board actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+        Game actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(point.toString()))
                 .andReturn()
                 .getResponse()
-                .getContentAsString(), Board.class);
+                .getContentAsString(), Game.class);
 
-        assertThat(actual.getMoves(), contains(move));
+        assertThat(actual.getBoards().get(0).getMoves(), contains(move));
     }
 
     @Test
     public void placeMove_shouldNotAllowTheXToBeLessThanTheWidthOfTheBoard() throws Exception {
-        Move move = new Move();
-        Point point = new Point(-1,0);
-
-        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class)))
-                .thenReturn(Board.builder().addMove(move).build());
+        Point point = new Point(-1, 0);
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -126,10 +124,11 @@ public class GameControllerTest {
     @Test
     public void placeMove_shouldNotAllowTheXToBeGreaterThanTheHeightOfTheBoard() throws Exception {
         Move move = new Move();
-        Point point = new Point(10,0);
+        Point point = new Point(10, 0);
 
-        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class)))
-                .thenReturn(Board.builder().addMove(move).build());
+        when(mockService.placeMove(anyLong(), anyLong(), any(Move.class)))
+                .thenReturn(Game.builder()
+                        .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -145,10 +144,11 @@ public class GameControllerTest {
     @Test
     public void placeMove_shouldNotAllowTheYToBeLessThanTheWidthOfTheBoard() throws Exception {
         Move move = new Move();
-        Point point = new Point(0,-1);
+        Point point = new Point(0, -1);
 
-        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class)))
-                .thenReturn(Board.builder().addMove(move).build());
+        when(mockService.placeMove(anyLong(), anyLong(), any(Move.class)))
+                .thenReturn(Game.builder()
+                        .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -164,10 +164,11 @@ public class GameControllerTest {
     @Test
     public void placeMove_shouldNotAllowTheYToBeGreaterThanTheHeightOfTheBoard() throws Exception {
         Move move = new Move();
-        Point point = new Point(0,10);
+        Point point = new Point(0, 10);
 
-        when(mockService.placeMove(anyLong(), anyLong(), any(Point.class)))
-                .thenReturn(Board.builder().addMove(move).build());
+        when(mockService.placeMove(anyLong(), anyLong(), any(Move.class)))
+                .thenReturn(Game.builder()
+                        .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -182,10 +183,10 @@ public class GameControllerTest {
 
     @Test
     public void placeMove_shouldHandleMoveCollisions() throws Exception {
-        Point point = new Point(0,0);
+        Point point = new Point(0, 0);
 
         doThrow(new MoveCollision())
-                .when(mockService).placeMove(anyLong(), anyLong(), any(Point.class));
+                .when(mockService).placeMove(anyLong(), anyLong(), any(Move.class));
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -196,5 +197,23 @@ public class GameControllerTest {
 
         ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
         assertThat(error.getValidations().get(0).getMessage(), is("Move already exists on board."));
+    }
+
+    @Test
+    public void placeMove_shouldHandleTurnChecks() throws Exception {
+        Point point = new Point(0, 0);
+
+        doThrow(new TurnCheck())
+                .when(mockService).placeMove(anyLong(), anyLong(), any(Move.class));
+
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(point.toString()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), GameErrors.class);
+
+        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), is("It is not your turn."));
     }
 }

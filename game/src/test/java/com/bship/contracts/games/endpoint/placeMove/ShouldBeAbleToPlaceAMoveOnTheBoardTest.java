@@ -297,7 +297,7 @@ assertThatJson(parsedJson).field("id").isEqualTo(2);
 }
 
 @Test
-public void validate_30_placeMove1() throws Exception {
+public void validate_30_placeMove() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")

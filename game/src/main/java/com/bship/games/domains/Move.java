@@ -1,20 +1,18 @@
 package com.bship.games.domains;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 @JsonDeserialize(builder = Move.Builder.class)
 public class Move {
 
-    @JsonIgnore
     private Long boardId;
 
-    @JsonIgnore
     private Long id;
 
-    private Point point;
     private MoveStatus status;
+
+    private Point point;
 
     public Move() {}
 
@@ -92,14 +90,13 @@ public class Move {
         Move move = (Move) o;
 
         if (boardId != null ? !boardId.equals(move.boardId) : move.boardId != null) return false;
-        if (id != null ? !id.equals(move.id) : move.id != null) return false;
-        return this.point != null ? this.point.equals(move.point) : move.point == null;
+        if (status != move.status) return false;
+        return point != null ? point.equals(move.point) : move.point == null;
     }
 
     @Override
     public int hashCode() {
         int result = boardId != null ? boardId.hashCode() : 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (point != null ? point.hashCode() : 0);
         return result;

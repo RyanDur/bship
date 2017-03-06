@@ -4,7 +4,7 @@ import com.bship.games.domains.Board;
 import com.bship.games.domains.Ship;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
-import com.bship.games.services.GameService;
+import com.bship.games.services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -27,12 +27,12 @@ import static org.springframework.http.ResponseEntity.badRequest;
 @RestController
 public class BoardsController implements BadRequestHandler {
 
-    private GameService service;
+    private BoardService service;
 
     private Function<Exception, ObjectError> shipError;
 
     @Autowired
-    public BoardsController(GameService service) {
+    public BoardsController(BoardService service) {
         shipError = error.apply("board");
         this.service = service;
     }

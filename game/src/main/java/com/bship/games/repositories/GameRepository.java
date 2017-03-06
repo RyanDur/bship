@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.Optional;
 
 @Repository
 public class GameRepository {
@@ -24,6 +25,15 @@ public class GameRepository {
 
     public Game createGame() {
         return Game.builder().withId(getGeneratedId()).build();
+    }
+
+    public Optional<Game> getGame(Long gameId) {
+        return null;
+    }
+
+    public Game save(Game game) {
+
+        return null;
     }
 
     private Long getGeneratedId() {

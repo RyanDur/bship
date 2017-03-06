@@ -8,7 +8,7 @@ import com.bship.games.endpoints.RequestErrors.GameErrors;
 import com.bship.games.endpoints.RequestErrors.ObjectValidation;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
-import com.bship.games.services.GameService;
+import com.bship.games.services.BoardService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
@@ -35,15 +35,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class BoardsControllerTest {
 
-    private BoardsController boardsController;
-    private GameService mockService;
+    private BoardService mockService;
     private MockMvc mockMvc;
     private ObjectMapper mapper;
 
     @Before
     public void setup() {
-        mockService = mock(GameService.class);
-        boardsController = new BoardsController(mockService);
+        mockService = mock(BoardService.class);
+        BoardsController boardsController = new BoardsController(mockService);
         mockMvc = MockMvcBuilders.standaloneSetup(boardsController).build();
         mapper = new ObjectMapper();
     }
