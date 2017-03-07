@@ -9,8 +9,13 @@ import com.bship.games.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import static java.util.Optional.of;
 
 @Service
 public class GameService {
@@ -38,14 +43,27 @@ public class GameService {
     }
 
     private Function<Game, Optional<Game>> saveTurn(Long boardId) {
-        return game -> game.getBoards().stream()
-                .map(Board::getId)
-                .filter(logic.nextTurn(boardId))
+        return game -> of(game)
+                .map(Game::getBoards)
+                .map(collectIds)
+                .map(getNextTurn(boardId))
+                .map(Stream::findFirst)
+                .map(Optional::get)
                 .map(save(game))
-                .findFirst();
+                .map(getSavedGame);
     }
 
-    private Function<Long, Game> save(Game game) {
-        return nextTurn -> repository.save(game.copy().withTurn(nextTurn).build());
+    private Function<Stream<Long>, Stream<Long>> getNextTurn(Long boardId) {
+        return ids -> ids.filter(logic.nextTurn(boardId));
     }
+
+    private Function<Long, Supplier<Game>> save(Game game) {
+        return nextTurn -> {
+            Game finishedTurn = game.copy().withTurn(nextTurn).build();
+            return () -> repository.save(finishedTurn);
+        };
+    }
+
+    private Function<Supplier<Game>, Game> getSavedGame = Supplier::get;
+    private Function<List<Board>, Stream<Long>> collectIds = boards -> boards.stream().map(Board::getId);
 }
