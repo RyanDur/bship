@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,8 @@ import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.partitioningBy;
+import static java.util.stream.Collectors.toMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -262,53 +265,52 @@ public class GameLogicTest {
         Move move2 = move.copy().withPoint(new Point(4, 1)).build();
         Optional<Game> actual = logic.playMove(game1.get(), boardId, move2);
 
-        List<Board> boards = game.getBoards();
-        Board board1 = boards.stream().filter(o -> o.getId().equals(boardId)).findFirst().get();
-        Board opponentBoard1 = boards.stream().filter(o -> !o.getId().equals(boardId)).findFirst().get();
-        opponentBoard1.copy().addOpponentMove(move).build();
+        Map<Boolean, Board> boardMap = partitionBoards(game1.get(), boardId);
+        Board current = boardMap.get(move.getBoardId().equals(boardId));
+        Board other = boardMap.get(!move.getBoardId().equals(boardId));
 
         Ship sunkShip = getShips(boardId).stream()
                 .filter(o -> o.getType().equals(Harbor.DESTROYER))
-                .collect(Collectors.toList()).get(0).copy().withSunk(true).build();
+                .findFirst()
+                .map(Ship::copy)
+                .map(o -> o.withSunk(true))
+                .map(Ship.Builder::build).get();
 
         List<Ship> shipList = getShips(boardId).stream()
                 .filter(o -> !o.getType().equals(Harbor.DESTROYER))
                 .collect(Collectors.toList());
-        shipList.add(sunkShip);
 
         Game expected = game.copy().withBoards(asList(
-                board1.copy().withMoves(asList(
+                current.copy().withMoves(asList(
                         move.copy().withStatus(HIT).build(),
                         move2.copy().withStatus(HIT).build()
                 )).addOpponentShip(sunkShip).build(),
-                opponentBoard1.copy().withOpponentMoves(asList(
+
+                other.copy().withOpponentMoves(asList(
                         move.copy().withStatus(HIT).build(),
                         move2.copy().withStatus(HIT).build()
-                )).withShips(shipList).build()
+                )).withShips(shipList).addShip(sunkShip).build()
+
         )).build();
 
         assertThat(actual.get(), is(equalTo(expected)));
     }
 
-    public Game getGame(long gameId, long boardId, long opponentBoardId) {
+    private Game getGame(long gameId, long boardId, long opponentBoardId) {
         List<Ship> ships = getShips(boardId);
         List<Ship> opponentShips = getShips(boardId);
         Board board = getBoard(boardId, ships);
         Board opponentBoard = getBoard(opponentBoardId, opponentShips);
-        return getGame(gameId, board, opponentBoard);
+        return Game.builder()
+                .withBoards(asList(board, opponentBoard))
+                .withId(gameId)
+                .build();
     }
 
     private Move getMove(int x, int y, Long boardId) {
         return Move.builder()
                 .withBoardId(boardId)
                 .withPoint(new Point(x, y)).build();
-    }
-
-    private Game getGame(long gameId, Board board, Board opponentBoard) {
-        return Game.builder()
-                .withBoards(asList(board, opponentBoard))
-                .withId(gameId)
-                .build();
     }
 
     private Board getBoard(long boardId, List<Ship> ships) {
@@ -344,5 +346,15 @@ public class GameLogicTest {
                         .withEnd(new Point(4, 1))
                         .withSunk(false)
                         .withId(boardId).build());
+    }
+
+    private Map<Boolean, Board> partitionBoards(Game game, Long boardId) {
+        return game.getBoards()
+                .stream()
+                .collect(partitioningBy(board -> board.getId().equals(boardId)))
+                .entrySet()
+                .stream()
+                .collect(toMap(Map.Entry::getKey,
+                        entry -> entry.getValue().stream().findFirst().get()));
     }
 }

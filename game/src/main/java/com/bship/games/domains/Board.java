@@ -60,9 +60,9 @@ public class Board {
                 .withId(getId())
                 .withGameId(getGameId())
                 .withShips(getShips())
-                .withShips(getOpponentShips())
+                .withOpponentShips(getOpponentShips())
                 .withMoves(getMoves())
-                .withMoves(getOpponentMoves());
+                .withOpponentMoves(getOpponentMoves());
     }
 
     public static Builder builder() {
@@ -162,13 +162,13 @@ public class Board {
 
     @Override
     public String toString() {
-        return "Board{" +
-                "gameId=" + getGameId() +
-                ", id=" + getId() +
-                ", ships=" + getShips() +
-                ", opponentShips=" + getOpponentShips() +
-                ", moves=" + getMoves() +
-                ", opponentMoves=" + getOpponentMoves() +
+        return "{" +
+                "\"gameId\":" + getGameId() +
+                ", \"id\":" + getId() +
+                ", \"ships\":" + getShips() +
+                ", \"opponentShips\":" + getOpponentShips() +
+                ", \"moves\":" + getMoves() +
+                ", \"opponentMoves\":" + getOpponentMoves() +
                 '}';
     }
 }

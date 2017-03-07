@@ -90,10 +90,10 @@ public class Game {
 
     @Override
     public String toString() {
-        return "Game{" +
-                "boards=" + getBoards() +
-                ", id=" + getId() +
-                ", turn=" + getTurn() +
+        return "{" +
+                "\"boards\":" + getBoards() +
+                ", \"id\":" + getId() +
+                ", \"turn\":" + getTurn() +
                 '}';
     }
 }

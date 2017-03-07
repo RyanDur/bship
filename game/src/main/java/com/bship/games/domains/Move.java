@@ -104,11 +104,11 @@ public class Move {
 
     @Override
     public String toString() {
-        return "Move{" +
-                "boardId=" + boardId +
-                ", id=" + id +
-                ", status=" + status +
-                ", point=" + point +
+        return "{" +
+                "\"boardId\":" + boardId +
+                ", \"id\":" + id +
+                ", \"status\":" + "\"" + status + "\"" +
+                ", \"point\":" + point +
                 '}';
     }
 }
