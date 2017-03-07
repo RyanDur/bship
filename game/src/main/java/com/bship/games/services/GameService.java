@@ -47,14 +47,14 @@ public class GameService {
                 .map(Game::getBoards)
                 .map(collectIds)
                 .map(getNextTurn(boardId))
-                .map(Stream::findFirst)
+                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(save(game))
                 .map(getSavedGame);
     }
 
-    private Function<Stream<Long>, Stream<Long>> getNextTurn(Long boardId) {
-        return ids -> ids.filter(logic.nextTurn(boardId));
+    private Function<Stream<Long>, Optional<Long>> getNextTurn(Long boardId) {
+        return ids -> ids.filter(logic.nextTurn(boardId)).findFirst();
     }
 
     private Function<Long, Supplier<Game>> save(Game game) {
