@@ -116,7 +116,7 @@ public class GameServiceTest {
         Game game = Game.builder().withId(gameId).withBoards(asList(
                 Board.builder().withId(boardId).build(),
                 Board.builder().withId(otherBoardId).build()
-        )).build();
+        )).withTurn(boardId).build();
         Optional<Game> gameOptional = Optional.of(game);
         Game nextGame = game.copy().withTurn(otherBoardId).build();
 
@@ -124,11 +124,11 @@ public class GameServiceTest {
         when(logic.nextTurn(boardId)).thenReturn(e -> true);
         when(logic.playMove(any(Game.class), anyLong(), any(Move.class))).thenReturn(gameOptional);
         when(gameRepository.getGame(gameId)).thenReturn(gameOptional);
-        when(gameRepository.save(nextGame)).thenReturn(nextGame);
+        when(gameRepository.save(game)).thenReturn(nextGame);
 
         Game actual = gameService.placeMove(gameId, boardId, point);
 
-        verify(gameRepository).save(nextGame);
+        verify(gameRepository).save(game);
         assertThat(actual, is(equalTo(nextGame)));
     }
 }
