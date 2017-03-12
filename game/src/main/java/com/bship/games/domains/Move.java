@@ -92,6 +92,7 @@ public class Move {
         Move move = (Move) o;
 
         if (boardId != null ? !boardId.equals(move.boardId) : move.boardId != null) return false;
+        if (id != null ? !id.equals(move.id) : move.id != null) return false;
         if (status != move.status) return false;
         return point != null ? point.equals(move.point) : move.point == null;
     }
@@ -99,6 +100,7 @@ public class Move {
     @Override
     public int hashCode() {
         int result = boardId != null ? boardId.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (point != null ? point.hashCode() : 0);
         return result;

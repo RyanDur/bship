@@ -8,6 +8,9 @@ import com.bship.games.repositories.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+import java.util.Optional;
+
 @Service
 public class BoardService {
 
@@ -20,11 +23,11 @@ public class BoardService {
         this.logic = logic;
     }
 
-    public Board placeShip(Long boardId, Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
-        Board board = repository.get(boardId);
-        if (logic.exists(board, ship)) throw new ShipExistsCheck();
-        if (logic.collision(board, ship)) throw new ShipCollisionCheck();
+    public Optional<Board> placeShip(BigInteger boardId, Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
+        Optional<Board> board = repository.get(boardId);
+        if (logic.exists(board.get(), ship)) throw new ShipExistsCheck();
+        if (logic.collision(board.get(), ship)) throw new ShipCollisionCheck();
 
-        return repository.save(board.copy().addShip(ship).build());
+        return repository.save(board.get().copy().addShip(ship).build());
     }
 }

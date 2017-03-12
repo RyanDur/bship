@@ -8,20 +8,19 @@ import java.math.BigInteger;
 import java.util.List;
 
 import static com.bship.games.util.Util.addTo;
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
 
 @JsonDeserialize(builder = Board.Builder.class)
 public class Board {
 
     @JsonIgnore
     private BigInteger gameId;
-
     private BigInteger id;
+
     private List<Ship> ships;
     private List<Ship> opponentShips;
     private List<Move> moves;
     private List<Move> opponentMoves;
+    private final boolean winner;
 
     private Board(Builder builder) {
         id = builder.id;
@@ -30,6 +29,7 @@ public class Board {
         opponentShips = builder.opponentShips;
         moves = builder.moves;
         opponentMoves = builder.opponentMoves;
+        winner = builder.winner;
     }
 
     public BigInteger getGameId() {
@@ -41,19 +41,23 @@ public class Board {
     }
 
     public List<Ship> getShips() {
-        return ofNullable(ships).orElse(emptyList());
+        return ships;
     }
 
     public List<Ship> getOpponentShips() {
-        return ofNullable(opponentShips).orElse(emptyList());
+        return opponentShips;
     }
 
     public List<Move> getMoves() {
-        return ofNullable(moves).orElse(emptyList());
+        return moves;
     }
 
     public List<Move> getOpponentMoves() {
-        return ofNullable(opponentMoves).orElse(emptyList());
+        return opponentMoves;
+    }
+
+    public boolean isWinner() {
+        return winner;
     }
 
     public Builder copy() {
@@ -63,7 +67,9 @@ public class Board {
                 .withShips(getShips())
                 .withOpponentShips(getOpponentShips())
                 .withMoves(getMoves())
-                .withOpponentMoves(getOpponentMoves());
+                .withOpponentMoves(getOpponentMoves())
+                .withWinner(isWinner());
+
     }
 
     public static Builder builder() {
@@ -78,6 +84,7 @@ public class Board {
         private List<Ship> opponentShips;
         private List<Move> moves;
         private List<Move> opponentMoves;
+        private boolean winner;
 
         public Builder withId(BigInteger id) {
             this.id = id;
@@ -129,6 +136,11 @@ public class Board {
             return this;
         }
 
+        public Builder withWinner(boolean winner) {
+            this.winner = winner;
+            return this;
+        }
+
         public Board build() {
             return new Board(this);
         }
@@ -141,6 +153,7 @@ public class Board {
 
         Board board = (Board) o;
 
+        if (winner != board.winner) return false;
         if (gameId != null ? !gameId.equals(board.gameId) : board.gameId != null) return false;
         if (id != null ? !id.equals(board.id) : board.id != null) return false;
         if (ships != null ? !ships.equals(board.ships) : board.ships != null) return false;
@@ -158,6 +171,7 @@ public class Board {
         result = 31 * result + (opponentShips != null ? opponentShips.hashCode() : 0);
         result = 31 * result + (moves != null ? moves.hashCode() : 0);
         result = 31 * result + (opponentMoves != null ? opponentMoves.hashCode() : 0);
+        result = 31 * result + (winner ? 1 : 0);
         return result;
     }
 
@@ -170,6 +184,7 @@ public class Board {
                 ", \"opponentShips\":" + getOpponentShips() +
                 ", \"moves\":" + getMoves() +
                 ", \"opponentMoves\":" + getOpponentMoves() +
+                ", \"winner\":" + isWinner() +
                 '}';
     }
 }

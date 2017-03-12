@@ -1,6 +1,7 @@
 package com.bship.games.repositories;
 
 import com.bship.games.domains.Harbor;
+import com.bship.games.domains.Move;
 import com.bship.games.domains.Ship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,9 +45,8 @@ public class ShipRepository {
         return ofNullable(get(BigInteger.valueOf(holder.getKey().longValue())));
     }
 
-    public Optional<List<Ship>> getAll(BigInteger boardId) {
-        return ofNullable(template.query(GET_SHIPS_FOR_BOARD, new Object[]{boardId}, shipRowMapper))
-                .filter(Objects::nonNull);
+    public List<Ship> getAll(BigInteger boardId) {
+        return template.query(GET_SHIPS_FOR_BOARD, new Object[]{boardId}, shipRowMapper);
     }
 
     public Optional<Ship> update(Ship ship) {
@@ -81,4 +81,16 @@ public class ShipRepository {
             .withEnd(toPoint(rs.getInt("end")))
             .withSunk(rs.getBoolean("sunk"))
             .withBoardId(BigInteger.valueOf(rs.getLong("ship_board_id"))).build();
+
+    public List<Ship> createAll(BigInteger boardId) {
+        return null;
+    }
+
+    public List<Ship> getAllOpponents(BigInteger gameId, BigInteger id) {
+        return null;
+    }
+
+    public void save(List<Ship> ships) {
+
+    }
 }

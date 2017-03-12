@@ -61,10 +61,10 @@ public class MoveRepositoryTest {
         Optional<Move> move2 = repository.create(board.getId(), point1, HIT);
         Optional<Move> move3 = repository.create(board.getId(), point2, HIT);
 
-        Optional<List<Move>> actual = repository.getAll(board.getId());
+        List<Move> actual = repository.getAll(board.getId());
 
-        assertThat(actual.get().size(), is(3));
-        assertThat(actual.get(), contains(move1.get(), move2.get(), move3.get()));
+        assertThat(actual.size(), is(3));
+        assertThat(actual, contains(move1.get(), move2.get(), move3.get()));
     }
 
     private RowMapper<Move> moveRowMapper = (rs, rowNum) -> Move.builder()

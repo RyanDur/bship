@@ -18,12 +18,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.math.BigInteger;
+
+import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -54,8 +56,8 @@ public class BoardsControllerTest {
 
     @Test
     public void placeShip_shouldProduceJSONWithCharsetUTF8() throws Exception {
-        when(mockService.placeShip(anyLong(), any(Ship.class)))
-                .thenReturn(Board.builder().build());
+        when(mockService.placeShip(any(BigInteger.class), any(Ship.class)))
+                .thenReturn(of(Board.builder().build()));
 
         mockMvc.perform(put("/boards/9").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -75,8 +77,8 @@ public class BoardsControllerTest {
 
     @Test
     public void placeShip_shouldRespondWith200() throws Exception {
-        when(mockService.placeShip(anyLong(), any(Ship.class)))
-                .thenReturn(Board.builder().build());
+        when(mockService.placeShip(any(BigInteger.class), any(Ship.class)))
+                .thenReturn(of(Board.builder().build()));
 
         mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -114,7 +116,7 @@ public class BoardsControllerTest {
 
         ArgumentCaptor<Ship> captor = ArgumentCaptor.forClass(Ship.class);
 
-        verify(mockService).placeShip(eq(9L), captor.capture());
+        verify(mockService).placeShip(BigInteger.valueOf(eq(9L)), captor.capture());
         Ship capturedShip = captor.getValue();
 
         assertEquals(Harbor.BATTLESHIP, capturedShip.getType());
@@ -417,7 +419,7 @@ public class BoardsControllerTest {
 
     @Test
     public void placeShip_shouldHandleShipExistence() throws Exception {
-        doThrow(new ShipExistsCheck()).when(mockService).placeShip(anyLong(), any(Ship.class));
+        doThrow(new ShipExistsCheck()).when(mockService).placeShip(any(BigInteger.class), any(Ship.class));
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -441,7 +443,7 @@ public class BoardsControllerTest {
 
     @Test
     public void placeShip_shouldHandleShipCollisions() throws Exception {
-        doThrow(new ShipCollisionCheck()).when(mockService).placeShip(anyLong(), any(Ship.class));
+        doThrow(new ShipCollisionCheck()).when(mockService).placeShip(any(BigInteger.class), any(Ship.class));
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +

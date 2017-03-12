@@ -3,6 +3,7 @@ package com.bship.games.repositories;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.MoveStatus;
 import com.bship.games.domains.Point;
+import com.bship.games.domains.Ship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,9 +43,9 @@ public class MoveRepository {
         return getMove(holder.getKey().longValue());
     }
 
-    public Optional<List<Move>> getAll(BigInteger boardId) {
-        return ofNullable(template.query("SELECT * FROM moves WHERE move_board_id = ?",
-                new Object[]{boardId}, moveRowMapper)).filter(Objects::nonNull);
+    public List<Move> getAll(BigInteger boardId) {
+        return template.query("SELECT * FROM moves WHERE move_board_id = ?",
+                new Object[]{boardId}, moveRowMapper);
     }
 
     private Optional<Move> getMove(Long id) {
@@ -67,4 +68,11 @@ public class MoveRepository {
             .withId(BigInteger.valueOf(rs.getLong("id")))
             .withBoardId(BigInteger.valueOf(rs.getLong("move_board_id")))
             .withPoint(toPoint(rs.getInt("point"))).build();
+
+    public List<Move> getAllOpponents(BigInteger gameId, BigInteger id) {
+        return null;
+    }
+
+    public void save(List<Move> moves) {
+    }
 }

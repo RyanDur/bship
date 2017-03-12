@@ -10,10 +10,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.math.BigInteger;
+
+import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,10 +43,10 @@ public class BoardServiceTest {
         Ship ship = Ship.builder().build();
         Board board1 = board.copy().addShip(ship).build();
 
-        when(repository.save(board1)).thenReturn(board1);
-        when(repository.get(anyLong())).thenReturn(board);
+        when(repository.save(board1)).thenReturn(of(board1));
+        when(repository.get(any(BigInteger.class))).thenReturn(of(board));
 
-        Board actual = service.placeShip(1L, ship);
+        Board actual = service.placeShip(BigInteger.valueOf(1L), ship).get();
 
         verify(repository).save(board1);
         assertThat(actual, is(equalTo(board1)));
@@ -57,10 +60,10 @@ public class BoardServiceTest {
         Board board = Board.builder().build();
         Ship ship = Ship.builder().build();
 
-        when(repository.get(anyLong())).thenReturn(board);
+        when(repository.get(any(BigInteger.class))).thenReturn(of(board));
         when(logic.exists(board, ship)).thenReturn(true);
 
-        service.placeShip(1L, ship);
+        service.placeShip(BigInteger.valueOf(1L), ship);
     }
 
     @Test
@@ -71,11 +74,11 @@ public class BoardServiceTest {
         Board board = Board.builder().build();
         Ship ship = Ship.builder().build();
 
-        when(repository.get(anyLong())).thenReturn(board);
+        when(repository.get(any(BigInteger.class))).thenReturn(of(board));
         when(logic.exists(board, ship)).thenReturn(false);
         when(logic.collision(board, ship)).thenReturn(true);
 
-        service.placeShip(1L, ship);
+        service.placeShip(BigInteger.valueOf(1L), ship);
     }
 
 }

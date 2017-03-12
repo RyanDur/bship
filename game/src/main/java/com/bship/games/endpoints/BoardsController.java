@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -41,9 +42,9 @@ public class BoardsController implements BadRequestHandler {
             value = "/boards/{boardId}",
             produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(OK)
-    public Board placeShip(@PathVariable Long boardId,
+    public Board placeShip(@PathVariable BigInteger boardId,
                            @Valid @RequestBody Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
-        return service.placeShip(boardId, ship);
+        return service.placeShip(boardId, ship).orElse(null);
     }
 
     @Override

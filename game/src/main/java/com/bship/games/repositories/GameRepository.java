@@ -26,7 +26,7 @@ public class GameRepository {
     private static final String INSERT_INTO_GAMES_ID = "INSERT INTO games(id)";
     private static final String VALUE_DEFAULT = "VALUE (default)";
     private static final String SEP = " ";
-    private static final String UPDATE_GAMES = "UPDATE Games";
+    private static final String UPDATE_GAMES = "UPDATE games";
     private static final String SET = "SET";
     private static final String TURN_TURN = "turn = :turn";
     private final NamedParameterJdbcTemplate template;

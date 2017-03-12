@@ -67,10 +67,10 @@ public class ShipRepositoryTest {
         Ship carrier = Ship.builder().withType(type).withStart(start).withEnd(end).build();
         Optional<Ship> savedCarrier = repository.create(carrier, board.getId());
 
-        Optional<List<Ship>> ships = repository.getAll(board.getId());
+        List<Ship> ships = repository.getAll(board.getId());
 
-        assertThat(ships.get().size(), is(2));
-        assertThat(ships.get(), containsInAnyOrder(savedCarrier.get(), savedBattleship));
+        assertThat(ships.size(), is(2));
+        assertThat(ships, containsInAnyOrder(savedCarrier.get(), savedBattleship));
     }
 
     @Test
@@ -80,9 +80,9 @@ public class ShipRepositoryTest {
         template.update("INSERT INTO games(id) VALUE(?) ", game.getId());
         template.update("INSERT INTO boards(id, game_id) VALUE(?, ?) ", board.getId(), board.getGameId());
 
-        Optional<List<Ship>> ships = repository.getAll(board.getId());
+        List<Ship> ships = repository.getAll(board.getId());
 
-        assertThat(ships.get(), is(empty()));
+        assertThat(ships, is(empty()));
     }
 
     @Test
