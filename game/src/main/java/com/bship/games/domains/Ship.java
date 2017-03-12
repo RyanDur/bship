@@ -29,19 +29,18 @@ public class Ship {
     @JsonIgnore
     private BigInteger boardId;
 
+    private Integer size;
     private boolean sunk;
     private BigInteger id;
 
-    public Ship() {
-    }
-
     private Ship(Builder builder) {
-        this.type = builder.type;
-        this.start = builder.start;
-        this.end = builder.end;
-        this.boardId = builder.boardId;
-        this.id = builder.id;
-        this.sunk = builder.sunk;
+        type = builder.type;
+        start = builder.start;
+        end = builder.end;
+        boardId = builder.boardId;
+        id = builder.id;
+        sunk = builder.sunk;
+        size = builder.size;
     }
 
     public Harbor getType() {
@@ -68,6 +67,10 @@ public class Ship {
         return boardId;
     }
 
+    public Integer getSize() {
+        return size;
+    }
+
     public Builder copy() {
         return builder()
                 .withId(id)
@@ -75,7 +78,8 @@ public class Ship {
                 .withStart(start)
                 .withEnd(end)
                 .withBoardId(boardId)
-                .withSunk(sunk);
+                .withSunk(sunk)
+                .withSize(size);
     }
 
     public static Builder builder() {
@@ -90,6 +94,7 @@ public class Ship {
         private BigInteger boardId;
         private BigInteger id;
         private boolean sunk;
+        private Integer size;
 
         public Builder withType(Harbor shipType) {
             this.type = shipType;
@@ -118,6 +123,11 @@ public class Ship {
 
         public Builder withSunk(boolean sunk) {
             this.sunk = sunk;
+            return this;
+        }
+
+        public Builder withSize(Integer size) {
+            this.size = size;
             return this;
         }
 

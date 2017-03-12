@@ -1,96 +1,97 @@
 package com.bship.games.repositories;
 
 import com.bship.games.domains.Harbor;
-import com.bship.games.domains.Move;
+import com.bship.games.domains.Point;
 import com.bship.games.domains.Ship;
+import com.bship.games.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.function.Function;
 
-import static com.bship.games.util.Util.toIndex;
-import static com.bship.games.util.Util.toPoint;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils.createBatch;
 
 @Repository
 public class ShipRepository {
 
-    private static final String INSERT_NEW_SHIP = "INSERT INTO ships(type, start, end, ship_board_id) VALUE(?,?,?,?)";
-    private static final String UPDATE_SHIP_SET_SUNK = "UPDATE ships SET sunk = ? WHERE id = ?";
-    private static final String GET_SHIP = "SELECT * FROM ships WHERE id = ?";
-    private static final String GET_SHIPS_FOR_BOARD = "SELECT * FROM ships WHERE ship_board_id = ?";
-    private final JdbcTemplate template;
+    private static final String INSERT_INTO_SHIPS = "INSERT INTO ships(type, size, ship_board_id) VALUES (:type, :size, :ship_board_id)";
+    public static final String SELECT_OPPONENTS_SUNK_SHIPS = "SELECT s.* FROM ships s JOIN boards b ON s.ship_board_id = b.id WHERE b.game_id = :game_id AND s.ship_board_id <> :board_id AND s.sunk IS TRUE;";
+    public static final String SELECT_MY_SHIPS = "SELECT * FROM ships WHERE ship_board_id = :board_id";
+    public static final String UPDATE_SHIPS = "UPDATE ships SET sunk = :sunk WHERE id = :id";
+    private final NamedParameterJdbcTemplate template;
 
     @Autowired
-    public ShipRepository(JdbcTemplate template) {
+    public ShipRepository(NamedParameterJdbcTemplate template) {
         this.template = template;
     }
 
-    public Optional<Ship> create(Ship ship, BigInteger boardId) {
-        GeneratedKeyHolder holder = new GeneratedKeyHolder();
-        PreparedStatementCreator preparedStatementCreator = con ->
-                prepareInsertStatement(ship.copy().withBoardId(boardId).build(), con);
-        template.update(preparedStatementCreator, holder);
-        return ofNullable(get(BigInteger.valueOf(holder.getKey().longValue())));
+    public List<Ship> createAll(BigInteger boardId) {
+        template.batchUpdate(INSERT_INTO_SHIPS,
+                createBatch(getNewShipBatch(boardId)));
+
+        return getAll(boardId);
     }
 
     public List<Ship> getAll(BigInteger boardId) {
-        return template.query(GET_SHIPS_FOR_BOARD, new Object[]{boardId}, shipRowMapper);
+        return template.query(SELECT_MY_SHIPS,
+                new MapSqlParameterSource("board_id", boardId),
+                buildShip);
     }
 
-    public Optional<Ship> update(Ship ship) {
-        template.update(con -> prepareUpdateStatement(ship, con));
-        return ofNullable(get(ship.getId()));
-    }
-
-    private Ship get(BigInteger id) {
-        return template.queryForObject(GET_SHIP, new Object[]{id}, shipRowMapper);
-    }
-
-    private PreparedStatement prepareInsertStatement(Ship ship, Connection con) throws SQLException {
-        PreparedStatement statement = con.prepareStatement(INSERT_NEW_SHIP, RETURN_GENERATED_KEYS);
-        statement.setString(1, ship.getType().name());
-        statement.setInt(2, toIndex(ship.getStart()));
-        statement.setInt(3, toIndex(ship.getEnd()));
-        statement.setLong(4, ship.getBoardId().longValue());
-        return statement;
-    }
-
-    private PreparedStatement prepareUpdateStatement(Ship ship, Connection con) throws SQLException {
-        PreparedStatement statement = con.prepareStatement(UPDATE_SHIP_SET_SUNK);
-        statement.setBoolean(1, ship.isSunk());
-        statement.setLong(2, ship.getId().longValue());
-        return statement;
-    }
-
-    private RowMapper<Ship> shipRowMapper = (rs, rowNum) -> Ship.builder()
-            .withId(BigInteger.valueOf(rs.getLong("id")))
-            .withType(Harbor.valueOf(rs.getString("type")))
-            .withStart(toPoint(rs.getInt("start")))
-            .withEnd(toPoint(rs.getInt("end")))
-            .withSunk(rs.getBoolean("sunk"))
-            .withBoardId(BigInteger.valueOf(rs.getLong("ship_board_id"))).build();
-
-    public List<Ship> createAll(BigInteger boardId) {
-        return null;
-    }
-
-    public List<Ship> getAllOpponents(BigInteger gameId, BigInteger id) {
-        return null;
+    public List<Ship> getAllOpponents(BigInteger gameId, BigInteger boardId) {
+        MapSqlParameterSource source = new MapSqlParameterSource();
+        source.addValue("game_id", gameId);
+        source.addValue("board_id", boardId);
+        return template.query(SELECT_OPPONENTS_SUNK_SHIPS, source, buildShip);
     }
 
     public void save(List<Ship> ships) {
+        of(ships).map(getUpdateShipBatch()).map(batch ->
+                template.batchUpdate(UPDATE_SHIPS, createBatch(batch)));
+    }
 
+    private RowMapper<Ship> buildShip = (rs, rowNum) -> Ship.builder()
+            .withId(BigInteger.valueOf(rs.getLong("id")))
+            .withType(Harbor.valueOf(rs.getString("type")))
+            .withStart(getPoint(rs.getString("start")))
+            .withEnd(getPoint(rs.getString("end")))
+            .withSunk(rs.getBoolean("sunk"))
+            .withSize(rs.getInt("size"))
+            .withBoardId(BigInteger.valueOf(rs.getLong("ship_board_id"))).build();
+
+    private Point getPoint(String point) throws SQLException {
+        return ofNullable(point)
+                .map(Integer::valueOf)
+                .map(Util::toPoint)
+                .orElse(new Point());
+    }
+
+    private HashMap[] getNewShipBatch(final BigInteger boardId) {
+        return Harbor.getShips().stream().map(ship ->
+                new HashMap<String, Object>() {{
+                    put("type", ship.name());
+                    put("size", ship.getSize());
+                    put("ship_board_id", boardId);
+                }})
+                .collect(toList()).toArray(new HashMap[0]);
+    }
+
+    private Function<List<Ship>, HashMap[]> getUpdateShipBatch() {
+        return ships -> ships.stream().map(ship ->
+                new HashMap<String, Object>() {{
+                    put("id", ship.getId());
+                    put("sunk", ship.isSunk());
+                }})
+                .collect(toList()).toArray(new HashMap[0]);
     }
 }

@@ -16,9 +16,10 @@ CREATE TABLE boards(
 CREATE TABLE ships(
   id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   type VARCHAR(50),
-  start INT NOT NULL,
-  end INT NOT NULL,
+  start INT DEFAULT NULL,
+  end INT DEFAULT NULL,
   sunk BOOL DEFAULT FALSE,
+  size INT,
   ship_board_id BIGINT NOT NULL,
   CONSTRAINT ship_boards_id_fk
   FOREIGN KEY (ship_board_id)
