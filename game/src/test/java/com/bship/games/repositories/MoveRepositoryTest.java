@@ -1,75 +1,303 @@
 package com.bship.games.repositories;
 
 import com.bship.DBHelper;
-import com.bship.games.domains.Board;
-import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
-import com.bship.games.domains.MoveStatus;
 import com.bship.games.domains.Point;
-import com.bship.games.util.Util;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
+import static java.math.BigInteger.ONE;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 public class MoveRepositoryTest {
 
-    private JdbcTemplate template;
-    private Board board;
-    private MoveRepository repository;
+    private NamedParameterJdbcTemplate template;
+    private MoveRepository moves;
 
     @Before
     public void setup() {
-        template = new JdbcTemplate(DBHelper.reset());
-        repository = new MoveRepository(template);
-        Game game = Game.builder().withId(BigInteger.valueOf(1L)).build();
-        board = Board.builder().withId(BigInteger.valueOf(1L)).withGameId(game.getId()).build();
-        template.update("INSERT INTO games(id) VALUE(?) ", game.getId());
-        template.update("INSERT INTO boards(id, game_id) VALUE(?, ?) ", board.getId(), board.getGameId());
+        template = new NamedParameterJdbcTemplate(DBHelper.reset());
+        moves = new MoveRepository(template);
+        template.update("INSERT INTO games(id) VALUE (default)", new HashMap<>());
+        template.update("INSERT INTO boards(game_id) VALUE (1)", new HashMap<>());
+        template.update("INSERT INTO boards(game_id) VALUE (1)", new HashMap<>());
+
+        template.update("INSERT INTO games(id) VALUE (default)", new HashMap<>());
+        template.update("INSERT INTO boards(game_id) VALUE (2)", new HashMap<>());
+        template.update("INSERT INTO boards(game_id) VALUE (2)", new HashMap<>());
     }
 
     @Test
-    public void create_shouldSaveAMoveInTheRepo() {
-        Point point = new Point(1, 2);
+    public void save_shouldSaveTheListOfMoves() {
+        BigInteger boardId = ONE;
+        Move move1 = Move.builder()
+                .withBoardId(boardId)
+                .withPoint(new Point(0, 0))
+                .withStatus(HIT)
+                .withId(ONE)
+                .build();
+        Move move2 = Move.builder()
+                .withBoardId(boardId)
+                .withPoint(new Point(1, 0))
+                .withStatus(MISS)
+                .withId(ONE.add(ONE))
+                .build();
+        Move move3 = Move.builder()
+                .withBoardId(boardId)
+                .withPoint(new Point(0, 1))
+                .withStatus(MISS)
+                .withId(ONE.add(ONE).add(ONE))
+                .build();
 
-        Optional<Move> actual = repository.create(board.getId(), point, MISS);
+        List<Move> moveList = asList(move1, move2, move3);
+        moves.save(moveList);
+        List<Move> actual = moves.getAll(boardId);
 
-        Move move = template.queryForObject("SELECT * FROM moves WHERE move_board_id = " + board.getId(),
-                moveRowMapper);
-
-        assertThat(actual.get(), is(equalTo(move)));
+        assertThat(actual, is(equalTo(moveList)));
     }
 
     @Test
-    public void getMoves_shouldGetAllTheMovesForABoard() {
-        Point point = new Point(1, 2);
-        Point point1 = new Point(1, 3);
-        Point point2 = new Point(1, 4);
+    public void getAll_shouldGetAllTheMoves() {
+        BigInteger boardId = ONE;
+        Move move1 = Move.builder()
+                .withBoardId(boardId)
+                .withPoint(new Point(5, 5))
+                .withStatus(HIT)
+                .withId(ONE)
+                .build();
+        Move move2 = Move.builder()
+                .withBoardId(boardId)
+                .withPoint(new Point(9, 3))
+                .withStatus(MISS)
+                .withId(ONE.add(ONE))
+                .build();
+        Move move3 = Move.builder()
+                .withBoardId(boardId)
+                .withPoint(new Point(2, 2))
+                .withStatus(HIT)
+                .withId(ONE.add(ONE).add(ONE))
+                .build();
 
-        Optional<Move> move1 = repository.create(board.getId(), point, HIT);
-        Optional<Move> move2 = repository.create(board.getId(), point1, HIT);
-        Optional<Move> move3 = repository.create(board.getId(), point2, HIT);
+        List<Move> moveList = asList(move1, move2, move3);
+        moves.save(moveList);
+        List<Move> actual = moves.getAll(boardId);
 
-        List<Move> actual = repository.getAll(board.getId());
-
-        assertThat(actual.size(), is(3));
-        assertThat(actual, contains(move1.get(), move2.get(), move3.get()));
+        assertThat(actual, is(equalTo(moveList)));
     }
 
-    private RowMapper<Move> moveRowMapper = (rs, rowNum) -> Move.builder()
-            .withId(BigInteger.valueOf(rs.getLong("id")))
-            .withBoardId(BigInteger.valueOf(rs.getLong("move_board_id")))
-            .withPoint(Util.toPoint(rs.getInt("point")))
-            .withStatus(MoveStatus.valueOf(rs.getString("status"))).build();
+    @Test
+    public void getAll_shouldReturnEmptyIfNoMoves() {
+        List<Move> actual = moves.getAll(ONE);
+
+        assertThat(actual, is(empty()));
+    }
+
+    @Test
+    public void getAllOpponents_shouldReturnTheOpponentsMoves() {
+        BigInteger boardId1 = ONE;
+        Move move11 = Move.builder()
+                .withBoardId(boardId1)
+                .withPoint(new Point(0, 0))
+                .withStatus(HIT)
+                .withId(ONE)
+                .build();
+        Move move21 = Move.builder()
+                .withBoardId(boardId1)
+                .withPoint(new Point(1, 0))
+                .withStatus(MISS)
+                .withId(ONE.add(ONE))
+                .build();
+        Move move31 = Move.builder()
+                .withBoardId(boardId1)
+                .withPoint(new Point(0, 1))
+                .withStatus(MISS)
+                .withId(ONE.add(ONE).add(ONE))
+                .build();
+
+        BigInteger boardId2 = ONE.add(ONE);
+        Move move12 = Move.builder()
+                .withBoardId(boardId2)
+                .withPoint(new Point(5, 5))
+                .withStatus(HIT)
+                .withId(ONE.add(ONE).add(ONE).add(ONE))
+                .build();
+        Move move22 = Move.builder()
+                .withBoardId(boardId2)
+                .withPoint(new Point(9, 3))
+                .withStatus(MISS)
+                .withId(ONE.add(ONE).add(ONE).add(ONE).add(ONE))
+                .build();
+        Move move32 = Move.builder()
+                .withBoardId(boardId2)
+                .withPoint(new Point(2, 2))
+                .withStatus(HIT)
+                .withId(ONE.add(ONE).add(ONE).add(ONE).add(ONE).add(ONE))
+                .build();
+        List<Move> players = asList(move11, move21, move31);
+        List<Move> opponents = asList(move12, move22, move32);
+
+        moves.save(players);
+        moves.save(opponents);
+
+        List<Move> actual = moves.getAllOpponents(ONE, boardId1);
+        assertThat(actual, is(equalTo(opponents)));
+    }
+
+    @Test
+    public void getAllOpponents_shouldReturnTheOpponentsMovesFromSpecificGame() {
+        BigInteger boardId11 = ONE;
+        Move move111 = Move.builder()
+                .withBoardId(boardId11)
+                .withPoint(new Point(0, 0))
+                .withStatus(HIT)
+                .withId(ONE)
+                .build();
+        Move move211 = Move.builder()
+                .withBoardId(boardId11)
+                .withPoint(new Point(1, 0))
+                .withStatus(MISS)
+                .withId(ONE.add(ONE))
+                .build();
+        Move move311 = Move.builder()
+                .withBoardId(boardId11)
+                .withPoint(new Point(0, 1))
+                .withStatus(MISS)
+                .withId(ONE.add(ONE).add(ONE))
+                .build();
+
+        BigInteger boardId21 = ONE.add(ONE);
+        Move move121 = Move.builder()
+                .withBoardId(boardId21)
+                .withPoint(new Point(5, 5))
+                .withStatus(HIT)
+                .withId(ONE.add(ONE).add(ONE).add(ONE))
+                .build();
+        Move move221 = Move.builder()
+                .withBoardId(boardId21)
+                .withPoint(new Point(9, 3))
+                .withStatus(MISS)
+                .withId(ONE.add(ONE).add(ONE).add(ONE).add(ONE))
+                .build();
+        Move move321 = Move.builder()
+                .withBoardId(boardId21)
+                .withPoint(new Point(2, 2))
+                .withStatus(HIT)
+                .withId(ONE.add(ONE).add(ONE).add(ONE).add(ONE).add(ONE))
+                .build();
+        List<Move> players1 = asList(move111, move211, move311);
+        List<Move> opponents1 = asList(move121, move221, move321);
+
+        moves.save(players1);
+        moves.save(opponents1);
+
+        BigInteger boardId32 = ONE.add(ONE).add(ONE);
+        Move move112 = Move.builder()
+                .withBoardId(boardId32)
+                .withPoint(new Point(0, 0))
+                .withStatus(HIT)
+                .withId(ONE
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE))
+                .build();
+        Move move212 = Move.builder()
+                .withBoardId(boardId32)
+                .withPoint(new Point(1, 0))
+                .withStatus(MISS)
+                .withId(ONE
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE))
+                .build();
+        Move move312 = Move.builder()
+                .withBoardId(boardId32)
+                .withPoint(new Point(0, 1))
+                .withStatus(MISS)
+                .withId(ONE
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE))
+                .build();
+
+        BigInteger boardId42 = ONE.add(ONE).add(ONE).add(ONE);
+        Move move122 = Move.builder()
+                .withBoardId(boardId42)
+                .withPoint(new Point(5, 5))
+                .withStatus(HIT)
+                .withId(ONE
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE))
+                .build();
+        Move move222 = Move.builder()
+                .withBoardId(boardId42)
+                .withPoint(new Point(9, 3))
+                .withStatus(MISS)
+                .withId(ONE
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE))
+                .build();
+        Move move322 = Move.builder()
+                .withBoardId(boardId42)
+                .withPoint(new Point(2, 2))
+                .withStatus(HIT)
+                .withId(ONE
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE)
+                        .add(ONE))
+                .build();
+        List<Move> players2 = asList(move112, move212, move312);
+        List<Move> opponents2 = asList(move122, move222, move322);
+
+        moves.save(players2);
+        moves.save(opponents2);
+
+        List<Move> actual = moves.getAllOpponents(ONE.add(ONE), boardId32);
+        assertThat(actual, is(equalTo(opponents2)));
+    }
 }
