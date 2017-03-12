@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import static com.bship.games.util.Util.addTo;
@@ -14,9 +15,9 @@ import static java.util.Optional.ofNullable;
 public class Board {
 
     @JsonIgnore
-    private Long gameId;
+    private BigInteger gameId;
 
-    private Long id;
+    private BigInteger id;
     private List<Ship> ships;
     private List<Ship> opponentShips;
     private List<Move> moves;
@@ -31,11 +32,11 @@ public class Board {
         opponentMoves = builder.opponentMoves;
     }
 
-    public Long getGameId() {
+    public BigInteger getGameId() {
         return gameId;
     }
 
-    public Long getId() {
+    public BigInteger getId() {
         return id;
     }
 
@@ -71,19 +72,19 @@ public class Board {
 
     @JsonPOJOBuilder
     public static final class Builder {
-        private Long id;
-        private Long gameId;
+        private BigInteger id;
+        private BigInteger gameId;
         private List<Ship> ships;
         private List<Ship> opponentShips;
         private List<Move> moves;
         private List<Move> opponentMoves;
 
-        public Builder withId(Long id) {
+        public Builder withId(BigInteger id) {
             this.id = id;
             return this;
         }
 
-        public Builder withGameId(Long gameId) {
+        public Builder withGameId(BigInteger gameId) {
             this.gameId = gameId;
             return this;
         }

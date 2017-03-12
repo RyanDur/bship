@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +34,8 @@ public class ShipRepositoryTest {
         template = new JdbcTemplate(DBHelper.reset());
         repository = new ShipRepository(template);
 
-        Game game = Game.builder().withId(1L).build();
-        board = Board.builder().withId(1L).withGameId(game.getId()).build();
+        Game game = Game.builder().withId(BigInteger.ONE).build();
+        board = Board.builder().withId(BigInteger.ONE).withGameId(game.getId()).build();
         template.update("INSERT INTO games(id) VALUE(?) ", game.getId());
         template.update("INSERT INTO boards(id, game_id) VALUE(?, ?) ", board.getId(), board.getGameId());
 
@@ -74,8 +75,8 @@ public class ShipRepositoryTest {
 
     @Test
     public void getAll_shouldReturnAnEmptyListIfNoMoves() {
-        Game game = Game.builder().withId(2L).build();
-        Board board = Board.builder().withId(3L).withGameId(game.getId()).build();
+        Game game = Game.builder().withId(BigInteger.valueOf(2L)).build();
+        Board board = Board.builder().withId(BigInteger.valueOf(3L)).withGameId(game.getId()).build();
         template.update("INSERT INTO games(id) VALUE(?) ", game.getId());
         template.update("INSERT INTO boards(id, game_id) VALUE(?, ?) ", board.getId(), board.getGameId());
 
@@ -86,8 +87,8 @@ public class ShipRepositoryTest {
 
     @Test
     public void update_shouldUpdateTheShipToSunk() {
-        Game game = Game.builder().withId(2L).build();
-        Board board = Board.builder().withId(3L).withGameId(game.getId()).build();
+        Game game = Game.builder().withId(BigInteger.valueOf(2L)).build();
+        Board board = Board.builder().withId(BigInteger.valueOf(3L)).withGameId(game.getId()).build();
         template.update("INSERT INTO games(id) VALUE(?) ", game.getId());
         template.update("INSERT INTO boards(id, game_id) VALUE(?, ?) ", board.getId(), board.getGameId());
         Ship ship = Ship.builder()
@@ -104,9 +105,9 @@ public class ShipRepositoryTest {
     }
 
     private RowMapper<Ship> shipRowMapper = (rs, rowNum) -> Ship.builder()
-            .withId(rs.getLong("id"))
+            .withId(BigInteger.valueOf(rs.getLong("id")))
             .withType(Harbor.valueOf(rs.getString("type")))
             .withStart(toPoint(rs.getInt("start")))
             .withEnd(toPoint(rs.getInt("end")))
-            .withBoardId(rs.getLong("ship_board_id")).build();
+            .withBoardId(BigInteger.valueOf(rs.getLong("ship_board_id"))).build();
 }

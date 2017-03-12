@@ -12,16 +12,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -45,7 +46,7 @@ public class GameServiceTest {
 
     @Test
     public void getNewGame_shouldReturnANewGame() {
-        when(gameRepository.createGame()).thenReturn(Game.builder().build());
+        when(gameRepository.create()).thenReturn(Game.builder().build());
         Game actualGame = gameService.getNewGame();
 
         assertThat(actualGame, is(instanceOf(Game.class)));
@@ -57,10 +58,10 @@ public class GameServiceTest {
         thrown.expectMessage("It is not your turn.");
 
         Move point = Move.builder().withPoint(new Point(0, 0)).build();
-        long boardId = 1L;
-        long gameId = 1L;
+        BigInteger boardId = BigInteger.ONE;
+        BigInteger gameId = BigInteger.ONE;
 
-        when(gameRepository.getGame(anyLong())).thenReturn(Optional.of(Game.builder().build()));
+        when(gameRepository.get(any(BigInteger.class))).thenReturn(of(Game.builder().build()));
         when(logic.turnCheck(boardId)).thenReturn(e -> false);
 
         gameService.placeMove(gameId, boardId, point);
@@ -69,18 +70,18 @@ public class GameServiceTest {
     @Test
     public void placeMove_shouldPlaceAMoveOnTheBoard() throws MoveCollision, TurnCheck {
         Move point = Move.builder().withPoint(new Point(0, 0)).build();
-        long boardId = 1L;
-        long gameId = 1L;
+        BigInteger boardId = BigInteger.ONE;
+        BigInteger gameId = BigInteger.ONE;
         Game game = Game.builder().withId(gameId).withBoards(singletonList(
                 Board.builder().withId(boardId).build()
         )).build();
-        Optional<Game> gameOptional = Optional.of(game);
+        Optional<Game> gameOptional = of(game);
 
         when(logic.turnCheck(boardId)).thenReturn(e -> true);
-        when(logic.nextTurn(anyLong())).thenReturn(e -> true);
-        when(logic.playMove(any(Game.class), anyLong(), any(Move.class))).thenReturn(gameOptional);
-        when(gameRepository.getGame(anyLong())).thenReturn(gameOptional);
-        when(gameRepository.save(any(Game.class))).thenReturn(game);
+        when(logic.nextTurn(any(BigInteger.class))).thenReturn(e -> true);
+        when(logic.playMove(any(Game.class), any(BigInteger.class), any(Move.class))).thenReturn(gameOptional);
+        when(gameRepository.get(any(BigInteger.class))).thenReturn(gameOptional);
+        when(gameRepository.save(any(Game.class))).thenReturn(of(game));
 
         Game actual = gameService.placeMove(gameId, boardId, point);
         assertThat(actual, is(equalTo(game)));
@@ -92,16 +93,16 @@ public class GameServiceTest {
         thrown.expectMessage("Move already exists on board.");
 
         Move point = Move.builder().withPoint(new Point(0, 0)).build();
-        long boardId = 1L;
-        long gameId = 1L;
+        BigInteger boardId = BigInteger.ONE;
+        BigInteger gameId = BigInteger.ONE;
         Game game = Game.builder().withId(gameId).withBoards(singletonList(
                 Board.builder().withId(boardId).build()
         )).build();
-        Optional<Game> gameOptional = Optional.of(game);
+        Optional<Game> gameOptional = of(game);
 
         when(logic.turnCheck(boardId)).thenReturn(e -> true);
-        when(gameRepository.getGame(anyLong())).thenReturn(gameOptional);
-        doThrow(new MoveCollision()).when(logic).playMove(any(Game.class), anyLong(), any(Move.class));
+        when(gameRepository.get(any(BigInteger.class))).thenReturn(gameOptional);
+        doThrow(new MoveCollision()).when(logic).playMove(any(Game.class), any(BigInteger.class), any(Move.class));
 
         gameService.placeMove(gameId, boardId, point);
     }
@@ -109,22 +110,22 @@ public class GameServiceTest {
     @Test
     public void placeMove_shouldSaveTheNextBoardsTurn() throws MoveCollision, TurnCheck {
         Move point = Move.builder().withPoint(new Point(0, 0)).build();
-        long boardId = 1L;
-        long otherBoardId = 2L;
-        long gameId = 1L;
+        BigInteger boardId = BigInteger.ONE;
+        BigInteger otherBoardId = BigInteger.valueOf(2);
+        BigInteger gameId = BigInteger.ONE;
 
         Game game = Game.builder().withId(gameId).withBoards(asList(
                 Board.builder().withId(boardId).build(),
                 Board.builder().withId(otherBoardId).build()
         )).withTurn(boardId).build();
-        Optional<Game> gameOptional = Optional.of(game);
+        Optional<Game> gameOptional = of(game);
         Game nextGame = game.copy().withTurn(otherBoardId).build();
 
         when(logic.turnCheck(boardId)).thenReturn(e -> true);
         when(logic.nextTurn(boardId)).thenReturn(e -> true);
-        when(logic.playMove(any(Game.class), anyLong(), any(Move.class))).thenReturn(gameOptional);
-        when(gameRepository.getGame(gameId)).thenReturn(gameOptional);
-        when(gameRepository.save(game)).thenReturn(nextGame);
+        when(logic.playMove(any(Game.class), any(BigInteger.class), any(Move.class))).thenReturn(gameOptional);
+        when(gameRepository.get(gameId)).thenReturn(gameOptional);
+        when(gameRepository.save(game)).thenReturn(of(nextGame));
 
         Game actual = gameService.placeMove(gameId, boardId, point);
 

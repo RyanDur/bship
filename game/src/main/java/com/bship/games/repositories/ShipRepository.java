@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -35,15 +36,15 @@ public class ShipRepository {
         this.template = template;
     }
 
-    public Optional<Ship> create(Ship ship, Long boardId) {
+    public Optional<Ship> create(Ship ship, BigInteger boardId) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         PreparedStatementCreator preparedStatementCreator = con ->
                 prepareInsertStatement(ship.copy().withBoardId(boardId).build(), con);
         template.update(preparedStatementCreator, holder);
-        return ofNullable(get(holder.getKey().longValue()));
+        return ofNullable(get(BigInteger.valueOf(holder.getKey().longValue())));
     }
 
-    public Optional<List<Ship>> getAll(long boardId) {
+    public Optional<List<Ship>> getAll(BigInteger boardId) {
         return ofNullable(template.query(GET_SHIPS_FOR_BOARD, new Object[]{boardId}, shipRowMapper))
                 .filter(Objects::nonNull);
     }
@@ -53,7 +54,7 @@ public class ShipRepository {
         return ofNullable(get(ship.getId()));
     }
 
-    private Ship get(Long id) {
+    private Ship get(BigInteger id) {
         return template.queryForObject(GET_SHIP, new Object[]{id}, shipRowMapper);
     }
 
@@ -62,22 +63,22 @@ public class ShipRepository {
         statement.setString(1, ship.getType().name());
         statement.setInt(2, toIndex(ship.getStart()));
         statement.setInt(3, toIndex(ship.getEnd()));
-        statement.setLong(4, ship.getBoardId());
+        statement.setLong(4, ship.getBoardId().longValue());
         return statement;
     }
 
     private PreparedStatement prepareUpdateStatement(Ship ship, Connection con) throws SQLException {
         PreparedStatement statement = con.prepareStatement(UPDATE_SHIP_SET_SUNK);
         statement.setBoolean(1, ship.isSunk());
-        statement.setLong(2, ship.getId());
+        statement.setLong(2, ship.getId().longValue());
         return statement;
     }
 
     private RowMapper<Ship> shipRowMapper = (rs, rowNum) -> Ship.builder()
-            .withId(rs.getLong("id"))
+            .withId(BigInteger.valueOf(rs.getLong("id")))
             .withType(Harbor.valueOf(rs.getString("type")))
             .withStart(toPoint(rs.getInt("start")))
             .withEnd(toPoint(rs.getInt("end")))
             .withSunk(rs.getBoolean("sunk"))
-            .withBoardId(rs.getLong("ship_board_id")).build();
+            .withBoardId(BigInteger.valueOf(rs.getLong("ship_board_id"))).build();
 }

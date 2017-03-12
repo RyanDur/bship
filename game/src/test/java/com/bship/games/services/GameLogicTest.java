@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,7 +42,7 @@ public class GameLogicTest {
 
     @Test
     public void turnCheck_shouldDecideIfTheCorrectTurnIsInPlay() throws Exception {
-        Long gameId = 2L;
+        BigInteger gameId = BigInteger.valueOf(2L);
 
         boolean actual = logic.turnCheck(gameId).test(Game.builder().withTurn(gameId).build());
         assertThat(actual, is(true));
@@ -49,15 +50,15 @@ public class GameLogicTest {
 
     @Test
     public void turnCheck_shouldDecideIfTheWrongTurnIsInPlay() throws Exception {
-        Long gameId = 2L;
+        BigInteger gameId = BigInteger.valueOf(2L);
 
-        boolean actual = logic.turnCheck(gameId).test(Game.builder().withTurn(gameId + 1).build());
+        boolean actual = logic.turnCheck(gameId).test(Game.builder().withTurn(gameId.add(BigInteger.valueOf(1))).build());
         assertThat(actual, is(false));
     }
 
     @Test
     public void turnCheck_shouldReturnTrueIfNoTurnIsSetSinceItIsAnybodiesTurn() throws Exception {
-        Long gameId = 2L;
+        BigInteger gameId = BigInteger.valueOf(2L);
 
         boolean actual = logic.turnCheck(gameId).test(Game.builder().build());
         assertThat(actual, is(true));
@@ -65,8 +66,8 @@ public class GameLogicTest {
 
     @Test
     public void nextTurn_shouldKnowIfTheIdIsTheNextToPlay() {
-        Long boardId = 1L;
-        Long nextBoardId = 2L;
+        BigInteger boardId = BigInteger.valueOf(1L);
+        BigInteger nextBoardId = BigInteger.valueOf(2L);
         boolean actual = logic.nextTurn(boardId).test(nextBoardId);
 
         assertThat(actual, is(true));
@@ -74,8 +75,8 @@ public class GameLogicTest {
 
     @Test
     public void nextTurn_shouldNotAllowIfTheCurrentPlayIdIsUnknown() {
-        Long boardId = null;
-        Long nextBoardId = 1L;
+        BigInteger boardId = null;
+        BigInteger nextBoardId = BigInteger.valueOf(1L);
         boolean actual = logic.nextTurn(nextBoardId).test(boardId);
 
         assertThat(actual, is(false));
@@ -83,8 +84,8 @@ public class GameLogicTest {
 
     @Test
     public void nextTurn_shouldNotAllowIfTheNextPlayIdIsUnknown() {
-        Long boardId = 1L;
-        Long nextBoardId = null;
+        BigInteger boardId = BigInteger.valueOf(1L);
+        BigInteger nextBoardId = null;
         boolean actual = logic.nextTurn(nextBoardId).test(boardId);
 
         assertThat(actual, is(false));
@@ -185,9 +186,9 @@ public class GameLogicTest {
 
     @Test
     public void playMove_shouldReturnAGameWithThePlayedMove() throws MoveCollision {
-        long gameId = 1L;
-        long boardId = 1L;
-        long opponentBoardId = 2L;
+        BigInteger gameId = BigInteger.valueOf(1L);
+        BigInteger boardId = BigInteger.valueOf(1L);
+        BigInteger opponentBoardId = BigInteger.valueOf(2L);
 
         Move move = getMove(9, 9, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
@@ -212,9 +213,9 @@ public class GameLogicTest {
         thrown.expect(MoveCollision.class);
         thrown.expectMessage("Move already exists on board.");
 
-        long gameId = 1L;
-        long boardId = 1L;
-        long opponentBoardId = 2L;
+        BigInteger gameId = BigInteger.valueOf(1L);
+        BigInteger boardId = BigInteger.valueOf(1L);
+        BigInteger opponentBoardId = BigInteger.valueOf(2L);
 
         Move move = getMove(9, 9, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
@@ -225,9 +226,9 @@ public class GameLogicTest {
 
     @Test
     public void playMove_shouldBeAbleToHitAShip() throws Exception {
-        long gameId = 1L;
-        long boardId = 1L;
-        long opponentBoardId = 2L;
+        BigInteger gameId = BigInteger.valueOf(1L);
+        BigInteger boardId = BigInteger.valueOf(1L);
+        BigInteger opponentBoardId = BigInteger.valueOf(2L);
 
         Move move = getMove(0, 0, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
@@ -253,9 +254,9 @@ public class GameLogicTest {
 
     @Test
     public void playMove_shouldBeAbleToSinkAShip() throws Exception {
-        long gameId = 1L;
-        long boardId = 1L;
-        long opponentBoardId = 2L;
+        BigInteger gameId = BigInteger.valueOf(1L);
+        BigInteger boardId = BigInteger.valueOf(1L);
+        BigInteger opponentBoardId = BigInteger.valueOf(2L);
 
         Move move = getMove(4, 0, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
@@ -296,7 +297,7 @@ public class GameLogicTest {
         assertThat(actual.get(), is(equalTo(expected)));
     }
 
-    private Game getGame(long gameId, long boardId, long opponentBoardId) {
+    private Game getGame(BigInteger gameId, BigInteger boardId, BigInteger opponentBoardId) {
         List<Ship> ships = getShips(boardId);
         List<Ship> opponentShips = getShips(boardId);
         Board board = getBoard(boardId, ships);
@@ -307,20 +308,20 @@ public class GameLogicTest {
                 .build();
     }
 
-    private Move getMove(int x, int y, Long boardId) {
+    private Move getMove(int x, int y, BigInteger boardId) {
         return Move.builder()
                 .withBoardId(boardId)
                 .withPoint(new Point(x, y)).build();
     }
 
-    private Board getBoard(long boardId, List<Ship> ships) {
+    private Board getBoard(BigInteger boardId, List<Ship> ships) {
         return Board.builder()
                 .withShips(ships)
                 .withId(boardId)
                 .build();
     }
 
-    private List<Ship> getShips(long boardId) {
+    private List<Ship> getShips(BigInteger boardId) {
         return asList(Ship.builder().withType(Harbor.AIRCRAFT_CARRIER)
                         .withStart(new Point(0, 0))
                         .withEnd(new Point(0, 4))
@@ -348,7 +349,7 @@ public class GameLogicTest {
                         .withId(boardId).build());
     }
 
-    private Map<Boolean, Board> partitionBoards(Game game, Long boardId) {
+    private Map<Boolean, Board> partitionBoards(Game game, BigInteger boardId) {
         return game.getBoards()
                 .stream()
                 .collect(partitioningBy(board -> board.getId().equals(boardId)))

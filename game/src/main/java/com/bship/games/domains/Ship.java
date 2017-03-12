@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+import java.math.BigInteger;
+
 @JsonDeserialize(builder = Ship.Builder.class)
 @PlacementCheck
 public class Ship {
@@ -25,10 +27,10 @@ public class Ship {
     private Point end;
 
     @JsonIgnore
-    private Long boardId;
+    private BigInteger boardId;
 
     private boolean sunk;
-    private Long id;
+    private BigInteger id;
 
     public Ship() {
     }
@@ -58,11 +60,11 @@ public class Ship {
         return sunk;
     }
 
-    public Long getId() {
+    public BigInteger getId() {
         return id;
     }
 
-    public Long getBoardId() {
+    public BigInteger getBoardId() {
         return boardId;
     }
 
@@ -85,8 +87,8 @@ public class Ship {
         private Harbor type;
         private Point start;
         private Point end;
-        private Long boardId;
-        private Long id;
+        private BigInteger boardId;
+        private BigInteger id;
         private boolean sunk;
 
         public Builder withType(Harbor shipType) {
@@ -104,12 +106,12 @@ public class Ship {
             return this;
         }
 
-        public Builder withBoardId(Long boardId) {
+        public Builder withBoardId(BigInteger boardId) {
             this.boardId = boardId;
             return this;
         }
 
-        public Builder withId(Long id) {
+        public Builder withId(BigInteger id) {
             this.id = id;
             return this;
         }

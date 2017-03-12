@@ -9,6 +9,7 @@ import com.bship.games.domains.Ship;
 import com.bship.games.exceptions.MoveCollision;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +33,11 @@ public class GameLogic {
 
     private Predicate<Ship> shipPredicate;
 
-    public Predicate<Game> turnCheck(Long id) {
+    public Predicate<Game> turnCheck(BigInteger id) {
         return game -> !ofNullable(game).map(Game::getTurn).filter(turn -> !turn.equals(id)).isPresent();
     }
 
-    public Predicate<Long> nextTurn(Long boardId) {
+    public Predicate<BigInteger> nextTurn(BigInteger boardId) {
         return id -> ofNullable(boardId).isPresent() &&
                 ofNullable(id).filter(currentId -> !currentId.equals(boardId)).isPresent();
     }
@@ -55,7 +56,7 @@ public class GameLogic {
                 .isPresent();
     }
 
-    public Optional<Game> playMove(Game game, Long boardId, Move move) throws MoveCollision {
+    public Optional<Game> playMove(Game game, BigInteger boardId, Move move) throws MoveCollision {
         Map<Boolean, Board> boardMap = partitionBoards(game, boardId);
         Board current = boardMap.get(move.getBoardId().equals(boardId));
         Board other = boardMap.get(!move.getBoardId().equals(boardId));
@@ -132,7 +133,7 @@ public class GameLogic {
                 .contains(move.getPoint());
     }
 
-    private Map<Boolean, Board> partitionBoards(Game game, Long boardId) {
+    private Map<Boolean, Board> partitionBoards(Game game, BigInteger boardId) {
         return game.getBoards()
                 .stream()
                 .collect(partitioningBy(board -> board.getId().equals(boardId)))

@@ -9,6 +9,7 @@ import com.bship.games.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -29,11 +30,11 @@ public class GameService {
     }
 
     public Game getNewGame() {
-        return repository.createGame();
+        return repository.create();
     }
 
-    public Game placeMove(Long gameId, Long boardId, Move move) throws MoveCollision, TurnCheck {
-        Game game = repository.getGame(gameId)
+    public Game placeMove(BigInteger gameId, BigInteger boardId, Move move) throws MoveCollision, TurnCheck {
+        Game game = repository.get(gameId)
                 .filter(logic.turnCheck(boardId))
                 .orElseThrow(TurnCheck::new);
 
@@ -42,7 +43,7 @@ public class GameService {
                 .orElse(null);
     }
 
-    private Function<Game, Optional<Game>> saveTurn(Long boardId) {
+    private Function<Game, Optional<Game>> saveTurn(BigInteger boardId) {
         return game -> of(game)
                 .map(Game::getBoards)
                 .map(collectIds)
@@ -53,17 +54,17 @@ public class GameService {
                 .map(getSavedGame);
     }
 
-    private Function<Stream<Long>, Optional<Long>> getNextTurn(Long boardId) {
+    private Function<Stream<BigInteger>, Optional<BigInteger>> getNextTurn(BigInteger boardId) {
         return ids -> ids.filter(logic.nextTurn(boardId)).findFirst();
     }
 
-    private Function<Long, Supplier<Game>> save(Game game) {
+    private Function<BigInteger, Supplier<Game>> save(Game game) {
         return nextTurn -> {
             Game finishedTurn = game.copy().withTurn(nextTurn).build();
-            return () -> repository.save(finishedTurn);
+            return () -> repository.save(finishedTurn).get();
         };
     }
 
     private Function<Supplier<Game>, Game> getSavedGame = Supplier::get;
-    private Function<List<Board>, Stream<Long>> collectIds = boards -> boards.stream().map(Board::getId);
+    private Function<List<Board>, Stream<BigInteger>> collectIds = boards -> boards.stream().map(Board::getId);
 }

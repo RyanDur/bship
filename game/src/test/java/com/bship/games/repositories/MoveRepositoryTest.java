@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +33,8 @@ public class MoveRepositoryTest {
     public void setup() {
         template = new JdbcTemplate(DBHelper.reset());
         repository = new MoveRepository(template);
-        Game game = Game.builder().withId(1L).build();
-        board = Board.builder().withId(1L).withGameId(game.getId()).build();
+        Game game = Game.builder().withId(BigInteger.valueOf(1L)).build();
+        board = Board.builder().withId(BigInteger.valueOf(1L)).withGameId(game.getId()).build();
         template.update("INSERT INTO games(id) VALUE(?) ", game.getId());
         template.update("INSERT INTO boards(id, game_id) VALUE(?, ?) ", board.getId(), board.getGameId());
     }
@@ -67,8 +68,8 @@ public class MoveRepositoryTest {
     }
 
     private RowMapper<Move> moveRowMapper = (rs, rowNum) -> Move.builder()
-            .withId(rs.getLong("id"))
-            .withBoardId(rs.getLong("move_board_id"))
+            .withId(BigInteger.valueOf(rs.getLong("id")))
+            .withBoardId(BigInteger.valueOf(rs.getLong("move_board_id")))
             .withPoint(Util.toPoint(rs.getInt("point")))
             .withStatus(MoveStatus.valueOf(rs.getString("status"))).build();
 }

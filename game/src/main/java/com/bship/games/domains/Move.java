@@ -3,12 +3,14 @@ package com.bship.games.domains;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+import java.math.BigInteger;
+
 @JsonDeserialize(builder = Move.Builder.class)
 public class Move {
 
-    private Long boardId;
+    private BigInteger boardId;
 
-    private Long id;
+    private BigInteger id;
 
     private MoveStatus status;
 
@@ -31,11 +33,11 @@ public class Move {
         return status;
     }
 
-    public Long getId() {
+    public BigInteger getId() {
         return id;
     }
 
-    public Long getBoardId() {
+    public BigInteger getBoardId() {
         return boardId;
     }
 
@@ -54,8 +56,8 @@ public class Move {
     public static class Builder {
         private Point point;
         private MoveStatus status;
-        private Long id;
-        private Long boardId;
+        private BigInteger id;
+        private BigInteger boardId;
 
         public Move build() {
             return new Move(this);
@@ -71,12 +73,12 @@ public class Move {
             return this;
         }
 
-        public Builder withId(Long id) {
+        public Builder withId(BigInteger id) {
             this.id = id;
             return this;
         }
 
-        public Builder withBoardId(Long boardId) {
+        public Builder withBoardId(BigInteger boardId) {
             this.boardId = boardId;
             return this;
         }

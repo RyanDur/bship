@@ -3,6 +3,7 @@ package com.bship.games.domains;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,8 +14,8 @@ import static java.util.Optional.ofNullable;
 @JsonDeserialize(builder = Game.Builder.class)
 public class Game {
     private List<Board> boards;
-    private Long id;
-    private final Long turn;
+    private BigInteger id;
+    private final BigInteger turn;
 
     private Game(Builder builder) {
         boards = builder.boards;
@@ -26,11 +27,11 @@ public class Game {
         return Optional.ofNullable(boards).orElse(emptyList());
     }
 
-    public Long getId() {
+    public BigInteger getId() {
         return id;
     }
 
-    public Long getTurn() {
+    public BigInteger getTurn() {
         return turn;
     }
 
@@ -44,11 +45,11 @@ public class Game {
 
     @JsonPOJOBuilder
     public static final class Builder {
-        private Long id;
+        private BigInteger id;
         private List<Board> boards;
-        private Long turn;
+        private BigInteger turn;
 
-        public Builder withId(Long id) {
+        public Builder withId(BigInteger id) {
             this.id = id;
             return this;
         }
@@ -62,7 +63,7 @@ public class Game {
             return new Game(this);
         }
 
-        public Builder withTurn(Long turn) {
+        public Builder withTurn(BigInteger turn) {
             this.turn = turn;
             return this;
         }

@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -30,7 +31,7 @@ public class MoveRepository {
         this.template = template;
     }
 
-    public Optional<Move> create(Long boardId, Point point, MoveStatus hit) {
+    public Optional<Move> create(BigInteger boardId, Point point, MoveStatus hit) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         Move move = Move.builder()
                 .withBoardId(boardId)
@@ -41,7 +42,7 @@ public class MoveRepository {
         return getMove(holder.getKey().longValue());
     }
 
-    public Optional<List<Move>> getAll(Long boardId) {
+    public Optional<List<Move>> getAll(BigInteger boardId) {
         return ofNullable(template.query("SELECT * FROM moves WHERE move_board_id = ?",
                 new Object[]{boardId}, moveRowMapper)).filter(Objects::nonNull);
     }
@@ -55,7 +56,7 @@ public class MoveRepository {
         PreparedStatement statement = con.prepareStatement(
                 "INSERT INTO moves(move_board_id, point, status) VALUE(?, ?, ?)",
                 RETURN_GENERATED_KEYS);
-        statement.setLong(1, move.getBoardId());
+        statement.setLong(1, move.getBoardId().longValue());
         statement.setInt(2, toIndex(move.getPoint()));
         statement.setString(3, move.getStatus().name());
         return statement;
@@ -63,7 +64,7 @@ public class MoveRepository {
 
     private RowMapper<Move> moveRowMapper = (rs, rowNum) -> Move.builder()
             .withStatus(MoveStatus.valueOf(rs.getString("status")))
-            .withId(rs.getLong("id"))
-            .withBoardId(rs.getLong("move_board_id"))
+            .withId(BigInteger.valueOf(rs.getLong("id")))
+            .withBoardId(BigInteger.valueOf(rs.getLong("move_board_id")))
             .withPoint(toPoint(rs.getInt("point"))).build();
 }
