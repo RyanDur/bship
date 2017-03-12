@@ -25,9 +25,9 @@ import static org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils.c
 public class ShipRepository {
 
     private static final String INSERT_INTO_SHIPS = "INSERT INTO ships(type, size, ship_board_id) VALUES (:type, :size, :ship_board_id)";
-    public static final String SELECT_OPPONENTS_SUNK_SHIPS = "SELECT s.* FROM ships s JOIN boards b ON s.ship_board_id = b.id WHERE b.game_id = :game_id AND s.ship_board_id <> :board_id AND s.sunk IS TRUE;";
-    public static final String SELECT_MY_SHIPS = "SELECT * FROM ships WHERE ship_board_id = :board_id";
-    public static final String UPDATE_SHIPS = "UPDATE ships SET sunk = :sunk WHERE id = :id";
+    private static final String SELECT_OPPONENTS_SUNK_SHIPS = "SELECT s.* FROM ships s JOIN boards b ON s.ship_board_id = b.id WHERE b.game_id = :game_id AND s.ship_board_id <> :board_id AND s.sunk IS TRUE;";
+    private static final String SELECT_MY_SHIPS = "SELECT * FROM ships WHERE ship_board_id = :board_id";
+    private static final String UPDATE_SHIPS = "UPDATE ships SET sunk = :sunk WHERE id = :id";
     private final NamedParameterJdbcTemplate template;
 
     @Autowired
