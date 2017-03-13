@@ -31,8 +31,6 @@ import static java.util.stream.Collectors.toMap;
 @Service
 public class GameLogic {
 
-    private Predicate<Ship> shipPredicate;
-
     public Predicate<Game> turnCheck(BigInteger id) {
         return game -> !ofNullable(game).map(Game::getTurn).filter(turn -> !turn.equals(id)).isPresent();
     }

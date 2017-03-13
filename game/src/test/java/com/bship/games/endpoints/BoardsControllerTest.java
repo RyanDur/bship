@@ -1,7 +1,6 @@
 package com.bship.games.endpoints;
 
 import com.bship.games.domains.Board;
-import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Ship;
 import com.bship.games.endpoints.RequestErrors.FieldValidation;
 import com.bship.games.endpoints.RequestErrors.GameErrors;
@@ -13,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -22,14 +20,9 @@ import java.math.BigInteger;
 
 import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -96,36 +89,6 @@ public class BoardsControllerTest {
                 ))
                 .andExpect(status().isOk());
     }
-
-    @Test
-    public void placeShip_methodSignatureBindToPathParamsAndRequestBody() throws Exception {
-        mockMvc.perform(put("/boards/9")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"BATTLESHIP\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 4,\n" +
-                        "    \"y\": 5\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 1,\n" +
-                        "    \"y\": 5\n" +
-                        "  }\n" +
-                        "}"
-                ));
-
-        ArgumentCaptor<Ship> captor = ArgumentCaptor.forClass(Ship.class);
-
-        verify(mockService).placeShip(BigInteger.valueOf(eq(9L)), captor.capture());
-        Ship capturedShip = captor.getValue();
-
-        assertEquals(Harbor.BATTLESHIP, capturedShip.getType());
-        assertThat(4, is(equalTo(capturedShip.getStart().getX())));
-        assertThat(5, is(equalTo(capturedShip.getStart().getY())));
-        assertThat(1, is(equalTo(capturedShip.getEnd().getX())));
-        assertThat(5, is(equalTo(capturedShip.getEnd().getY())));
-    }
-
 
     @Test
     public void placeShip_shouldRequireATypeOfShip() throws Exception {

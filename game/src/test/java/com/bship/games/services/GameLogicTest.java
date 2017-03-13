@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toMap;
@@ -318,6 +319,7 @@ public class GameLogicTest {
         return Board.builder()
                 .withShips(ships)
                 .withId(boardId)
+                .withMoves(emptyList())
                 .build();
     }
 

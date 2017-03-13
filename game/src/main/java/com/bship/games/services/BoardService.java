@@ -14,20 +14,20 @@ import java.util.Optional;
 @Service
 public class BoardService {
 
-    private final BoardRepository repository;
+    private final BoardRepository ships;
     private final GameLogic logic;
 
     @Autowired
-    public BoardService(BoardRepository repository, GameLogic logic) {
-        this.repository = repository;
+    public BoardService(BoardRepository ships, GameLogic logic) {
+        this.ships = ships;
         this.logic = logic;
     }
 
     public Optional<Board> placeShip(BigInteger boardId, Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
-        Optional<Board> board = repository.get(boardId);
-        if (logic.exists(board.get(), ship)) throw new ShipExistsCheck();
-        if (logic.collision(board.get(), ship)) throw new ShipCollisionCheck();
+        Board board = ships.get(boardId).filter(b -> !logic.exists(b, ship))
+                .orElseThrow(ShipExistsCheck::new);
+        if (logic.collision(board, ship)) throw new ShipCollisionCheck();
 
-        return repository.save(board.get().copy().addShip(ship).build());
+        return ships.save(board.copy().addShip(ship).build());
     }
 }
