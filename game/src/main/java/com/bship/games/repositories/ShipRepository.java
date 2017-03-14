@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
+import static com.bship.games.util.Util.toIndex;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -28,6 +29,7 @@ public class ShipRepository {
     private static final String SELECT_OPPONENTS_SUNK_SHIPS = "SELECT s.* FROM ships s JOIN boards b ON s.ship_board_id = b.id WHERE b.game_id = :game_id AND s.ship_board_id <> :board_id AND s.sunk IS TRUE;";
     private static final String SELECT_MY_SHIPS = "SELECT * FROM ships WHERE ship_board_id = :board_id";
     private static final String UPDATE_SHIPS = "UPDATE ships SET sunk = :sunk WHERE id = :id";
+    public static final String UPDATE_SHIP_POSITION = "UPDATE ships SET start = :start, end = :end WHERE id = :id";
     private final NamedParameterJdbcTemplate template;
 
     @Autowired
@@ -58,6 +60,15 @@ public class ShipRepository {
     public void save(List<Ship> ships) {
         of(ships).map(getUpdateShipBatch()).map(batch ->
                 template.batchUpdate(UPDATE_SHIPS, createBatch(batch)));
+    }
+
+    public void save(Ship ship) {
+        MapSqlParameterSource source = new MapSqlParameterSource();
+        source.addValue("id", ship.getId());
+        source.addValue("start", toIndex(ship.getStart()));
+        source.addValue("end", toIndex(ship.getEnd()));
+
+        template.update(UPDATE_SHIP_POSITION, source);
     }
 
     private RowMapper<Ship> buildShip = (rs, rowNum) -> Ship.builder()

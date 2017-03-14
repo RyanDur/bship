@@ -5,12 +5,15 @@ import com.bship.games.domains.Point;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.rangeClosed;
@@ -28,22 +31,25 @@ public class Util {
     }
 
     public static List<Point> pointsRange(Point start, Point end) {
-        int startY = start.getY();
-        int startX = start.getX();
-        int endY = end.getY();
-        int endX = end.getX();
-        IntFunction<Point> mapper;
-        IntStream range;
+        Optional<Integer> startY = ofNullable(start).map(Point::getY);
+        Optional<Integer> startX = ofNullable(start).map(Point::getX);
+        Optional<Integer> endY = ofNullable(end).map(Point::getY);
+        Optional<Integer> endX = ofNullable(end).map(Point::getX);
 
-        if (startY == endY) {
-            mapper = x -> new Point(x, startY);
-            range = rangeClosed(startX, endX);
-        } else {
-            mapper = y -> new Point(startX, y);
-            range = rangeClosed(startY, endY);
+        if (startX.isPresent() && startY.isPresent() && endX.isPresent() && endY.isPresent()) {
+            IntFunction<Point> mapper;
+            IntStream range;
+            if (Objects.equals(startY, endY)) {
+                mapper = x -> new Point(x, startY.get());
+                range = rangeClosed(startX.get(), endX.get());
+            } else {
+                mapper = y -> new Point(startX.get(), y);
+                range = rangeClosed(startY.get(), endY.get());
+            }
+
+            return range.mapToObj(mapper).collect(toList());
         }
-
-        return range.mapToObj(mapper).collect(toList());
+        return asList(start, end);
     }
 
     public static Boolean detectCollision(List<Point> a, List<Point> b) {

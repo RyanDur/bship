@@ -1,4 +1,4 @@
-package contracts.games.endpoint.placeMove.shouldBeAbleToPlaceAMoveOnTheBoard
+package contracts.games.endpoint.placeMove.shouldNotBeAbleToPlaceAMoveOnTheBoardWhereMoveAlreadyExists
 
 import org.springframework.cloud.contract.spec.Contract
 

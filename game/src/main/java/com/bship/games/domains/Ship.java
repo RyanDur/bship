@@ -4,7 +4,6 @@ import com.bship.games.domains.validations.BoundsCheck;
 import com.bship.games.domains.validations.NonEmpty;
 import com.bship.games.domains.validations.PlacementCheck;
 import com.bship.games.domains.validations.ShipExists;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
@@ -26,7 +25,6 @@ public class Ship {
     @BoundsCheck
     private Point end;
 
-    @JsonIgnore
     private BigInteger boardId;
 
     private Integer size;

@@ -1,6 +1,7 @@
 package com.bship.games.repositories;
 
 import com.bship.games.domains.Board;
+import com.bship.games.domains.Ship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -71,6 +72,11 @@ public class BoardRepository {
         template.update("UPDATE boards SET winner = :winner WHERE id = :id", source);
 
         return get(board.getId());
+    }
+
+    public Optional<Board> save(Ship ship, BigInteger boardId) {
+        ships.save(ship.copy().withBoardId(boardId).build());
+        return get(boardId);
     }
 
     private RowMapper<Board> buildBoard() {

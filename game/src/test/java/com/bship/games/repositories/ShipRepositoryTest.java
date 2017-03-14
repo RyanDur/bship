@@ -92,6 +92,22 @@ public class ShipRepositoryTest {
     }
 
     @Test
+    public void save_shouldSaveAShip() {
+        List<Ship> all = ships.createAll(ONE);
+        Ship ship = all.get(0).copy()
+                .withStart(new Point(0, 0))
+                .withEnd(new Point(0, 4))
+                .withBoardId(ONE)
+                .build();
+        ships.save(ship);
+        Ship actual = ships.getAll(ONE).stream()
+                .filter(o -> o.getId().equals(ONE))
+                .findFirst().get();
+
+        assertThat(actual, is(equalTo(ship)));
+    }
+
+    @Test
     public void getAllOpponents_shouldReturnAllTheOpponentsSunkShip() {
         ships.createAll(ONE);
         List<Ship> opponents = ships.createAll(ONE.add(ONE))

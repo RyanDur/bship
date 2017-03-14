@@ -1,4 +1,4 @@
-package contracts.games.endpoint.placeMove.shouldNotBeAbleToPlaceAMoveOnTheBoardPastLowerBounds
+package contracts.games.endpoint.placeMove.shouldNotBeAbleToPlaceAMoveOnTheBoardWhereYDoesNotExist
 
 import org.springframework.cloud.contract.spec.Contract
 

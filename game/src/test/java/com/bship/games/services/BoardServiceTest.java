@@ -43,12 +43,12 @@ public class BoardServiceTest {
         Ship ship = Ship.builder().build();
         Board board1 = board.copy().addShip(ship).build();
 
-        when(repository.save(board1)).thenReturn(of(board1));
+        when(repository.save(ship, BigInteger.valueOf(1L))).thenReturn(of(board1));
         when(repository.get(any(BigInteger.class))).thenReturn(of(board));
 
         Board actual = service.placeShip(BigInteger.valueOf(1L), ship).get();
 
-        verify(repository).save(board1);
+        verify(repository).save(ship, BigInteger.valueOf(1L));
         assertThat(actual, is(equalTo(board1)));
     }
 

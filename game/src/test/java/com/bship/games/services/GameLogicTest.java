@@ -94,12 +94,44 @@ public class GameLogicTest {
 
     @Test
     public void exists_shouldKnowIfAShipIsAlreadyOnTheBoard() {
-        Ship ship = Ship.builder().withType(Harbor.BATTLESHIP).build();
-        Board board = Board.builder().addShip(ship).build();
+        Ship ship1 = Ship.builder()
+                .withType(Harbor.BATTLESHIP)
+                .withStart(new Point(0, 0))
+                .withEnd(new Point(0, 4))
+                .build();
 
-        boolean actual = logic.exists(board, ship);
+        Ship ship2 = Ship.builder()
+                .withType(Harbor.BATTLESHIP)
+                .withStart(new Point(1, 0))
+                .withEnd(new Point(1, 4))
+                .build();
+
+        Board board = Board.builder().addShip(ship1).build();
+
+        boolean actual = logic.exists(board, ship2);
 
         assertThat(actual, is(true));
+    }
+
+    @Test
+    public void exists_shouldKnowIfAShipIsNotAlreadyPlacedOnTheBoard() {
+        Ship ship1 = Ship.builder()
+                .withType(Harbor.BATTLESHIP)
+                .withStart(new Point())
+                .withEnd(new Point())
+                .build();
+
+        Ship ship2 = Ship.builder()
+                .withType(Harbor.BATTLESHIP)
+                .withStart(new Point(0,2))
+                .withEnd(new Point(1, 2))
+                .build();
+
+        Board board = Board.builder().addShip(ship1).build();
+
+        boolean actual = logic.exists(board, ship2);
+
+        assertThat(actual, is(false));
     }
 
     @Test

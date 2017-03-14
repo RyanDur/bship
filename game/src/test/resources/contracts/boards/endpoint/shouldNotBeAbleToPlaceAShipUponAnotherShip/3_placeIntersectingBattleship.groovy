@@ -11,6 +11,7 @@ Contract.make {
     }
     body([
         type : 'BATTLESHIP',
+        id   : 2,
         start: [
             x: 4,
             y: 2

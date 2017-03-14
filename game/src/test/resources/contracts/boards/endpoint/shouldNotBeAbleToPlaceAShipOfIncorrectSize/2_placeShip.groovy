@@ -11,6 +11,7 @@ Contract.make {
     }
     body([
         type : 'AIRCRAFT_CARRIER',
+        id   : 1,
         start: [
             x: 0,
             y: 0

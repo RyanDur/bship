@@ -10,6 +10,7 @@ Contract.make {
       contentType(applicationJson())
     }
     body([
+        id   : 1,
         start: [
             x: 0,
             y: 0

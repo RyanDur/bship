@@ -41,9 +41,22 @@ public class GameLogic {
     }
 
     public boolean exists(Board board, Ship ship) {
-        return ofNullable(ship).isPresent() &&
-                ofNullable(board).map(Board::getShips).map(Collection::stream)
-                        .filter(ships -> ships.anyMatch(ship::equals)).isPresent();
+        return ofNullable(ship).isPresent() && ofNullable(board)
+                .map(Board::getShips)
+                .map(Collection::stream)
+                .filter(ships -> ships.anyMatch((o) -> isPlaced(o) &&
+                        ship.getType().equals(o.getType()))).isPresent();
+    }
+
+    public boolean isPlaced(Ship o) {
+        Optional<Integer> startX = ofNullable(o).map(Ship::getStart).map(Point::getX);
+        Optional<Integer> endX = ofNullable(o).map(Ship::getEnd).map(Point::getX);
+        Optional<Integer> startY = ofNullable(o).map(Ship::getStart).map(Point::getY);
+        Optional<Integer> endY = ofNullable(o).map(Ship::getEnd).map(Point::getY);
+        return startX.isPresent() &&
+                endX.isPresent() &&
+                startY.isPresent() &&
+                endY.isPresent();
     }
 
     public boolean collision(Board board, Ship ship) {
