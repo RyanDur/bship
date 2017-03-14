@@ -1,4 +1,4 @@
-package contracts.games.endpoint.placeMove.shouldNotBeAbleToPlaceAMoveOnTheBoardWhereMoveAlreadyExists
+package contracts.games.endpoint.placeMove.shouldBeAbleToPlaceAMoveOnTheBoardThatHits
 
 import org.springframework.cloud.contract.spec.Contract
 
@@ -11,7 +11,7 @@ Contract.make {
     }
     body([
         x: 0,
-        y: 5
+        y: 4
     ])
   }
   response {
@@ -101,10 +101,10 @@ Contract.make {
                      moves        : [[
                                          point : [
                                              x: 0,
-                                             y: 5
+                                             y: 4
                                          ],
                                          id    : $(regex(number())),
-                                         status: 'MISS'
+                                         status: 'HIT'
                                      ]],
                      opponentMoves: [],
                      winner       : false
@@ -191,10 +191,10 @@ Contract.make {
                      opponentMoves: [[
                                          point : [
                                              x: 0,
-                                             y: 5
+                                             y: 4
                                          ],
                                          id    : $(regex(number())),
-                                         status: 'MISS'
+                                         status: 'HIT'
                                      ]],
                      winner       : false
                  ]],

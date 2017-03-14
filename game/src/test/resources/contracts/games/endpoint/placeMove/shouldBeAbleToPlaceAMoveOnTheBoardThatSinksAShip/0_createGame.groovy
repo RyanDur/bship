@@ -1,21 +1,17 @@
-package contracts.games.endpoint.placeMove.shouldNotBeAbleToPlaceAMoveOnTheBoardWhereMoveAlreadyExists
+package contracts.games.endpoint.placeMove.shouldBeAbleToPlaceAMoveOnTheBoardThatSinksAShip
 
 import org.springframework.cloud.contract.spec.Contract
 
 Contract.make {
   request {
-    method 'PUT'
-    urlPath '/games/1/boards/1'
+    method 'POST'
+    urlPath '/games'
     headers {
       contentType(applicationJson())
     }
-    body([
-        x: 0,
-        y: 5
-    ])
   }
   response {
-    status 200
+    status 201
     headers {
       contentType(applicationJson())
     }
@@ -23,14 +19,14 @@ Contract.make {
         boards: [[
                      id           : 1,
                      ships        : [[
-                                         type   : 'AIRCRAFT_CARRIER',
+                                         type   : "AIRCRAFT_CARRIER",
                                          start  : [
-                                             x: 0,
-                                             y: 0
+                                             x: null,
+                                             y: null
                                          ],
                                          end    : [
-                                             x: 0,
-                                             y: 4
+                                             x: null,
+                                             y: null
                                          ],
                                          boardId: 1,
                                          size   : 5,
@@ -38,14 +34,14 @@ Contract.make {
                                          id     : 1
                                      ],
                                      [
-                                         type   : 'BATTLESHIP',
+                                         type   : "BATTLESHIP",
                                          start  : [
-                                             x: 1,
-                                             y: 0
+                                             x: null,
+                                             y: null
                                          ],
                                          end    : [
-                                             x: 1,
-                                             y: 3
+                                             x: null,
+                                             y: null
                                          ],
                                          boardId: 1,
                                          size   : 4,
@@ -53,14 +49,14 @@ Contract.make {
                                          id     : 2
                                      ],
                                      [
-                                         type   : 'SUBMARINE',
+                                         type   : "SUBMARINE",
                                          start  : [
-                                             x: 2,
-                                             y: 0
+                                             x: null,
+                                             y: null
                                          ],
                                          end    : [
-                                             x: 2,
-                                             y: 2
+                                             x: null,
+                                             y: null
                                          ],
                                          boardId: 1,
                                          size   : 3,
@@ -68,14 +64,14 @@ Contract.make {
                                          id     : 3
                                      ],
                                      [
-                                         type   : 'CRUISER',
+                                         type   : "CRUISER",
                                          start  : [
-                                             x: 3,
-                                             y: 0
+                                             x: null,
+                                             y: null
                                          ],
                                          end    : [
-                                             x: 3,
-                                             y: 2
+                                             x: null,
+                                             y: null
                                          ],
                                          boardId: 1,
                                          size   : 3,
@@ -83,14 +79,14 @@ Contract.make {
                                          id     : 4
                                      ],
                                      [
-                                         type   : 'DESTROYER',
+                                         type   : "DESTROYER",
                                          start  : [
-                                             x: 4,
-                                             y: 0
+                                             x: null,
+                                             y: null
                                          ],
                                          end    : [
-                                             x: 4,
-                                             y: 1
+                                             x: null,
+                                             y: null
                                          ],
                                          boardId: 1,
                                          size   : 2,
@@ -98,28 +94,21 @@ Contract.make {
                                          id     : 5
                                      ]],
                      opponentShips: [],
-                     moves        : [[
-                                         point : [
-                                             x: 0,
-                                             y: 5
-                                         ],
-                                         id    : $(regex(number())),
-                                         status: 'MISS'
-                                     ]],
+                     moves        : [],
                      opponentMoves: [],
                      winner       : false
                  ],
                  [
                      id           : 2,
                      ships        : [[
-                                         type   : 'AIRCRAFT_CARRIER',
+                                         type   : "AIRCRAFT_CARRIER",
                                          start  : [
-                                             x: 0,
-                                             y: 0
+                                             x: null,
+                                             y: null
                                          ],
                                          end    : [
-                                             x: 0,
-                                             y: 4
+                                             x: null,
+                                             y: null
                                          ],
                                          boardId: 2,
                                          size   : 5,
@@ -127,14 +116,14 @@ Contract.make {
                                          id     : 6
                                      ],
                                      [
-                                         type   : 'BATTLESHIP',
+                                         type   : "BATTLESHIP",
                                          start  : [
-                                             x: 1,
-                                             y: 0
+                                             x: null,
+                                             y: null
                                          ],
                                          end    : [
-                                             x: 1,
-                                             y: 3
+                                             x: null,
+                                             y: null
                                          ],
                                          boardId: 2,
                                          size   : 4,
@@ -142,14 +131,14 @@ Contract.make {
                                          id     : 7
                                      ],
                                      [
-                                         type   : 'SUBMARINE',
+                                         type   : "SUBMARINE",
                                          start  : [
-                                             x: 2,
-                                             y: 0
+                                             x: null,
+                                             y: null
                                          ],
                                          end    : [
-                                             x: 2,
-                                             y: 2
+                                             x: null,
+                                             y: null
                                          ],
                                          boardId: 2,
                                          size   : 3,
@@ -157,14 +146,14 @@ Contract.make {
                                          id     : 8
                                      ],
                                      [
-                                         type   : 'CRUISER',
+                                         type   : "CRUISER",
                                          start  : [
-                                             x: 3,
-                                             y: 0
+                                             x: null,
+                                             y: null
                                          ],
                                          end    : [
-                                             x: 3,
-                                             y: 2
+                                             x: null,
+                                             y: null
                                          ],
                                          boardId: 2,
                                          size   : 3,
@@ -172,14 +161,14 @@ Contract.make {
                                          id     : 9
                                      ],
                                      [
-                                         type   : 'DESTROYER',
+                                         type   : "DESTROYER",
                                          start  : [
-                                             x: 4,
-                                             y: 0
+                                             x: null,
+                                             y: null
                                          ],
                                          end    : [
-                                             x: 4,
-                                             y: 1
+                                             x: null,
+                                             y: null
                                          ],
                                          boardId: 2,
                                          size   : 2,
@@ -188,18 +177,11 @@ Contract.make {
                                      ]],
                      opponentShips: [],
                      moves        : [],
-                     opponentMoves: [[
-                                         point : [
-                                             x: 0,
-                                             y: 5
-                                         ],
-                                         id    : $(regex(number())),
-                                         status: 'MISS'
-                                     ]],
+                     opponentMoves: [],
                      winner       : false
                  ]],
         id    : 1,
-        turn  : 2
+        turn  : null
     ])
   }
 }

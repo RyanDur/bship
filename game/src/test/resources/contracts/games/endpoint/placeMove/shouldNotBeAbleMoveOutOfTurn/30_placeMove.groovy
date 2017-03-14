@@ -188,7 +188,14 @@ Contract.make {
                                      ]],
                      opponentShips: [],
                      moves        : [],
-                     opponentMoves: [],
+                     opponentMoves: [[
+                                         point : [
+                                             x: 0,
+                                             y: 5
+                                         ],
+                                         id    : $(regex(number())),
+                                         status: 'MISS'
+                                     ]],
                      winner       : false
                  ]],
         id    : 1,

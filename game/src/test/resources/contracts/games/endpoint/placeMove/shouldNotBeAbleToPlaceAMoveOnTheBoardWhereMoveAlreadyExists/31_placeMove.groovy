@@ -106,7 +106,14 @@ Contract.make {
                                          id    : $(regex(number())),
                                          status: 'MISS'
                                      ]],
-                     opponentMoves: [],
+                     opponentMoves: [[
+                                         point : [
+                                             x: 0,
+                                             y: 5
+                                         ],
+                                         id    : $(regex(number())),
+                                         status: 'MISS'
+                                     ]],
                      winner       : false
                  ],
                  [
@@ -192,9 +199,17 @@ Contract.make {
                                              x: 0,
                                              y: 5
                                          ],
+                                         id    : $(regex(number())),
                                          status: 'MISS'
                                      ]],
-                     opponentMoves: [],
+                     opponentMoves: [[
+                                         point : [
+                                             x: 0,
+                                             y: 5
+                                         ],
+                                         id    : $(regex(number())),
+                                         status: 'MISS'
+                                     ]],
                      winner       : false
                  ]],
         id    : 1,

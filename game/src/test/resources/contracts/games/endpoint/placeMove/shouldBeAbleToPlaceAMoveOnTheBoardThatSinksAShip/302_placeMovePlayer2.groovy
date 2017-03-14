@@ -1,17 +1,17 @@
-package contracts.games.endpoint.placeMove.shouldNotBeAbleToPlaceAMoveOnTheBoardWhereMoveAlreadyExists
+package contracts.games.endpoint.placeMove.shouldBeAbleToPlaceAMoveOnTheBoardThatSinksAShip
 
 import org.springframework.cloud.contract.spec.Contract
 
 Contract.make {
   request {
     method 'PUT'
-    urlPath '/games/1/boards/1'
+    urlPath '/games/1/boards/2'
     headers {
       contentType(applicationJson())
     }
     body([
-        x: 0,
-        y: 5
+        x: 4,
+        y: 0
     ])
   }
   response {
@@ -101,12 +101,19 @@ Contract.make {
                      moves        : [[
                                          point : [
                                              x: 0,
-                                             y: 5
+                                             y: 4
                                          ],
                                          id    : $(regex(number())),
-                                         status: 'MISS'
+                                         status: 'HIT'
                                      ]],
-                     opponentMoves: [],
+                     opponentMoves: [[
+                                         point : [
+                                             x: 4,
+                                             y: 0
+                                         ],
+                                         id    : $(regex(number())),
+                                         status: 'HIT'
+                                     ]],
                      winner       : false
                  ],
                  [
@@ -187,19 +194,26 @@ Contract.make {
                                          id     : 10
                                      ]],
                      opponentShips: [],
-                     moves        : [],
+                     moves        : [[
+                                         point : [
+                                             x: 4,
+                                             y: 0
+                                         ],
+                                         id    : $(regex(number())),
+                                         status: 'HIT'
+                                     ]],
                      opponentMoves: [[
                                          point : [
                                              x: 0,
-                                             y: 5
+                                             y: 4
                                          ],
                                          id    : $(regex(number())),
-                                         status: 'MISS'
+                                         status: 'HIT'
                                      ]],
                      winner       : false
                  ]],
         id    : 1,
-        turn  : 2
+        turn  : 1
     ])
   }
 }

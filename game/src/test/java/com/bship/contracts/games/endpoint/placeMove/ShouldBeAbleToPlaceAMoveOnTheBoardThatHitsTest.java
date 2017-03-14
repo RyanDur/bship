@@ -1,6 +1,6 @@
 package com.bship.contracts.games.endpoint.placeMove;
 
-import com.bship.contracts.PlaceMoveShouldNotBeAbleToPlaceAMoveOnTheBoardWhereMoveAlreadyExistsBase;
+import com.bship.contracts.PlaceMoveShouldBeAbleToPlaceAMoveOnTheBoardThatHitsBase;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
@@ -14,7 +14,7 @@ import static com.toomuchcoding.jsonassert.JsonAssertion.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class ShouldNotBeAbleToPlaceAMoveOnTheBoardWhereMoveAlreadyExistsTest extends PlaceMoveShouldNotBeAbleToPlaceAMoveOnTheBoardWhereMoveAlreadyExistsBase {
+public class ShouldBeAbleToPlaceAMoveOnTheBoardThatHitsTest extends PlaceMoveShouldBeAbleToPlaceAMoveOnTheBoardThatHitsBase {
 
 	@Test
 	public void validate_0_createGame() throws Exception {
@@ -557,7 +557,7 @@ public void validate_30_placeMove() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"x\":0,\"y\":5}");
+.body("{\"x\":0,\"y\":4}");
 
 // when:
 ResponseOptions response = given().spec(request)
@@ -573,12 +573,12 @@ assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqual
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("ships").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("ships").field("start").field("x").isEqualTo(2);
-assertThatJson(parsedJson).array("boards").array("moves").contains("status").isEqualTo("MISS");
 assertThatJson(parsedJson).array("boards").array("ships").field("start").field("y").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("ships").field("end").field("y").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("ships").field("end").field("x").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("moves").contains("status").isEqualTo("HIT");
 assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(10);
 assertThatJson(parsedJson).array("boards").array("ships").contains("size").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(4);
@@ -587,13 +587,13 @@ assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("ships").field("end").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(8);
-assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("status").isEqualTo("MISS");
 assertThatJson(parsedJson).array("boards").array("ships").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).array("boards").array("ships").field("end").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(5);
 assertThatJson(parsedJson).array("boards").array("ships").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
+assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("ships").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("ships").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("ships").field("start").field("x").isEqualTo(4);
@@ -606,107 +606,18 @@ assertThatJson(parsedJson).array("boards").array("ships").field("end").field("y"
 assertThatJson(parsedJson).array("boards").array("ships").field("end").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("ships").field("end").field("x").isEqualTo(4);
+assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(4);
 assertThatJson(parsedJson).field("id").isEqualTo(1);
 assertThatJson(parsedJson).field("turn").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(6);
-assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(5);
 assertThatJson(parsedJson).array("boards").array("ships").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("ships").contains("type").isEqualTo("AIRCRAFT_CARRIER");
 assertThatJson(parsedJson).array("boards").array("ships").field("start").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("ships").contains("boardId").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("ships").field("end").field("y").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("status").isEqualTo("HIT");
 assertThatJson(parsedJson).array("boards").array("ships").field("end").field("x").isEqualTo(3);
-assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(5);
-}
-
-@Test
-public void validate_31_placeMove() throws Exception {
-// given:
-MockMvcRequestSpecification request = given()
-.header("Content-Type", "application/json")
-.body("{\"x\":0,\"y\":5}");
-
-// when:
-ResponseOptions response = given().spec(request)
-.put("/games/1/boards/2");
-
-// then:
-assertThat(response.statusCode()).isEqualTo(200);
-assertThat(response.header("Content-Type")).matches("application/json.*");
-// and:
-DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("boards").array("ships").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(7);
-assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(1);
-assertThatJson(parsedJson).array("boards").array("ships").contains("type").isEqualTo("BATTLESHIP");
-assertThatJson(parsedJson).array("boards").array("ships").field("start").field("x").isEqualTo(2);
-assertThatJson(parsedJson).array("boards").array("moves").contains("status").isEqualTo("MISS");
-assertThatJson(parsedJson).array("boards").array("ships").field("start").field("y").isEqualTo(0);
-assertThatJson(parsedJson).array("boards").array("ships").field("end").field("y").isEqualTo(4);
-assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(3);
-assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("x").isEqualTo(0);
-assertThatJson(parsedJson).array("boards").array("ships").field("end").field("x").isEqualTo(2);
-assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(10);
-assertThatJson(parsedJson).array("boards").array("ships").contains("size").isEqualTo(4);
-assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(4);
-assertThatJson(parsedJson).array("boards").array("ships").field("start").field("x").isEqualTo(3);
-assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
-assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
-assertThatJson(parsedJson).array("boards").array("ships").field("end").field("y").isEqualTo(3);
-assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(8);
-assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("status").isEqualTo("MISS");
-assertThatJson(parsedJson).array("boards").array("ships").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("boards").array("ships").field("end").field("x").isEqualTo(1);
-assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
-assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("ships").contains("type").isEqualTo("DESTROYER");
-assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
-assertThatJson(parsedJson).field("turn").isEqualTo(1);
-assertThatJson(parsedJson).array("boards").array("ships").contains("boardId").isEqualTo(1);
-assertThatJson(parsedJson).array("boards").array("ships").contains("size").isEqualTo(3);
-assertThatJson(parsedJson).array("boards").array("ships").field("start").field("x").isEqualTo(4);
-assertThatJson(parsedJson).array("boards").array("ships").contains("type").isEqualTo("CRUISER");
-assertThatJson(parsedJson).array("boards").array("ships").field("start").field("x").isEqualTo(0);
-assertThatJson(parsedJson).array("boards").array("ships").contains("sunk").isEqualTo(false);
-assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(1);
-assertThatJson(parsedJson).array("boards").array("ships").field("end").field("y").isEqualTo(2);
-assertThatJson(parsedJson).array("boards").array("ships").field("end").field("x").isEqualTo(0);
-assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
-assertThatJson(parsedJson).array("boards").array("ships").field("end").field("x").isEqualTo(4);
-assertThatJson(parsedJson).field("id").isEqualTo(1);
-assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(6);
-assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("ships").contains("size").isEqualTo(2);
-assertThatJson(parsedJson).array("boards").array("ships").contains("type").isEqualTo("AIRCRAFT_CARRIER");
-assertThatJson(parsedJson).array("boards").array("ships").field("start").field("x").isEqualTo(1);
-assertThatJson(parsedJson).array("boards").array("ships").contains("boardId").isEqualTo(2);
-assertThatJson(parsedJson).array("boards").array("ships").contains("id").isEqualTo(2);
-assertThatJson(parsedJson).array("boards").array("ships").field("end").field("y").isEqualTo(1);
-assertThatJson(parsedJson).array("boards").array("ships").field("end").field("x").isEqualTo(3);
-assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(5);
-}
-
-@Test
-public void validate_32_placeMove() throws Exception {
-// given:
-MockMvcRequestSpecification request = given()
-.header("Content-Type", "application/json")
-.body("{\"x\":0,\"y\":5}");
-
-// when:
-ResponseOptions response = given().spec(request)
-.put("/games/1/boards/1");
-
-// then:
-assertThat(response.statusCode()).isEqualTo(400);
-assertThat(response.header("Content-Type")).matches("application/json.*");
-// and:
-DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("MoveCollision");
-assertThatJson(parsedJson).array("errors").array("validations").contains("type").isEqualTo("game");
-assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Move already exists on board.");
 }
 
 }
