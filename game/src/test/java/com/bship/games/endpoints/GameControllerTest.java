@@ -95,13 +95,13 @@ public class GameControllerTest {
         when(mockService.placeMove(any(BigInteger.class), any(BigInteger.class), any(Move.class)))
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
-
-        Game actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+        String content = mockMvc.perform(put("/games/1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(point.toString()))
                 .andReturn()
                 .getResponse()
-                .getContentAsString(), Game.class);
+                .getContentAsString();//, Game.class;
+        Game actual = mapper.readValue(content, Game.class);
 
         assertThat(actual.getBoards().get(0).getMoves(), contains(move));
     }

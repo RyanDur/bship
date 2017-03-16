@@ -8,6 +8,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import java.math.BigInteger;
+import java.util.Objects;
+import java.util.StringJoiner;
+
+import static java.util.Optional.ofNullable;
 
 @JsonDeserialize(builder = Ship.Builder.class)
 @PlacementCheck
@@ -69,6 +73,11 @@ public class Ship {
         return size;
     }
 
+    public boolean isPlaced() {
+        return ofNullable(start).map(Point::isSet).orElse(false) &&
+                ofNullable(end).map(Point::isSet).orElse(false);
+    }
+
     public Builder copy() {
         return builder()
                 .withId(id)
@@ -86,6 +95,7 @@ public class Ship {
 
     @JsonPOJOBuilder
     public static final class Builder {
+
         private Harbor type;
         private Point start;
         private Point end;
@@ -132,6 +142,7 @@ public class Ship {
         public Ship build() {
             return new Ship(this);
         }
+
     }
 
     @Override
@@ -139,36 +150,33 @@ public class Ship {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Ship ship = (Ship) o;
+        Ship that = (Ship) o;
 
-        if (sunk != ship.sunk) return false;
-        if (type != ship.type) return false;
-        if (start != null ? !start.equals(ship.start) : ship.start != null) return false;
-        if (end != null ? !end.equals(ship.end) : ship.end != null) return false;
-        if (boardId != null ? !boardId.equals(ship.boardId) : ship.boardId != null) return false;
-        return id != null ? id.equals(ship.id) : ship.id == null;
+        return Objects.equals(this.boardId, that.boardId) &&
+                Objects.equals(this.end, that.end) &&
+                Objects.equals(this.id, that.id) &&
+                Objects.equals(this.size, that.size) &&
+                Objects.equals(this.start, that.start) &&
+                Objects.equals(this.sunk, that.sunk) &&
+                Objects.equals(this.type, that.type);
     }
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + (start != null ? start.hashCode() : 0);
-        result = 31 * result + (end != null ? end.hashCode() : 0);
-        result = 31 * result + (boardId != null ? boardId.hashCode() : 0);
-        result = 31 * result + (sunk ? 1 : 0);
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        return result;
+        return Objects.hash(boardId, end, id, size, start, sunk,
+                type);
     }
 
     @Override
     public String toString() {
-        return "{" +
-                "\"type\":" + "\"" + type + "\"" +
-                ", \"start\":" + start +
-                ", \"end\":" + end +
-                ", \"boardId\":" + boardId +
-                ", \"sunk\":" + sunk +
-                ", \"id\":" + id +
-                '}';
+        return new StringJoiner(", ", this.getClass().getSimpleName() + "{", "}")
+                .add("\"boardId\": " + boardId)
+                .add("\"end\": " + end)
+                .add("\"id\": " + id)
+                .add("\"size\": " + size)
+                .add("\"start\" " + start)
+                .add("\"sunk\": " + sunk)
+                .add("\"type\" " + "\"" + type + "\"")
+                .toString();
     }
 }

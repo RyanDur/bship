@@ -2,6 +2,9 @@ package com.bship.games.domains;
 
 import com.bship.games.domains.validations.BoundsCheck;
 
+import java.util.Objects;
+import java.util.StringJoiner;
+
 @BoundsCheck
 public class Point {
     private Integer x;
@@ -23,29 +26,31 @@ public class Point {
         return y;
     }
 
+    public boolean isSet() {
+        return x != null && y != null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Point point = (Point) o;
+        Point that = (Point) o;
 
-        return (x != null ? x.equals(point.x) : point.x == null) &&
-                (y != null ? y.equals(point.y) : point.y == null);
+        return Objects.equals(this.x, that.x) &&
+                Objects.equals(this.y, that.y);
     }
 
     @Override
     public int hashCode() {
-        int result = x != null ? x.hashCode() : 0;
-        result = 31 * result + (y != null ? y.hashCode() : 0);
-        return result;
+        return Objects.hash(x, y);
     }
 
     @Override
     public String toString() {
-        return "{" +
-                "\"x\":" + x +
-                ", \"y\":" + y +
-                '}';
+        return new StringJoiner(", ","{", "}")
+                .add("\"x\": " + x)
+                .add("\"y\": " + y)
+                .toString();
     }
 }
