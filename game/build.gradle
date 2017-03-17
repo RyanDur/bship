@@ -56,3 +56,9 @@ flyway {
   url = 'jdbc:mysql://localhost:3306/bs'
   user = 'root'
 }
+
+test {
+  testLogging {
+    events "PASSED", "FAILED", "SKIPPED"
+  }
+}
