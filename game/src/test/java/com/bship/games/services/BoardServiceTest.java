@@ -2,6 +2,7 @@ package com.bship.games.services;
 
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Ship;
+import com.bship.games.exceptions.BoardValidation;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.repositories.BoardRepository;
@@ -38,7 +39,7 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void placeShip_shouldPlaceAShipOnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
+    public void placeShip_shouldPlaceAShipOnTheBoard() throws BoardValidation {
         Board board = Board.builder().build();
         Ship ship = Ship.builder().build();
         Board board1 = board.copy().addShip(ship).build();
@@ -53,7 +54,7 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void placeShip_shouldGuardAgainstPlacingDuplicateShip() throws ShipExistsCheck, ShipCollisionCheck {
+    public void placeShip_shouldGuardAgainstPlacingDuplicateShip() throws BoardValidation {
         thrown.expect(ShipExistsCheck.class);
         thrown.expectMessage("Ship already exists on board.");
 
@@ -67,7 +68,7 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void placeShip_shouldGuardAgainstShipCollisions() throws ShipExistsCheck, ShipCollisionCheck {
+    public void placeShip_shouldGuardAgainstShipCollisions() throws BoardValidation {
         thrown.expect(ShipCollisionCheck.class);
         thrown.expectMessage("Ship collision.");
 

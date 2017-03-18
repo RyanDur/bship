@@ -2,8 +2,7 @@ package com.bship.games.endpoints;
 
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Ship;
-import com.bship.games.exceptions.ShipCollisionCheck;
-import com.bship.games.exceptions.ShipExistsCheck;
+import com.bship.games.exceptions.BoardValidation;
 import com.bship.games.services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +42,12 @@ public class BoardsController implements BadRequestHandler {
             produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(OK)
     public Board placeShip(@PathVariable BigInteger boardId,
-                           @Valid @RequestBody Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
+                           @Valid @RequestBody Ship ship) throws BoardValidation {
         return service.placeShip(boardId, ship).orElse(null);
     }
 
     @Override
-    @ExceptionHandler({ShipExistsCheck.class, ShipCollisionCheck.class})
+    @ExceptionHandler({BoardValidation.class})
     public ResponseEntity processValidationError(Exception check) {
         return badRequest().body(getErrors(of(check).map(shipError).map(Stream::of).map(objectErrors)));
     }

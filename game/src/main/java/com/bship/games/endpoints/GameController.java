@@ -3,8 +3,7 @@ package com.bship.games.endpoints;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.Point;
-import com.bship.games.exceptions.MoveCollision;
-import com.bship.games.exceptions.TurnCheck;
+import com.bship.games.exceptions.GameValidation;
 import com.bship.games.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,14 +53,14 @@ public class GameController implements BadRequestHandler {
     @ResponseStatus(OK)
     public Game placeMove(@PathVariable BigInteger gameId,
                            @PathVariable BigInteger boardId,
-                           @Valid @RequestBody Point point) throws MoveCollision, TurnCheck {
+                           @Valid @RequestBody Point point) throws GameValidation {
         System.out.println("");
         return service.placeMove(gameId, boardId, Move.builder().withPoint(point)
                 .withBoardId(boardId).build());
     }
 
     @Override
-    @ExceptionHandler({MoveCollision.class, TurnCheck.class})
+    @ExceptionHandler({GameValidation.class})
     public ResponseEntity processValidationError(Exception check) {
         return badRequest().body(getErrors(of(check).map(gameError).map(Stream::of).map(objectErrors)));
     }

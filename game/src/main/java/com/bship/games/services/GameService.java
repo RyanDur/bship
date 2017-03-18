@@ -3,7 +3,7 @@ package com.bship.games.services;
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
-import com.bship.games.exceptions.MoveCollision;
+import com.bship.games.exceptions.GameValidation;
 import com.bship.games.exceptions.TurnCheck;
 import com.bship.games.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class GameService {
         return repository.create();
     }
 
-    public Game placeMove(BigInteger gameId, BigInteger boardId, Move move) throws MoveCollision, TurnCheck {
+    public Game placeMove(BigInteger gameId, BigInteger boardId, Move move) throws GameValidation {
         Game game = repository.get(gameId)
                 .filter(logic.turnCheck(boardId))
                 .orElseThrow(TurnCheck::new);

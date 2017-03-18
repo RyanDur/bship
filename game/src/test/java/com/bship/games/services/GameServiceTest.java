@@ -4,6 +4,7 @@ import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.Point;
+import com.bship.games.exceptions.GameValidation;
 import com.bship.games.exceptions.MoveCollision;
 import com.bship.games.exceptions.TurnCheck;
 import com.bship.games.repositories.GameRepository;
@@ -53,7 +54,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void placeMove_shouldThrowExceptionIfItIsNotTheBoardsTurn() throws MoveCollision, TurnCheck {
+    public void placeMove_shouldThrowExceptionIfItIsNotTheBoardsTurn() throws GameValidation {
         thrown.expect(TurnCheck.class);
         thrown.expectMessage("It is not your turn.");
 
@@ -68,7 +69,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void placeMove_shouldPlaceAMoveOnTheBoard() throws MoveCollision, TurnCheck {
+    public void placeMove_shouldPlaceAMoveOnTheBoard() throws GameValidation {
         Move point = Move.builder().withPoint(new Point(0, 0)).build();
         BigInteger boardId = BigInteger.ONE;
         BigInteger gameId = BigInteger.ONE;
@@ -88,7 +89,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void placeMove_shouldNotBeAbleToPlaceAMoveAtopAnother() throws MoveCollision, TurnCheck {
+    public void placeMove_shouldNotBeAbleToPlaceAMoveAtopAnother() throws GameValidation {
         thrown.expect(MoveCollision.class);
         thrown.expectMessage("Move already exists on board.");
 
@@ -108,7 +109,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void placeMove_shouldSaveTheNextBoardsTurn() throws MoveCollision, TurnCheck {
+    public void placeMove_shouldSaveTheNextBoardsTurn() throws GameValidation {
         Move point = Move.builder().withPoint(new Point(0, 0)).build();
         BigInteger boardId = BigInteger.ONE;
         BigInteger otherBoardId = BigInteger.valueOf(2);

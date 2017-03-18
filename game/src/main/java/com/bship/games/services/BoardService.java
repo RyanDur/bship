@@ -2,6 +2,7 @@ package com.bship.games.services;
 
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Ship;
+import com.bship.games.exceptions.BoardValidation;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.repositories.BoardRepository;
@@ -23,7 +24,7 @@ public class BoardService {
         this.logic = logic;
     }
 
-    public Optional<Board> placeShip(BigInteger boardId, Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
+    public Optional<Board> placeShip(BigInteger boardId, Ship ship) throws BoardValidation {
         Board board = boards.get(boardId).filter(b -> !logic.exists(b, ship))
                 .orElseThrow(ShipExistsCheck::new);
         if (logic.collision(board, ship)) throw new ShipCollisionCheck();
