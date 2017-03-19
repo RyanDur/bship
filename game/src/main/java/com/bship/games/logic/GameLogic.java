@@ -7,6 +7,8 @@ import com.bship.games.domains.MoveStatus;
 import com.bship.games.domains.Point;
 import com.bship.games.domains.Ship;
 import com.bship.games.exceptions.MoveCollision;
+import com.bship.games.exceptions.ShipCollisionCheck;
+import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.exceptions.TurnCheck;
 import org.springframework.stereotype.Service;
 
@@ -29,21 +31,12 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class GameLogic {
 
-    public boolean exists(Board board, Ship ship) {
-        return ofNullable(ship).isPresent() && ofNullable(board)
-                .map(Board::getShips)
-                .map(Collection::stream)
-                .filter(ships -> ships.filter(Ship::isPlaced)
-                        .map(Ship::getType)
-                        .anyMatch(type -> type.equals(ship.getType()))).isPresent();
-    }
-
-    public boolean collision(Board board, Ship ship) {
-        return ofNullable(ship).isPresent() && ofNullable(board)
-                .map(Board::getShips).map(Collection::stream)
-                .filter(ships -> ships.anyMatch(savedShip ->
-                        detectCollision(getRange(savedShip), getRange(ship))))
-                .isPresent();
+    public Function<Board, Board> placementCheck(Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
+        return rethrowFunction(board -> {
+            if (exists(board, ship)) throw new ShipExistsCheck();
+            if (collision(board, ship)) throw new ShipCollisionCheck();
+            return board;
+        });
     }
 
     public Function<Game, Game> valid(Move move) throws TurnCheck, MoveCollision {
@@ -101,6 +94,23 @@ public class GameLogic {
                         .addShip(sunk)
                         .build()
         )).build());
+    }
+
+    private boolean exists(Board board, Ship ship) {
+        return ofNullable(ship).isPresent() && ofNullable(board)
+                .map(Board::getShips)
+                .map(Collection::stream)
+                .filter(ships -> ships.filter(Ship::isPlaced)
+                        .map(Ship::getType)
+                        .anyMatch(type -> type.equals(ship.getType()))).isPresent();
+    }
+
+    private boolean collision(Board board, Ship ship) {
+        return ofNullable(ship).isPresent() && ofNullable(board)
+                .map(Board::getShips).map(Collection::stream)
+                .filter(ships -> ships.anyMatch(savedShip ->
+                        detectCollision(getRange(savedShip), getRange(ship))))
+                .isPresent();
     }
 
     private List<Ship> without(Board other, Predicate<Ship> test) {

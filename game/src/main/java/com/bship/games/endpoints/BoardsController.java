@@ -43,7 +43,7 @@ public class BoardsController implements BadRequestHandler {
     @ResponseStatus(OK)
     public Board placeShip(@PathVariable BigInteger boardId,
                            @Valid @RequestBody Ship ship) throws BoardValidation {
-        return service.placeShip(boardId, ship).orElse(null);
+        return service.placeShip(boardId, ship);
     }
 
     @Override

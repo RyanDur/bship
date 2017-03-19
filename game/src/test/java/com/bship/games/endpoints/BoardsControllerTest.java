@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigInteger;
 
-import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -50,7 +49,7 @@ public class BoardsControllerTest {
     @Test
     public void placeShip_shouldProduceJSONWithCharsetUTF8() throws Exception {
         when(mockService.placeShip(any(BigInteger.class), any(Ship.class)))
-                .thenReturn(of(Board.builder().build()));
+                .thenReturn(Board.builder().build());
 
         mockMvc.perform(put("/boards/9").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -71,7 +70,7 @@ public class BoardsControllerTest {
     @Test
     public void placeShip_shouldRespondWith200() throws Exception {
         when(mockService.placeShip(any(BigInteger.class), any(Ship.class)))
-                .thenReturn(of(Board.builder().build()));
+                .thenReturn(Board.builder().build());
 
         mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)

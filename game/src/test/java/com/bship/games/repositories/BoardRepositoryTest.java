@@ -152,14 +152,14 @@ public class BoardRepositoryTest {
         verify(moves).save(board.getMoves());
     }
 
-    @Test
-    public void save_shouldSaveAShipToTheBoard() {
-        Ship ship = Ship.builder().build();
-        Ship shipToSave = ship.copy().withBoardId(BigInteger.ONE).build();
-        boards.save(ship, BigInteger.ONE);
-
-        verify(ships).save(shipToSave);
-    }
+//    @Test
+//    public void save_shouldSaveAShipToTheBoard() {
+//        Ship ship = Ship.builder().build();
+//        Ship shipToSave = ship.copy().withBoardId(BigInteger.ONE).build();
+//        boards.save(ship, BigInteger.ONE);
+//
+//        verify(ships).save(shipToSave);
+//    }
 
     public List<Ship> getShips() {
         return Harbor.getShips().stream().map(ship -> Ship.builder()

@@ -26,10 +26,10 @@ import static org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils.c
 public class ShipRepository {
 
     private static final String INSERT_INTO_SHIPS = "INSERT INTO ships(type, size, ship_board_id) VALUES (:type, :size, :ship_board_id)";
-    private static final String SELECT_OPPONENTS_SUNK_SHIPS = "SELECT s.* FROM ships s JOIN boards b ON s.ship_board_id = b.id WHERE b.game_id = :game_id AND s.ship_board_id <> :board_id AND s.sunk IS TRUE;";
-    private static final String SELECT_MY_SHIPS = "SELECT * FROM ships WHERE ship_board_id = :board_id";
-    private static final String UPDATE_SHIPS = "UPDATE ships SET sunk = :sunk WHERE id = :id";
-    public static final String UPDATE_SHIP_POSITION = "UPDATE ships SET start = :start, end = :end WHERE id = :id";
+    private static final String SELECT_OPPONENTS_SUNK_SHIPS = "SELECT s.* FROM ships s JOIN boards b ON s.ship_board_id = b.id WHERE b.game_id = :game_id AND s.ship_board_id <> :ship_board_id AND s.sunk IS TRUE;";
+    private static final String SELECT_MY_SHIPS = "SELECT * FROM ships WHERE ship_board_id = :ship_board_id";
+    private static final String UPDATE_SHIPS = "UPDATE ships SET sunk = :sunk, start = :start, end = :end WHERE id = :id";
+    private static final String UPDATE_SHIP_POSITION = "UPDATE ships SET start = :start, end = :end WHERE id = :id";
     private final NamedParameterJdbcTemplate template;
 
     @Autowired
@@ -46,14 +46,14 @@ public class ShipRepository {
 
     public List<Ship> getAll(BigInteger boardId) {
         return template.query(SELECT_MY_SHIPS,
-                new MapSqlParameterSource("board_id", boardId),
+                new MapSqlParameterSource("ship_board_id", boardId),
                 buildShip);
     }
 
     public List<Ship> getAllOpponents(BigInteger gameId, BigInteger boardId) {
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("game_id", gameId);
-        source.addValue("board_id", boardId);
+        source.addValue("ship_board_id", boardId);
         return template.query(SELECT_OPPONENTS_SUNK_SHIPS, source, buildShip);
     }
 
@@ -102,6 +102,8 @@ public class ShipRepository {
                 new HashMap<String, Object>() {{
                     put("id", ship.getId());
                     put("sunk", ship.isSunk());
+                    put("start", toIndex(ship.getStart()));
+                    put("end", toIndex(ship.getEnd()));
                 }})
                 .collect(toList()).toArray(new HashMap[0]);
     }

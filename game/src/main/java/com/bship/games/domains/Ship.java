@@ -4,6 +4,7 @@ import com.bship.games.domains.validations.BoundsCheck;
 import com.bship.games.domains.validations.NonEmpty;
 import com.bship.games.domains.validations.PlacementCheck;
 import com.bship.games.domains.validations.ShipExists;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
@@ -73,11 +74,13 @@ public class Ship {
         return size;
     }
 
+    @JsonIgnore
     public boolean isPlaced() {
         return ofNullable(start).map(Point::isSet).orElse(false) &&
                 ofNullable(end).map(Point::isSet).orElse(false);
     }
 
+    @JsonIgnore
     public Builder copy() {
         return builder()
                 .withId(id)
@@ -89,6 +92,7 @@ public class Ship {
                 .withSize(size);
     }
 
+    @JsonIgnore
     public static Builder builder() {
         return new Builder();
     }
@@ -169,14 +173,14 @@ public class Ship {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", this.getClass().getSimpleName() + "{", "}")
+        return new StringJoiner(", ", "{", "}")
                 .add("\"boardId\": " + boardId)
                 .add("\"end\": " + end)
                 .add("\"id\": " + id)
                 .add("\"size\": " + size)
-                .add("\"start\" " + start)
+                .add("\"start\": " + start)
                 .add("\"sunk\": " + sunk)
-                .add("\"type\" " + "\"" + type + "\"")
+                .add("\"type\": " + "\"" + type + "\"")
                 .toString();
     }
 }

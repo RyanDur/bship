@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 public class UtilTest {
 
@@ -76,6 +77,37 @@ public class UtilTest {
         Integer index = Util.toIndex(point);
 
         assertThat(index, is(93));
+    }
+
+    @Test
+    public void toIndex_shouldReturnNullIfPointIsNotSetCompletely() {
+        Point point = new Point();
+        Integer index = Util.toIndex(point);
+
+        assertThat(index, is(nullValue()));
+    }
+
+    @Test
+    public void toIndex_shouldReturnNullIfPointXIsNotSet() {
+        Point point = new Point(null, 5);
+        Integer index = Util.toIndex(point);
+
+        assertThat(index, is(nullValue()));
+    }
+
+    @Test
+    public void toIndex_shouldReturnNullIfNoPoint() {
+        Integer index = Util.toIndex(null);
+
+        assertThat(index, is(nullValue()));
+    }
+
+    @Test
+    public void toIndex_shouldReturnNullIfPointYIsNotSet() {
+        Point point = new Point(5, null);
+        Integer index = Util.toIndex(point);
+
+        assertThat(index, is(nullValue()));
     }
 
     @Test

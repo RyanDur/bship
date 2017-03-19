@@ -8,6 +8,8 @@ import com.bship.games.domains.Point;
 import com.bship.games.domains.Ship;
 import com.bship.games.exceptions.GameValidation;
 import com.bship.games.exceptions.MoveCollision;
+import com.bship.games.exceptions.ShipCollisionCheck;
+import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.exceptions.TurnCheck;
 import org.junit.Before;
 import org.junit.Rule;
@@ -74,8 +76,8 @@ public class GameLogicTest {
         thrown.expectMessage("Move already exists on board.");
 
         BigInteger boardId = ONE;
-        Move move1 = Move.builder().withPoint(new Point(1,2)).withId(ONE).withBoardId(boardId).build();
-        Move move2 = Move.builder().withPoint(new Point(1,2)).withBoardId(boardId).build();
+        Move move1 = Move.builder().withPoint(new Point(1, 2)).withId(ONE).withBoardId(boardId).build();
+        Move move2 = Move.builder().withPoint(new Point(1, 2)).withBoardId(boardId).build();
         Board board1 = Board.builder().addMove(move1).withId(boardId).build();
         Board board2 = Board.builder().withId(boardId.add(ONE)).build();
         Game game = Game.builder().withBoards(asList(board1, board2)).withTurn(boardId).build();
@@ -97,7 +99,31 @@ public class GameLogicTest {
     }
 
     @Test
-    public void exists_shouldKnowIfAShipIsAlreadyOnTheBoard() {
+    public void placementCheck_shouldReturnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
+        Ship ship1 = Ship.builder()
+                .withType(Harbor.BATTLESHIP)
+                .withStart(new Point(0, 0))
+                .withEnd(new Point(0, 4))
+                .build();
+
+        Ship ship2 = Ship.builder()
+                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withStart(new Point(1, 0))
+                .withEnd(new Point(1, 4))
+                .build();
+
+        Board board = Board.builder().addShip(ship1).build();
+
+        Board actual = logic.placementCheck(ship2).apply(board);
+        assertThat(actual, is(equalTo(board)));
+    }
+
+
+    @Test
+    public void placementCheck_shouldKnowIfAShipIsAlreadyOnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
+        thrown.expect(ShipExistsCheck.class);
+        thrown.expectMessage("Ship already exists on board.");
+
         Ship ship1 = Ship.builder()
                 .withType(Harbor.BATTLESHIP)
                 .withStart(new Point(0, 0))
@@ -112,13 +138,11 @@ public class GameLogicTest {
 
         Board board = Board.builder().addShip(ship1).build();
 
-        boolean actual = logic.exists(board, ship2);
-
-        assertThat(actual, is(true));
+        logic.placementCheck(ship2).apply(board);
     }
 
     @Test
-    public void exists_shouldKnowIfAShipIsNotAlreadyPlacedOnTheBoard() {
+    public void placementCheck_shouldKnowIfAShipIsAlreadySetOnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
         Ship ship1 = Ship.builder()
                 .withType(Harbor.BATTLESHIP)
                 .withStart(new Point())
@@ -127,99 +151,72 @@ public class GameLogicTest {
 
         Ship ship2 = Ship.builder()
                 .withType(Harbor.BATTLESHIP)
-                .withStart(new Point(0,2))
-                .withEnd(new Point(1, 2))
+                .withStart(new Point(1, 0))
+                .withEnd(new Point(1, 4))
                 .build();
 
         Board board = Board.builder().addShip(ship1).build();
 
-        boolean actual = logic.exists(board, ship2);
-
-        assertThat(actual, is(false));
+        Board actual = logic.placementCheck(ship2).apply(board);
+        assertThat(actual, is(equalTo(board)));
     }
 
     @Test
-    public void exists_shouldKnowIfAShipIsNotAlreadyOnAnEmptyBoard() {
-        Ship ship = Ship.builder().withType(Harbor.BATTLESHIP).build();
-        Board board = Board.builder().build();
+    public void placementCheck_shouldBeAbleToDetectACollision() throws ShipExistsCheck, ShipCollisionCheck {
+        thrown.expect(ShipCollisionCheck.class);
+        thrown.expectMessage("Ship collision.");
 
-        boolean actual = logic.exists(board, ship);
-
-        assertThat(actual, is(false));
-    }
-
-    @Test
-    public void exists_shouldKnowIfAShipIsNotAlreadyOnTheBoard() {
-        Ship ship = Ship.builder().withType(Harbor.BATTLESHIP).build();
-        Board board = Board.builder().addShip(Ship.builder().withType(Harbor.SUBMARINE).build()).build();
-
-        boolean actual = logic.exists(board, ship);
-
-        assertThat(actual, is(false));
-    }
-
-    @Test
-    public void exists_shouldReturnFalseForANonExistentBoard() {
-        Ship ship = Ship.builder().withType(Harbor.BATTLESHIP).build();
-        Board board = null;
-
-        boolean actual = logic.exists(board, ship);
-
-        assertThat(actual, is(false));
-    }
-
-    @Test
-    public void exists_shouldReturnFalseForANonExistentShip() {
-        Ship ship = null;
-        Board board = Board.builder().addShip(Ship.builder().withType(Harbor.SUBMARINE).build()).build();
-
-        boolean actual = logic.exists(board, ship);
-
-        assertThat(actual, is(false));
-    }
-
-    @Test
-    public void collision_shouldBeAbleToDetectACollision() {
         Ship battleship = Ship.builder().withType(Harbor.BATTLESHIP).withStart(new Point(0, 0)).withEnd(new Point(0, 3)).build();
         Ship carrier = Ship.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(new Point(0, 0)).withEnd(new Point(4, 0)).build();
         Board board = Board.builder().withShips(singletonList(battleship)).build();
 
-        boolean actual = logic.collision(board, carrier);
-
-        assertThat(actual, is(true));
+        logic.placementCheck(carrier).apply(board);
     }
 
-    @Test
-    public void collision_shouldBeAbleToDetectWhenThereIsNotACollision() {
-        Ship battleship = Ship.builder().withType(Harbor.BATTLESHIP).withStart(new Point(0, 0)).withEnd(new Point(0, 3)).build();
-        Ship carrier = Ship.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(new Point(1, 1)).withEnd(new Point(4, 1)).build();
-        Board board = Board.builder().withShips(singletonList(battleship)).build();
 
-        boolean actual = logic.collision(board, carrier);
 
-        assertThat(actual, is(false));
-    }
-
-    @Test
-    public void collision_shouldBeFalseIfThereIsNotABoard() {
-        Ship carrier = Ship.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(new Point(1, 1)).withEnd(new Point(4, 1)).build();
-        Board board = null;
-
-        boolean actual = logic.collision(board, carrier);
-
-        assertThat(actual, is(false));
-    }
-
-    @Test
-    public void collision_shouldBeFalseIfThereIsNotAShip() {
-        Ship battleship = Ship.builder().withType(Harbor.BATTLESHIP).withStart(new Point(0, 0)).withEnd(new Point(0, 3)).build();
-        Ship carrier = null;
-        Board board = Board.builder().withShips(singletonList(battleship)).build();
-
-        boolean actual = logic.collision(board, carrier);
-
-        assertThat(actual, is(false));
-    }
+//    @Test
+//    public void collision_shouldBeAbleToDetectACollision() {
+//        Ship battleship = Ship.builder().withType(Harbor.BATTLESHIP).withStart(new Point(0, 0)).withEnd(new Point(0, 3)).build();
+//        Ship carrier = Ship.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(new Point(0, 0)).withEnd(new Point(4, 0)).build();
+//        Board board = Board.builder().withShips(singletonList(battleship)).build();
+//
+//        boolean actual = logic.collision(board, carrier);
+//
+//        assertThat(actual, is(true));
+//    }
+//
+//    @Test
+//    public void collision_shouldBeAbleToDetectWhenThereIsNotACollision() {
+//        Ship battleship = Ship.builder().withType(Harbor.BATTLESHIP).withStart(new Point(0, 0)).withEnd(new Point(0, 3)).build();
+//        Ship carrier = Ship.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(new Point(1, 1)).withEnd(new Point(4, 1)).build();
+//        Board board = Board.builder().withShips(singletonList(battleship)).build();
+//
+//        boolean actual = logic.collision(board, carrier);
+//
+//        assertThat(actual, is(false));
+//    }
+//
+//    @Test
+//    public void collision_shouldBeFalseIfThereIsNotABoard() {
+//        Ship carrier = Ship.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(new Point(1, 1)).withEnd(new Point(4, 1)).build();
+//        Board board = null;
+//
+//        boolean actual = logic.collision(board, carrier);
+//
+//        assertThat(actual, is(false));
+//    }
+//
+//    @Test
+//    public void collision_shouldBeFalseIfThereIsNotAShip() {
+//        Ship battleship = Ship.builder().withType(Harbor.BATTLESHIP).withStart(new Point(0, 0)).withEnd(new Point(0, 3)).build();
+//        Ship carrier = null;
+//        Board board = Board.builder().withShips(singletonList(battleship)).build();
+//
+//        boolean actual = logic.collision(board, carrier);
+//
+//        assertThat(actual, is(false));
+//    }
 
     @Test
     public void playMove_shouldReturnAGameWithThePlayedMove() {

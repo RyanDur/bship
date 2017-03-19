@@ -23,7 +23,9 @@ public class Util {
     public static final int SIDE = 10;
 
     public static Integer toIndex(Point point) {
-        return point.getY() + (point.getX() * SIDE);
+        return ofNullable(point).filter(Point::isSet)
+                .map(p -> p.getY() + (p.getX() * SIDE))
+                .orElse(null);
     }
 
     public static Point toPoint(Integer index) {
