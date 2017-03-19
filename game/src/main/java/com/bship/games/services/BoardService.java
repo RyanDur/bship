@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,12 +29,16 @@ public class BoardService {
     public Board placePiece(Long boardId, Piece piece) throws BoardValidation {
         return boards.get(boardId)
                 .map(logic.placementCheck(piece))
-                .map(board -> board.copy()
-                        .withPieces(otherPieces(board, piece))
-                        .addShip(piece.copy().withBoardId(boardId).build())
-                        .build())
+                .map(addPieceToBoard(boardId, piece))
                 .flatMap(boards::save)
                 .orElseThrow(BoardExistence::new);
+    }
+
+    private Function<Board, Board> addPieceToBoard(Long boardId, Piece piece) {
+        return board -> board.copy()
+                .withPieces(otherPieces(board, piece))
+                .addPiece(piece.copy().withBoardId(boardId).build())
+                .build();
     }
 
     private List<Piece> otherPieces(Board board, Piece piece) {

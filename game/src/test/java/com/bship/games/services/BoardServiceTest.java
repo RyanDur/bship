@@ -60,7 +60,7 @@ public class BoardServiceTest {
                 .filter(o -> !o.getType().equals(piece.getType()))
                 .collect(toList());
 
-        Board expected = board.copy().withPieces(unplaced).addShip(piece).build();
+        Board expected = board.copy().withPieces(unplaced).addPiece(piece).build();
 
         when(repository.get(boardId)).thenReturn(of(board));
         when(logic.placementCheck(piece)).thenReturn(b -> b);
@@ -80,7 +80,7 @@ public class BoardServiceTest {
         long boardId = 1L;
         Board board = Board.builder().build();
         Piece piece = Piece.builder().build();
-        Board expected = board.copy().addShip(piece).build();
+        Board expected = board.copy().addPiece(piece).build();
 
         when(repository.get(boardId)).thenReturn(Optional.empty());
         when(logic.placementCheck(piece)).thenReturn(b -> b);
@@ -112,7 +112,7 @@ public class BoardServiceTest {
         long boardId = 1L;
         Board board = Board.builder().build();
         Piece piece = Piece.builder().build();
-        Board expected = board.copy().addShip(piece).build();
+        Board expected = board.copy().addPiece(piece).build();
 
         when(repository.get(boardId)).thenReturn(of(board));
         doThrow(new ShipCollisionCheck()).when(logic).placementCheck(piece);

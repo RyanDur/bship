@@ -93,7 +93,7 @@ public class GameLogic {
                 other.copy()
                         .addOpponentMove(playedMove)
                         .withPieces(without(other, recentlySunk.apply(sunk)))
-                        .addShip(sunk)
+                        .addPiece(sunk)
                         .build()
         )).build());
     }

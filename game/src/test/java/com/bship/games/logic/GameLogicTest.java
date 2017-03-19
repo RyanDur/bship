@@ -110,7 +110,7 @@ public class GameLogicTest {
                 .withEnd(new Point(1, 4))
                 .build();
 
-        Board board = Board.builder().addShip(piece1).build();
+        Board board = Board.builder().addPiece(piece1).build();
 
         Board actual = logic.placementCheck(piece2).apply(board);
         assertThat(actual, is(equalTo(board)));
@@ -134,7 +134,7 @@ public class GameLogicTest {
                 .withEnd(new Point(1, 4))
                 .build();
 
-        Board board = Board.builder().addShip(piece1).build();
+        Board board = Board.builder().addPiece(piece1).build();
 
         logic.placementCheck(piece2).apply(board);
     }
@@ -153,7 +153,7 @@ public class GameLogicTest {
                 .withEnd(new Point(1, 4))
                 .build();
 
-        Board board = Board.builder().addShip(piece1).build();
+        Board board = Board.builder().addPiece(piece1).build();
 
         Board actual = logic.placementCheck(piece2).apply(board);
         assertThat(actual, is(equalTo(board)));
@@ -261,7 +261,7 @@ public class GameLogicTest {
                 other.copy().withOpponentMoves(asList(
                         move.copy().withStatus(HIT).build(),
                         move2.copy().withStatus(HIT).build()
-                )).withPieces(pieceList).addShip(sunkShip).build()
+                )).withPieces(pieceList).addPiece(sunkShip).build()
 
         )).build();
 

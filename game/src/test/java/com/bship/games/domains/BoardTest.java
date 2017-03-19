@@ -31,15 +31,15 @@ public class BoardTest {
 
     @Test
     public void addShip_shouldBeAbleToAddAShipToTheBoard() {
-        Board board = Board.builder().addShip(battleship).build();
+        Board board = Board.builder().addPiece(battleship).build();
 
         assertThat(board.getPieces(), contains(battleship));
     }
 
     @Test
     public void addShip_shouldBeAbleToAddMultipleShipsToTheBoard() {
-        Board board = Board.builder().addShip(battleship).build();
-        Board newBoard = board.copy().addShip(aircraftCarrier).build();
+        Board board = Board.builder().addPiece(battleship).build();
+        Board newBoard = board.copy().addPiece(aircraftCarrier).build();
 
         assertThat(newBoard.getPieces(), contains(battleship, aircraftCarrier));
     }
@@ -48,7 +48,7 @@ public class BoardTest {
     public void getShips__with_addShip_shouldBeImmutable() {
         thrown.expect(UnsupportedOperationException.class);
 
-        Board board = Board.builder().addShip(battleship).build();
+        Board board = Board.builder().addPiece(battleship).build();
 
         board.getPieces().add(aircraftCarrier);
     }

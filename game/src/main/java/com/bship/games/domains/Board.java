@@ -118,7 +118,7 @@ public class Board {
             return this;
         }
 
-        public Builder addShip(Piece piece) {
+        public Builder addPiece(Piece piece) {
             pieces = addTo(pieces, piece);
             return this;
         }
