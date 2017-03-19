@@ -1,9 +1,14 @@
 package com.bship.games.domains;
 
+import com.bship.games.domains.validations.BoundsCheck;
+import com.bship.games.domains.validations.NonEmpty;
+import com.bship.games.domains.validations.ValidPoint;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import java.math.BigInteger;
+
+import static java.util.Optional.ofNullable;
 
 @JsonDeserialize(builder = Move.Builder.class)
 public class Move {
@@ -14,6 +19,9 @@ public class Move {
 
     private MoveStatus status;
 
+    @NonEmpty
+    @BoundsCheck
+    @ValidPoint
     private Point point;
 
     public Move() {}
@@ -91,19 +99,12 @@ public class Move {
 
         Move move = (Move) o;
 
-        if (boardId != null ? !boardId.equals(move.boardId) : move.boardId != null) return false;
-        if (id != null ? !id.equals(move.id) : move.id != null) return false;
-        if (status != move.status) return false;
         return point != null ? point.equals(move.point) : move.point == null;
     }
 
     @Override
     public int hashCode() {
-        int result = boardId != null ? boardId.hashCode() : 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (point != null ? point.hashCode() : 0);
-        return result;
+        return point != null ? point.hashCode() : 0;
     }
 
     @Override
@@ -111,7 +112,7 @@ public class Move {
         return "{" +
                 "\"boardId\":" + boardId +
                 ", \"id\":" + id +
-                ", \"status\":" + "\"" + status + "\"" +
+                ", \"status\":" + ofNullable(status).map(s -> "\"" + s + "\"").orElse(null) +
                 ", \"point\":" + point +
                 '}';
     }

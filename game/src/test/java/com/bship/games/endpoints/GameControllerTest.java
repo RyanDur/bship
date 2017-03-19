@@ -4,6 +4,7 @@ import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.Point;
+import com.bship.games.endpoints.RequestErrors.FieldValidation;
 import com.bship.games.endpoints.RequestErrors.GameErrors;
 import com.bship.games.endpoints.RequestErrors.ObjectValidation;
 import com.bship.games.exceptions.MoveCollision;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -89,18 +91,20 @@ public class GameControllerTest {
 
     @Test
     public void placeMove_shouldBeAbleToPlaceAMoveOnTheBoard() throws Exception {
-        Move move = new Move();
         Point point = new Point(0, 0);
+        Move move = Move.builder().withPoint(point).build();
 
-        when(mockService.placeMove(any(BigInteger.class), any(BigInteger.class), any(Move.class)))
+        when(mockService.placeMove(any(BigInteger.class), any(Move.class)))
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
-        String content = mockMvc.perform(put("/games/1/boards/1")
+
+        String content = mockMvc.perform(patch("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(point.toString()))
+                .content(move.toString()))
                 .andReturn()
                 .getResponse()
-                .getContentAsString();//, Game.class;
+                .getContentAsString();
+
         Game actual = mapper.readValue(content, Game.class);
 
         assertThat(actual.getBoards().get(0).getMoves(), contains(move));
@@ -109,88 +113,90 @@ public class GameControllerTest {
     @Test
     public void placeMove_shouldNotAllowTheXToBeLessThanTheWidthOfTheBoard() throws Exception {
         Point point = new Point(-1, 0);
+        Move move = Move.builder().withPoint(point).build();
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(point.toString()))
+                .content(move.toString()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
-        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
+        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
         assertThat(error.getValidations().get(0).getMessage(), is("out of bounds."));
     }
 
     @Test
     public void placeMove_shouldNotAllowTheXToBeGreaterThanTheHeightOfTheBoard() throws Exception {
-        Move move = new Move();
         Point point = new Point(10, 0);
+        Move move = Move.builder().withPoint(point).build();
 
-        when(mockService.placeMove(any(BigInteger.class), any(BigInteger.class), any(Move.class)))
+        when(mockService.placeMove(any(BigInteger.class), any(Move.class)))
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(point.toString()))
+                .content(move.toString()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
-        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
+        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
         assertThat(error.getValidations().get(0).getMessage(), is("out of bounds."));
     }
 
     @Test
     public void placeMove_shouldNotAllowTheYToBeLessThanTheWidthOfTheBoard() throws Exception {
-        Move move = new Move();
         Point point = new Point(0, -1);
+        Move move = Move.builder().withPoint(point).build();
 
-        when(mockService.placeMove(any(BigInteger.class), any(BigInteger.class), any(Move.class)))
+        when(mockService.placeMove(any(BigInteger.class), any(Move.class)))
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(point.toString()))
+                .content(move.toString()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
-        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
+        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
         assertThat(error.getValidations().get(0).getMessage(), is("out of bounds."));
     }
 
     @Test
     public void placeMove_shouldNotAllowTheYToBeGreaterThanTheHeightOfTheBoard() throws Exception {
-        Move move = new Move();
         Point point = new Point(0, 10);
+        Move move = Move.builder().withPoint(point).build();
 
-        when(mockService.placeMove(any(BigInteger.class), any(BigInteger.class), any(Move.class)))
+        when(mockService.placeMove(any(BigInteger.class), any(Move.class)))
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(point.toString()))
+                .content(move.toString()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
-        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
+        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
         assertThat(error.getValidations().get(0).getMessage(), is("out of bounds."));
     }
 
     @Test
     public void placeMove_shouldHandleMoveCollisions() throws Exception {
         Point point = new Point(0, 0);
+        Move move = Move.builder().withPoint(point).build();
 
         doThrow(new MoveCollision())
-                .when(mockService).placeMove(any(BigInteger.class), any(BigInteger.class), any(Move.class));
+                .when(mockService).placeMove(any(BigInteger.class), any(Move.class));
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(point.toString()))
+                .content(move.toString()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
@@ -202,13 +208,14 @@ public class GameControllerTest {
     @Test
     public void placeMove_shouldHandleTurnChecks() throws Exception {
         Point point = new Point(0, 0);
+        Move move = Move.builder().withPoint(point).build();
 
         doThrow(new TurnCheck())
-                .when(mockService).placeMove(any(BigInteger.class), any(BigInteger.class), any(Move.class));
+                .when(mockService).placeMove(any(BigInteger.class), any(Move.class));
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1/boards/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(point.toString()))
+                .content(move.toString()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);

@@ -1,12 +1,14 @@
 package com.bship.games.domains;
 
 import com.bship.games.domains.validations.BoundsCheck;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Objects;
 import java.util.StringJoiner;
 
 @BoundsCheck
 public class Point {
+
     private Integer x;
     private Integer y;
 
@@ -26,6 +28,7 @@ public class Point {
         return y;
     }
 
+    @JsonIgnore
     public boolean isSet() {
         return x != null && y != null;
     }

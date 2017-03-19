@@ -557,20 +557,22 @@ public void validate_30_placeMove() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"y\":5}");
+.body("{\"boardId\":1,\"point\":{\"y\":5}}");
 
 // when:
 ResponseOptions response = given().spec(request)
-.put("/games/1/boards/1");
+.patch("/games/1");
 
 // then:
 assertThat(response.statusCode()).isEqualTo(400);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("errors").array("validations").contains("type").isEqualTo("point");
-assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("out of bounds.");
-assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("BoundsCheck");
+assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("point");
+assertThatJson(parsedJson).array("errors").array("validations").field("value").field("y").isEqualTo(5);
+assertThatJson(parsedJson).array("errors").array("validations").field("value").field("x").isNull();
+assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Cannot be empty or null.");
+assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("ValidPoint");
 }
 
 }

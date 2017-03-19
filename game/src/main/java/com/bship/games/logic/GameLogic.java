@@ -1,4 +1,4 @@
-package com.bship.games.services;
+package com.bship.games.logic;
 
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
@@ -7,38 +7,27 @@ import com.bship.games.domains.MoveStatus;
 import com.bship.games.domains.Point;
 import com.bship.games.domains.Ship;
 import com.bship.games.exceptions.MoveCollision;
+import com.bship.games.exceptions.TurnCheck;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
+import static com.bship.games.util.LambdaExceptionUtil.rethrowFunction;
 import static com.bship.games.util.Util.detectCollision;
 import static com.bship.games.util.Util.pointsRange;
 import static java.util.Arrays.asList;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 @Service
 public class GameLogic {
-
-    public Predicate<Game> turnCheck(BigInteger id) {
-        return game -> !ofNullable(game).map(Game::getTurn).filter(turn -> !turn.equals(id)).isPresent();
-    }
-
-    public Predicate<BigInteger> nextTurn(BigInteger boardId) {
-        return id -> ofNullable(boardId).isPresent() &&
-                ofNullable(id).filter(currentId -> !currentId.equals(boardId)).isPresent();
-    }
 
     public boolean exists(Board board, Ship ship) {
         return ofNullable(ship).isPresent() && ofNullable(board)
@@ -57,14 +46,30 @@ public class GameLogic {
                 .isPresent();
     }
 
-    public Optional<Game> playMove(Game game, BigInteger boardId, Move move) throws MoveCollision {
-        Map<Boolean, Board> boardMap = partitionBoards(game, boardId);
-        Board current = boardMap.get(move.getBoardId().equals(boardId));
-        Board other = boardMap.get(!move.getBoardId().equals(boardId));
+    public Function<Game, Game> valid(Move move) throws TurnCheck, MoveCollision {
+        return rethrowFunction(game -> {
+            if (game.getTurn() != null && !move.getBoardId().equals(game.getTurn()))
+                throw new TurnCheck();
+            if (game.getBoards().stream().filter(currentBoard(move)).anyMatch(played(move)))
+                throw new MoveCollision();
+            return game;
+        });
+    }
 
-        if (isAlreadyPlayed(current, move)) throw new MoveCollision();
-        Move playedMove = getPlayedMove(move, other);
-        return getUpdatedGame(game, current, other, playedMove);
+    public Function<Game, Game> play(Move move) {
+        return game -> {
+            Board current = game.getBoards().stream().filter(currentBoard(move)).findFirst().get();
+            Board other = game.getBoards().stream().filter(currentBoard(move).negate()).findFirst().get();
+            Move playedMove = getPlayedMove(move, other);
+            return getUpdatedGame(game, current, other, playedMove).get();
+        };
+    }
+
+    public Function<Game, Game> setNextTurn(Move move) {
+        return game -> {
+            Board other = game.getBoards().stream().filter(currentBoard(move).negate()).findFirst().get();
+            return game.copy().withTurn(other.getId()).build();
+        };
     }
 
     private Optional<Game> getUpdatedGame(Game game, Board current, Board other, Move playedMove) {
@@ -127,23 +132,6 @@ public class GameLogic {
                 .map(Ship.Builder::build);
     }
 
-    private boolean isAlreadyPlayed(Board current, Move move) {
-        return current.getMoves().stream()
-                .map(Move::getPoint)
-                .collect(toList())
-                .contains(move.getPoint());
-    }
-
-    private Map<Boolean, Board> partitionBoards(Game game, BigInteger boardId) {
-        return game.getBoards()
-                .stream()
-                .collect(partitioningBy(board -> board.getId().equals(boardId)))
-                .entrySet()
-                .stream()
-                .collect(toMap(Map.Entry::getKey,
-                        entry -> entry.getValue().stream().findFirst().get()));
-    }
-
     private List<Point> getRange(Ship ship) {
         return pointsRange(ship.getStart(), ship.getEnd());
     }
@@ -156,7 +144,15 @@ public class GameLogic {
                 .findAny().map(p -> HIT).orElse(MISS);
     }
 
-    private Predicate<Ship> notSunk = ship -> !ship.isSunk();
+    private Predicate<Board> played(Move move) {
+        return board -> board.getMoves().contains(move);
+    }
+
+    private Predicate<Board> currentBoard(Move move) {
+        return boards -> boards.getId().equals(move.getBoardId());
+    }
 
     private Function<Ship, Predicate<Ship>> recentlySunk = sunk -> ship -> !ship.getType().equals(sunk.getType());
+
+    private Predicate<Ship> notSunk = ship -> !ship.isSunk();
 }

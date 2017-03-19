@@ -557,11 +557,11 @@ public void validate_30_placeMove() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"x\":0,\"y\":4}");
+.body("{\"boardId\":1,\"point\":{\"x\":0,\"y\":4}}");
 
 // when:
 ResponseOptions response = given().spec(request)
-.put("/games/1/boards/1");
+.patch("/games/1");
 
 // then:
 assertThat(response.statusCode()).isEqualTo(200);

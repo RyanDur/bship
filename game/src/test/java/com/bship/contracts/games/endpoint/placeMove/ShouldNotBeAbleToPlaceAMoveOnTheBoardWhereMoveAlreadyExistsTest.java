@@ -557,11 +557,11 @@ public void validate_30_placeMove() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"x\":0,\"y\":5}");
+.body("{\"boardId\":1,\"point\":{\"x\":0,\"y\":5}}");
 
 // when:
 ResponseOptions response = given().spec(request)
-.put("/games/1/boards/1");
+.patch("/games/1");
 
 // then:
 assertThat(response.statusCode()).isEqualTo(200);
@@ -625,11 +625,11 @@ public void validate_31_placeMove() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"x\":0,\"y\":5}");
+.body("{\"boardId\":2,\"point\":{\"x\":0,\"y\":5}}");
 
 // when:
 ResponseOptions response = given().spec(request)
-.put("/games/1/boards/2");
+.patch("/games/1");
 
 // then:
 assertThat(response.statusCode()).isEqualTo(200);
@@ -693,11 +693,11 @@ public void validate_32_placeMove() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"x\":0,\"y\":5}");
+.body("{\"boardId\":1,\"point\":{\"x\":0,\"y\":5}}");
 
 // when:
 ResponseOptions response = given().spec(request)
-.put("/games/1/boards/1");
+.patch("/games/1");
 
 // then:
 assertThat(response.statusCode()).isEqualTo(400);

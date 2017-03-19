@@ -4,15 +4,17 @@ import org.springframework.cloud.contract.spec.Contract
 
 Contract.make {
   request {
-    method 'PUT'
-    urlPath '/games/1/boards/1'
+    method 'PATCH'
+    urlPath '/games/1'
     headers {
       contentType(applicationJson())
     }
     body([
-        x: 0,
-        y: 4
-    ])
+        boardId: 1,
+        point  : [
+            x: 0,
+            y: 4
+        ]])
   }
   response {
     status 200

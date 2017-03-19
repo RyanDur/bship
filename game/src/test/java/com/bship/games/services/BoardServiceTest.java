@@ -5,6 +5,7 @@ import com.bship.games.domains.Ship;
 import com.bship.games.exceptions.BoardValidation;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
+import com.bship.games.logic.GameLogic;
 import com.bship.games.repositories.BoardRepository;
 import org.junit.Before;
 import org.junit.Rule;

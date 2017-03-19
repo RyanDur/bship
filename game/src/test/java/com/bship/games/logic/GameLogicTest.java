@@ -1,4 +1,4 @@
-package com.bship.games.services;
+package com.bship.games.logic;
 
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
@@ -6,7 +6,9 @@ import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.Point;
 import com.bship.games.domains.Ship;
+import com.bship.games.exceptions.GameValidation;
 import com.bship.games.exceptions.MoveCollision;
+import com.bship.games.exceptions.TurnCheck;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,11 +17,11 @@ import org.junit.rules.ExpectedException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
+import static java.math.BigInteger.ONE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -42,54 +44,56 @@ public class GameLogicTest {
     }
 
     @Test
-    public void turnCheck_shouldDecideIfTheCorrectTurnIsInPlay() throws Exception {
-        BigInteger gameId = BigInteger.valueOf(2L);
+    public void valid_shouldReturnTheGame() throws GameValidation {
+        BigInteger boardId = ONE;
+        Move move = Move.builder().withBoardId(boardId).build();
+        Board board1 = Board.builder().withMoves(emptyList()).withId(boardId).build();
+        Board board2 = Board.builder().withMoves(emptyList()).withId(boardId.add(ONE)).build();
+        Game game = Game.builder().withBoards(asList(board1, board2)).withTurn(boardId).build();
 
-        boolean actual = logic.turnCheck(gameId).test(Game.builder().withTurn(gameId).build());
-        assertThat(actual, is(true));
+        Game actual = logic.valid(move).apply(game);
+
+        assertThat(actual, is(equalTo(game)));
     }
 
     @Test
-    public void turnCheck_shouldDecideIfTheWrongTurnIsInPlay() throws Exception {
-        BigInteger gameId = BigInteger.valueOf(2L);
+    public void valid_shouldThrowTurnCheckIfTheMoveIsPlayedOutOfTurn() throws GameValidation {
+        thrown.expect(TurnCheck.class);
+        thrown.expectMessage("It is not your turn.");
 
-        boolean actual = logic.turnCheck(gameId).test(Game.builder().withTurn(gameId.add(BigInteger.valueOf(1))).build());
-        assertThat(actual, is(false));
+        BigInteger boardId = ONE;
+        Move move = Move.builder().withBoardId(boardId).build();
+        Game game = Game.builder().withTurn(boardId.add(ONE)).build();
+
+        logic.valid(move).apply(game);
     }
 
     @Test
-    public void turnCheck_shouldReturnTrueIfNoTurnIsSetSinceItIsAnybodiesTurn() throws Exception {
-        BigInteger gameId = BigInteger.valueOf(2L);
+    public void valid_shouldThrowMoveCollisionIfMoveAlreadyPlayed() throws MoveCollision, TurnCheck {
+        thrown.expect(MoveCollision.class);
+        thrown.expectMessage("Move already exists on board.");
 
-        boolean actual = logic.turnCheck(gameId).test(Game.builder().build());
-        assertThat(actual, is(true));
+        BigInteger boardId = ONE;
+        Move move1 = Move.builder().withPoint(new Point(1,2)).withId(ONE).withBoardId(boardId).build();
+        Move move2 = Move.builder().withPoint(new Point(1,2)).withBoardId(boardId).build();
+        Board board1 = Board.builder().addMove(move1).withId(boardId).build();
+        Board board2 = Board.builder().withId(boardId.add(ONE)).build();
+        Game game = Game.builder().withBoards(asList(board1, board2)).withTurn(boardId).build();
+
+        logic.valid(move2).apply(game);
     }
 
     @Test
-    public void nextTurn_shouldKnowIfTheIdIsTheNextToPlay() {
-        BigInteger boardId = BigInteger.valueOf(1L);
-        BigInteger nextBoardId = BigInteger.valueOf(2L);
-        boolean actual = logic.nextTurn(boardId).test(nextBoardId);
+    public void valid_shouldNotCareWhoGoesFirst() throws MoveCollision, TurnCheck {
+        BigInteger boardId2 = ONE;
+        Move move = Move.builder().withBoardId(boardId2).build();
+        Board board1 = Board.builder().withMoves(emptyList()).withId(ONE).build();
+        Board board2 = Board.builder().withMoves(emptyList()).withId(boardId2).build();
+        Game game = Game.builder().withBoards(asList(board1, board2)).build();
 
-        assertThat(actual, is(true));
-    }
+        Game actual = logic.valid(move).apply(game);
 
-    @Test
-    public void nextTurn_shouldNotAllowIfTheCurrentPlayIdIsUnknown() {
-        BigInteger boardId = null;
-        BigInteger nextBoardId = BigInteger.valueOf(1L);
-        boolean actual = logic.nextTurn(nextBoardId).test(boardId);
-
-        assertThat(actual, is(false));
-    }
-
-    @Test
-    public void nextTurn_shouldNotAllowIfTheNextPlayIdIsUnknown() {
-        BigInteger boardId = BigInteger.valueOf(1L);
-        BigInteger nextBoardId = null;
-        boolean actual = logic.nextTurn(nextBoardId).test(boardId);
-
-        assertThat(actual, is(false));
+        assertThat(actual, is(equalTo(game)));
     }
 
     @Test
@@ -218,7 +222,7 @@ public class GameLogicTest {
     }
 
     @Test
-    public void playMove_shouldReturnAGameWithThePlayedMove() throws MoveCollision {
+    public void playMove_shouldReturnAGameWithThePlayedMove() {
         BigInteger gameId = BigInteger.valueOf(1L);
         BigInteger boardId = BigInteger.valueOf(1L);
         BigInteger opponentBoardId = BigInteger.valueOf(2L);
@@ -226,7 +230,7 @@ public class GameLogicTest {
         Move move = getMove(9, 9, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
 
-        Optional<Game> actual = logic.playMove(game, boardId, move);
+        Game actual = logic.play(move).apply(game);
 
         List<Board> boards = game.getBoards();
         Board board1 = boards.stream().filter(o -> o.getId().equals(boardId)).findFirst().get();
@@ -238,23 +242,7 @@ public class GameLogicTest {
                 opponentBoard1.copy().addOpponentMove(move.copy().withStatus(MISS).build()).build()
         )).build();
 
-        assertThat(actual.get(), is(equalTo(expected)));
-    }
-
-    @Test
-    public void playMove_shouldNotBeAbleToPlayAMoveTwice() throws Exception {
-        thrown.expect(MoveCollision.class);
-        thrown.expectMessage("Move already exists on board.");
-
-        BigInteger gameId = BigInteger.valueOf(1L);
-        BigInteger boardId = BigInteger.valueOf(1L);
-        BigInteger opponentBoardId = BigInteger.valueOf(2L);
-
-        Move move = getMove(9, 9, boardId);
-        Game game = getGame(gameId, boardId, opponentBoardId);
-
-        game = logic.playMove(game, boardId, move).get();
-        logic.playMove(game.copy().build(), boardId, move.copy().build());
+        assertThat(actual, is(equalTo(expected)));
     }
 
     @Test
@@ -266,7 +254,7 @@ public class GameLogicTest {
         Move move = getMove(0, 0, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
 
-        Optional<Game> actual = logic.playMove(game, boardId, move);
+        Game actual = logic.play(move).apply(game);
 
         List<Board> boards = game.getBoards();
         Board board1 = boards.stream().filter(o -> o.getId().equals(boardId)).findFirst().get();
@@ -282,7 +270,7 @@ public class GameLogicTest {
                 ).build()
         )).build();
 
-        assertThat(actual.get(), is(equalTo(expected)));
+        assertThat(actual, is(equalTo(expected)));
     }
 
     @Test
@@ -294,12 +282,12 @@ public class GameLogicTest {
         Move move = getMove(4, 0, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
 
-        Optional<Game> game1 = logic.playMove(game, boardId, move);
+        Game game1 = logic.play(move).apply(game);
 
         Move move2 = move.copy().withPoint(new Point(4, 1)).build();
-        Optional<Game> actual = logic.playMove(game1.get(), boardId, move2);
+        Game actual = logic.play(move2).apply(game1);
 
-        Map<Boolean, Board> boardMap = partitionBoards(game1.get(), boardId);
+        Map<Boolean, Board> boardMap = partitionBoards(game1, boardId);
         Board current = boardMap.get(move.getBoardId().equals(boardId));
         Board other = boardMap.get(!move.getBoardId().equals(boardId));
 
@@ -327,7 +315,21 @@ public class GameLogicTest {
 
         )).build();
 
-        assertThat(actual.get(), is(equalTo(expected)));
+        assertThat(actual, is(equalTo(expected)));
+    }
+
+    @Test
+    public void setNextTurn_shouldSetTheNextTurnToBPlayed() {
+        BigInteger boardId1 = ONE;
+        BigInteger boardId2 = ONE.add(ONE);
+        Move move = Move.builder().withBoardId(boardId1).build();
+        Board board1 = Board.builder().withId(boardId1).build();
+        Board board2 = Board.builder().withId(boardId2).build();
+        Game game = Game.builder().withBoards(asList(board1, board2)).withTurn(boardId1).build();
+        Game expected = Game.builder().withBoards(asList(board1, board2)).withTurn(boardId2).build();
+
+        Game actual = logic.setNextTurn(move).apply(game);
+        assertThat(actual, is(equalTo(expected)));
     }
 
     private Game getGame(BigInteger gameId, BigInteger boardId, BigInteger opponentBoardId) {

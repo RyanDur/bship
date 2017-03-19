@@ -2,7 +2,6 @@ package com.bship.games.repositories;
 
 import com.bship.games.domains.Move;
 import com.bship.games.domains.MoveStatus;
-import com.bship.games.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,6 +12,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.bship.games.util.Util.toIndex;
 import static com.bship.games.util.Util.toPoint;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils.createBatch;
@@ -52,7 +52,7 @@ public class MoveRepository {
         return moves.stream().map(move ->
                 new HashMap<String, Object>() {{
                     put("board_id", move.getBoardId());
-                    put("point", Util.toIndex(move.getPoint()));
+                    put("point", toIndex(move.getPoint()));
                     put("status", move.getStatus().name());
                 }})
                 .collect(toList()).toArray(new HashMap[0]);

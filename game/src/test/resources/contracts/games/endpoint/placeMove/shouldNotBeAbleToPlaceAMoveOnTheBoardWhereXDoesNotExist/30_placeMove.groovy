@@ -4,14 +4,16 @@ import org.springframework.cloud.contract.spec.Contract
 
 Contract.make {
   request {
-    method 'PUT'
-    urlPath '/games/1/boards/1'
+    method 'PATCH'
+    urlPath '/games/1'
     headers {
       contentType(applicationJson())
     }
     body([
-        y: 5
-    ])
+        boardId: 1,
+        point  : [
+            y: 5
+        ]])
   }
   response {
     status 400
@@ -21,9 +23,13 @@ Contract.make {
     body([
         errors: [[
                      validations: [[
-                                       code   : 'BoundsCheck',
-                                       type   : 'point',
-                                       message: 'out of bounds.'
+                                       code   : 'ValidPoint',
+                                       field  : 'point',
+                                       value  : [
+                                           x: null,
+                                           y: 5
+                                       ],
+                                       message: 'Cannot be empty or null.'
                                    ]]
                  ]]
     ])
