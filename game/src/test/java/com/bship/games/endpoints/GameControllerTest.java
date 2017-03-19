@@ -98,7 +98,7 @@ public class GameControllerTest {
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
-        String content = mockMvc.perform(patch("/games/1")
+        String content = mockMvc.perform(put("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(move.toString()))
                 .andReturn()
@@ -115,7 +115,7 @@ public class GameControllerTest {
         Point point = new Point(-1, 0);
         Move move = Move.builder().withPoint(point).build();
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(move.toString()))
                 .andReturn()
@@ -135,7 +135,7 @@ public class GameControllerTest {
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(move.toString()))
                 .andReturn()
@@ -155,7 +155,7 @@ public class GameControllerTest {
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(move.toString()))
                 .andReturn()
@@ -175,7 +175,7 @@ public class GameControllerTest {
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(move.toString()))
                 .andReturn()
@@ -194,7 +194,7 @@ public class GameControllerTest {
         doThrow(new MoveCollision())
                 .when(mockService).placeMove(anyLong(), any(Move.class));
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(move.toString()))
                 .andReturn()
@@ -213,7 +213,7 @@ public class GameControllerTest {
         doThrow(new TurnCheck())
                 .when(mockService).placeMove(anyLong(), any(Move.class));
 
-        GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(move.toString()))
                 .andReturn()

@@ -4,7 +4,7 @@ import org.springframework.cloud.contract.spec.Contract
 
 Contract.make {
   request {
-    method 'PATCH'
+    method 'PUT'
     urlPath '/games/1'
     headers {
       contentType(applicationJson())

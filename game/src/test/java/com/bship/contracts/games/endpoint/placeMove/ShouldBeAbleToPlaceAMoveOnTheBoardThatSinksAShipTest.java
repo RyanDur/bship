@@ -561,7 +561,7 @@ MockMvcRequestSpecification request = given()
 
 // when:
 ResponseOptions response = given().spec(request)
-.patch("/games/1");
+.put("/games/1");
 
 // then:
 assertThat(response.statusCode()).isEqualTo(200);
@@ -629,7 +629,7 @@ MockMvcRequestSpecification request = given()
 
 // when:
 ResponseOptions response = given().spec(request)
-.patch("/games/1");
+.put("/games/1");
 
 // then:
 assertThat(response.statusCode()).isEqualTo(200);
@@ -701,7 +701,7 @@ MockMvcRequestSpecification request = given()
 
 // when:
 ResponseOptions response = given().spec(request)
-.patch("/games/1");
+.put("/games/1");
 
 // then:
 assertThat(response.statusCode()).isEqualTo(200);
@@ -775,7 +775,7 @@ MockMvcRequestSpecification request = given()
 
 // when:
 ResponseOptions response = given().spec(request)
-.patch("/games/1");
+.put("/games/1");
 
 // then:
 assertThat(response.statusCode()).isEqualTo(200);
