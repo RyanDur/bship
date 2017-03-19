@@ -16,14 +16,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
-import static java.math.BigInteger.ONE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -47,10 +45,10 @@ public class GameLogicTest {
 
     @Test
     public void valid_shouldReturnTheGame() throws GameValidation {
-        BigInteger boardId = ONE;
+        long boardId = 1L;
         Move move = Move.builder().withBoardId(boardId).build();
         Board board1 = Board.builder().withMoves(emptyList()).withId(boardId).build();
-        Board board2 = Board.builder().withMoves(emptyList()).withId(boardId.add(ONE)).build();
+        Board board2 = Board.builder().withMoves(emptyList()).withId(boardId + 1L).build();
         Game game = Game.builder().withBoards(asList(board1, board2)).withTurn(boardId).build();
 
         Game actual = logic.valid(move).apply(game);
@@ -63,9 +61,9 @@ public class GameLogicTest {
         thrown.expect(TurnCheck.class);
         thrown.expectMessage("It is not your turn.");
 
-        BigInteger boardId = ONE;
+        long boardId = 1L;
         Move move = Move.builder().withBoardId(boardId).build();
-        Game game = Game.builder().withTurn(boardId.add(ONE)).build();
+        Game game = Game.builder().withTurn(boardId + 1L).build();
 
         logic.valid(move).apply(game);
     }
@@ -75,11 +73,11 @@ public class GameLogicTest {
         thrown.expect(MoveCollision.class);
         thrown.expectMessage("Move already exists on board.");
 
-        BigInteger boardId = ONE;
-        Move move1 = Move.builder().withPoint(new Point(1, 2)).withId(ONE).withBoardId(boardId).build();
+        long boardId = 1L;
+        Move move1 = Move.builder().withPoint(new Point(1, 2)).withId(1L).withBoardId(boardId).build();
         Move move2 = Move.builder().withPoint(new Point(1, 2)).withBoardId(boardId).build();
         Board board1 = Board.builder().addMove(move1).withId(boardId).build();
-        Board board2 = Board.builder().withId(boardId.add(ONE)).build();
+        Board board2 = Board.builder().withId(boardId + 1L).build();
         Game game = Game.builder().withBoards(asList(board1, board2)).withTurn(boardId).build();
 
         logic.valid(move2).apply(game);
@@ -87,9 +85,9 @@ public class GameLogicTest {
 
     @Test
     public void valid_shouldNotCareWhoGoesFirst() throws MoveCollision, TurnCheck {
-        BigInteger boardId2 = ONE;
+        long boardId2 = 1L;
         Move move = Move.builder().withBoardId(boardId2).build();
-        Board board1 = Board.builder().withMoves(emptyList()).withId(ONE).build();
+        Board board1 = Board.builder().withMoves(emptyList()).withId(1L).build();
         Board board2 = Board.builder().withMoves(emptyList()).withId(boardId2).build();
         Game game = Game.builder().withBoards(asList(board1, board2)).build();
 
@@ -173,56 +171,11 @@ public class GameLogicTest {
         logic.placementCheck(carrier).apply(board);
     }
 
-
-
-//    @Test
-//    public void collision_shouldBeAbleToDetectACollision() {
-//        Ship battleship = Ship.builder().withType(Harbor.BATTLESHIP).withStart(new Point(0, 0)).withEnd(new Point(0, 3)).build();
-//        Ship carrier = Ship.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(new Point(0, 0)).withEnd(new Point(4, 0)).build();
-//        Board board = Board.builder().withShips(singletonList(battleship)).build();
-//
-//        boolean actual = logic.collision(board, carrier);
-//
-//        assertThat(actual, is(true));
-//    }
-//
-//    @Test
-//    public void collision_shouldBeAbleToDetectWhenThereIsNotACollision() {
-//        Ship battleship = Ship.builder().withType(Harbor.BATTLESHIP).withStart(new Point(0, 0)).withEnd(new Point(0, 3)).build();
-//        Ship carrier = Ship.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(new Point(1, 1)).withEnd(new Point(4, 1)).build();
-//        Board board = Board.builder().withShips(singletonList(battleship)).build();
-//
-//        boolean actual = logic.collision(board, carrier);
-//
-//        assertThat(actual, is(false));
-//    }
-//
-//    @Test
-//    public void collision_shouldBeFalseIfThereIsNotABoard() {
-//        Ship carrier = Ship.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(new Point(1, 1)).withEnd(new Point(4, 1)).build();
-//        Board board = null;
-//
-//        boolean actual = logic.collision(board, carrier);
-//
-//        assertThat(actual, is(false));
-//    }
-//
-//    @Test
-//    public void collision_shouldBeFalseIfThereIsNotAShip() {
-//        Ship battleship = Ship.builder().withType(Harbor.BATTLESHIP).withStart(new Point(0, 0)).withEnd(new Point(0, 3)).build();
-//        Ship carrier = null;
-//        Board board = Board.builder().withShips(singletonList(battleship)).build();
-//
-//        boolean actual = logic.collision(board, carrier);
-//
-//        assertThat(actual, is(false));
-//    }
-
     @Test
     public void playMove_shouldReturnAGameWithThePlayedMove() {
-        BigInteger gameId = BigInteger.valueOf(1L);
-        BigInteger boardId = BigInteger.valueOf(1L);
-        BigInteger opponentBoardId = BigInteger.valueOf(2L);
+        long gameId = 1L;
+        long boardId = 1L;
+        long opponentBoardId = 2L;
 
         Move move = getMove(9, 9, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
@@ -230,8 +183,8 @@ public class GameLogicTest {
         Game actual = logic.play(move).apply(game);
 
         List<Board> boards = game.getBoards();
-        Board board1 = boards.stream().filter(o -> o.getId().equals(boardId)).findFirst().get();
-        Board opponentBoard1 = boards.stream().filter(o -> !o.getId().equals(boardId)).findFirst().get();
+        Board board1 = boards.stream().filter(o -> o.getId() == boardId).findFirst().get();
+        Board opponentBoard1 = boards.stream().filter(o -> o.getId() != boardId).findFirst().get();
         opponentBoard1.copy().addOpponentMove(move).build();
 
         Game expected = game.copy().withBoards(asList(
@@ -244,9 +197,9 @@ public class GameLogicTest {
 
     @Test
     public void playMove_shouldBeAbleToHitAShip() throws Exception {
-        BigInteger gameId = BigInteger.valueOf(1L);
-        BigInteger boardId = BigInteger.valueOf(1L);
-        BigInteger opponentBoardId = BigInteger.valueOf(2L);
+        long gameId = 1L;
+        long boardId = 1L;
+        long opponentBoardId = 2L;
 
         Move move = getMove(0, 0, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
@@ -254,8 +207,8 @@ public class GameLogicTest {
         Game actual = logic.play(move).apply(game);
 
         List<Board> boards = game.getBoards();
-        Board board1 = boards.stream().filter(o -> o.getId().equals(boardId)).findFirst().get();
-        Board opponentBoard1 = boards.stream().filter(o -> !o.getId().equals(boardId)).findFirst().get();
+        Board board1 = boards.stream().filter(o -> o.getId() == boardId).findFirst().get();
+        Board opponentBoard1 = boards.stream().filter(o -> o.getId() != boardId).findFirst().get();
         opponentBoard1.copy().addOpponentMove(move).build();
 
         Game expected = game.copy().withBoards(asList(
@@ -272,9 +225,9 @@ public class GameLogicTest {
 
     @Test
     public void playMove_shouldBeAbleToSinkAShip() throws Exception {
-        BigInteger gameId = BigInteger.valueOf(1L);
-        BigInteger boardId = BigInteger.valueOf(1L);
-        BigInteger opponentBoardId = BigInteger.valueOf(2L);
+        long gameId = 1L;
+        long boardId = 1L;
+        long opponentBoardId = 2L;
 
         Move move = getMove(4, 0, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
@@ -285,8 +238,8 @@ public class GameLogicTest {
         Game actual = logic.play(move2).apply(game1);
 
         Map<Boolean, Board> boardMap = partitionBoards(game1, boardId);
-        Board current = boardMap.get(move.getBoardId().equals(boardId));
-        Board other = boardMap.get(!move.getBoardId().equals(boardId));
+        Board current = boardMap.get(move.getBoardId() == boardId);
+        Board other = boardMap.get(move.getBoardId() != boardId);
 
         Ship sunkShip = getShips(boardId).stream()
                 .filter(o -> o.getType().equals(Harbor.DESTROYER))
@@ -317,8 +270,8 @@ public class GameLogicTest {
 
     @Test
     public void setNextTurn_shouldSetTheNextTurnToBPlayed() {
-        BigInteger boardId1 = ONE;
-        BigInteger boardId2 = ONE.add(ONE);
+        long boardId1 = 1L;
+        long boardId2 = 1L + 1L;
         Move move = Move.builder().withBoardId(boardId1).build();
         Board board1 = Board.builder().withId(boardId1).build();
         Board board2 = Board.builder().withId(boardId2).build();
@@ -329,7 +282,7 @@ public class GameLogicTest {
         assertThat(actual, is(equalTo(expected)));
     }
 
-    private Game getGame(BigInteger gameId, BigInteger boardId, BigInteger opponentBoardId) {
+    private Game getGame(long gameId, long boardId, long opponentBoardId) {
         List<Ship> ships = getShips(boardId);
         List<Ship> opponentShips = getShips(boardId);
         Board board = getBoard(boardId, ships);
@@ -340,13 +293,13 @@ public class GameLogicTest {
                 .build();
     }
 
-    private Move getMove(int x, int y, BigInteger boardId) {
+    private Move getMove(int x, int y, long boardId) {
         return Move.builder()
                 .withBoardId(boardId)
                 .withPoint(new Point(x, y)).build();
     }
 
-    private Board getBoard(BigInteger boardId, List<Ship> ships) {
+    private Board getBoard(long boardId, List<Ship> ships) {
         return Board.builder()
                 .withShips(ships)
                 .withId(boardId)
@@ -354,7 +307,7 @@ public class GameLogicTest {
                 .build();
     }
 
-    private List<Ship> getShips(BigInteger boardId) {
+    private List<Ship> getShips(long boardId) {
         return asList(Ship.builder().withType(Harbor.AIRCRAFT_CARRIER)
                         .withStart(new Point(0, 0))
                         .withEnd(new Point(0, 4))
@@ -382,10 +335,10 @@ public class GameLogicTest {
                         .withId(boardId).build());
     }
 
-    private Map<Boolean, Board> partitionBoards(Game game, BigInteger boardId) {
+    private Map<Boolean, Board> partitionBoards(Game game, long boardId) {
         return game.getBoards()
                 .stream()
-                .collect(partitioningBy(board -> board.getId().equals(boardId)))
+                .collect(partitioningBy(board -> board.getId() == boardId))
                 .entrySet()
                 .stream()
                 .collect(toMap(Map.Entry::getKey,

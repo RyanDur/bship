@@ -3,8 +3,8 @@ package com.bship.games.domains;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
-import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
@@ -13,9 +13,9 @@ import static java.util.Optional.ofNullable;
 
 @JsonDeserialize(builder = Game.Builder.class)
 public class Game {
-    private List<Board> boards;
-    private BigInteger id;
-    private final BigInteger turn;
+    private final List<Board> boards;
+    private final Long id;
+    private final Long turn;
 
     private Game(Builder builder) {
         boards = builder.boards;
@@ -27,11 +27,11 @@ public class Game {
         return Optional.ofNullable(boards).orElse(emptyList());
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public BigInteger getTurn() {
+    public Long getTurn() {
         return turn;
     }
 
@@ -43,13 +43,30 @@ public class Game {
         return new Builder();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Game that = (Game) o;
+
+        return Objects.equals(this.boards, that.boards) &&
+                Objects.equals(this.id, that.id) &&
+                Objects.equals(this.turn, that.turn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(boards, id, turn);
+    }
+
     @JsonPOJOBuilder
     public static final class Builder {
-        private BigInteger id;
+        private Long id;
         private List<Board> boards;
-        private BigInteger turn;
+        private Long turn;
 
-        public Builder withId(BigInteger id) {
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
@@ -63,30 +80,10 @@ public class Game {
             return new Game(this);
         }
 
-        public Builder withTurn(BigInteger turn) {
+        public Builder withTurn(Long turn) {
             this.turn = turn;
             return this;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Game game = (Game) o;
-
-        if (boards != null ? !boards.equals(game.boards) : game.boards != null) return false;
-        if (id != null ? !id.equals(game.id) : game.id != null) return false;
-        return turn != null ? turn.equals(game.turn) : game.turn == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = boards != null ? boards.hashCode() : 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        result = 31 * result + (turn != null ? turn.hashCode() : 0);
-        return result;
     }
 
     @Override

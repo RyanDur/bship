@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +19,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,13 +47,13 @@ public class GameRepositoryTest {
     @Test
     public void create_shouldHaveTwoBoards() {
         Game game = repository.create();
-        when(boardRepository.create(any(BigInteger.class))).thenReturn(Board.builder().build());
+        when(boardRepository.create(anyLong())).thenReturn(Board.builder().build());
         assertThat(game.getBoards().size(), is(2));
     }
 
     @Test
     public void create_shouldPersistGames() {
-        when(boardRepository.getAll(any(BigInteger.class))).thenReturn(asList(null, null));
+        when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
         Game game1 = repository.create();
         Game game2 = repository.create();
 
@@ -61,13 +61,13 @@ public class GameRepositoryTest {
 
         assertThat(games, is(not(empty())));
         assertThat(games.size(), is(2));
-        assertThat(game1.getId(), is(equalTo(BigInteger.valueOf(1))));
-        assertThat(game2.getId(), is(equalTo(BigInteger.valueOf(2))));
+        assertThat(game1.getId(), is(equalTo(1L)));
+        assertThat(game2.getId(), is(equalTo(2L)));
     }
 
     @Test
     public void getAll_shouldGetAllTheGames() {
-        when(boardRepository.getAll(any(BigInteger.class))).thenReturn(asList(null, null));
+        when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
         Game game1 = repository.create();
         Game game2 = repository.create();
 
@@ -85,7 +85,7 @@ public class GameRepositoryTest {
 
     @Test
     public void get_shouldRetrieveABoard() {
-        when(boardRepository.getAll(any(BigInteger.class))).thenReturn(asList(null, null));
+        when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
         Game createdGame = repository.create();
         Optional<Game> game = repository.get(createdGame.getId());
 
@@ -94,7 +94,7 @@ public class GameRepositoryTest {
 
     @Test
     public void get_shouldOnlyRetrieveTheBoardForTheGivenId() {
-        when(boardRepository.getAll(any(BigInteger.class))).thenReturn(asList(null, null));
+        when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
         repository.create();
         Game createdGame = repository.create();
         repository.create();
@@ -105,19 +105,19 @@ public class GameRepositoryTest {
 
     @Test
     public void get_shouldReturnEmptyIfTheBoardDoesNotExit() {
-        when(boardRepository.getAll(any(BigInteger.class))).thenReturn(asList(null, null));
+        when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
         repository.create();
         repository.create();
         repository.create();
-        Optional<Game> game = repository.get(BigInteger.valueOf(100));
+        Optional<Game> game = repository.get(100L);
 
         assertThat(game, is(Optional.empty()));
     }
 
     @Test
     public void save_shouldSaveTheGame() {
-        when(boardRepository.getAll(any(BigInteger.class))).thenReturn(asList(null, null));
-        Game game = repository.create().copy().withTurn(BigInteger.valueOf(2)).build();
+        when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
+        Game game = repository.create().copy().withTurn(2L).build();
 
         repository.save(game);
         Optional<Game> savedGame = repository.get(game.getId());
@@ -127,8 +127,8 @@ public class GameRepositoryTest {
 
     @Test
     public void save_shouldReturnTheSavedGame() {
-        when(boardRepository.getAll(any(BigInteger.class))).thenReturn(asList(null, null));
-        Game game = repository.create().copy().withTurn(BigInteger.valueOf(2)).build();
+        when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
+        Game game = repository.create().copy().withTurn(2L).build();
 
         Optional<Game> savedGame = repository.save(game);
 
@@ -137,7 +137,7 @@ public class GameRepositoryTest {
 
     @Test
     public void save_shouldSaveTheBoards() {
-        when(boardRepository.getAll(any(BigInteger.class))).thenReturn(asList(null, null));
+        when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
         Game game = repository.create();
 
         repository.save(game);

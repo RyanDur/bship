@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,13 +39,13 @@ public class GameRepository {
     }
 
     public Game create() {
-        BigInteger id = generateGame();
+        long id = generateGame();
         return Game.builder().withId(id)
                 .withBoards(asList(boards.create(id), boards.create(id)))
                 .build();
     }
 
-    public Optional<Game> get(BigInteger id) {
+    public Optional<Game> get(long id) {
         return template.query(join(SELECT_FROM_GAMES, WHERE, ID_ID),
                 new MapSqlParameterSource("id", id),
                 buildGame(boards))
@@ -67,10 +66,10 @@ public class GameRepository {
         return get(game.getId());
     }
 
-    private BigInteger generateGame() {
+    private long generateGame() {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         template.update(join(INSERT_INTO_GAMES_ID, VALUE_DEFAULT), null, holder);
-        return BigInteger.valueOf(holder.getKey().longValue());
+        return holder.getKey().longValue();
     }
 
     private String join(String... sqls) {
@@ -79,10 +78,10 @@ public class GameRepository {
 
     private RowMapper<Game> buildGame(BoardRepository boards) {
         return (rs, rowNum) -> Game.builder()
-                .withId(BigInteger.valueOf(rs.getLong("id")))
-                .withBoards(boards.getAll(BigInteger.valueOf(rs.getLong("id"))))
-                .withTurn(of(BigInteger.valueOf(rs.getLong("turn")))
-                        .filter(turn -> turn.compareTo(BigInteger.ZERO) > 0)
+                .withId(rs.getLong("id"))
+                .withBoards(boards.getAll(rs.getLong("id")))
+                .withTurn(of(rs.getLong("turn"))
+                        .filter(turn -> turn.compareTo(0L) > 0)
                         .orElse(null))
                 .build();
     }

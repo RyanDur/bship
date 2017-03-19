@@ -25,6 +25,7 @@ import static com.bship.games.util.LambdaExceptionUtil.rethrowFunction;
 import static com.bship.games.util.Util.detectCollision;
 import static com.bship.games.util.Util.pointsRange;
 import static java.util.Arrays.asList;
+import static java.util.Objects.nonNull;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -42,7 +43,7 @@ public class GameLogic {
 
     public Function<Game, Game> valid(Move move) throws TurnCheck, MoveCollision {
         return rethrowFunction(game -> {
-            if (game.getTurn() != null && !move.getBoardId().equals(game.getTurn()))
+            if (nonNull(game.getTurn()) && !game.getTurn().equals(move.getBoardId()))
                 throw new TurnCheck();
             if (game.getBoards().stream().filter(currentBoard(move)).anyMatch(played(move)))
                 throw new MoveCollision();
@@ -160,7 +161,7 @@ public class GameLogic {
     }
 
     private Predicate<Board> currentBoard(Move move) {
-        return boards -> boards.getId().equals(move.getBoardId());
+        return boards -> boards.getId() == move.getBoardId();
     }
 
     private Function<Ship, Predicate<Ship>> recentlySunk = sunk -> ship -> !ship.getType().equals(sunk.getType());

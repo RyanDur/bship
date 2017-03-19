@@ -14,7 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +48,7 @@ public class BoardServiceTest {
 
     @Test
     public void placeShip_shouldPlaceAShipOnTheBoard() throws BoardValidation {
-        BigInteger boardId = BigInteger.valueOf(1L);
+        long boardId = 1L;
         Board board = Board.builder().withId(boardId).withShips(getShips()).build();
         Ship ship = Ship.builder()
                 .withStart(new Point(3,2))
@@ -78,7 +77,7 @@ public class BoardServiceTest {
         thrown.expect(BoardExistence.class);
         thrown.expectMessage("Board Does Not Exist!");
 
-        BigInteger boardId = BigInteger.valueOf(1L);
+        long boardId = 1L;
         Board board = Board.builder().build();
         Ship ship = Ship.builder().build();
         Board expected = board.copy().addShip(ship).build();
@@ -95,7 +94,7 @@ public class BoardServiceTest {
         thrown.expect(BoardExistence.class);
         thrown.expectMessage("Board Does Not Exist!");
 
-        BigInteger boardId = BigInteger.valueOf(1L);
+        long boardId = 1L;
         Board board = Board.builder().withShips(emptyList()).build();
         Ship ship = Ship.builder().build();
 
@@ -110,7 +109,7 @@ public class BoardServiceTest {
     public void placeShip_shouldThrowABoardValidationIfThereIsNoBoardAfterCheck() throws BoardValidation {
         thrown.expect(BoardValidation.class);
 
-        BigInteger boardId = BigInteger.valueOf(1L);
+        long boardId = 1L;
         Board board = Board.builder().build();
         Ship ship = Ship.builder().build();
         Board expected = board.copy().addShip(ship).build();
@@ -127,7 +126,7 @@ public class BoardServiceTest {
                 .withType(ship)
                 .withStart(new Point())
                 .withEnd(new Point())
-                .withBoardId(BigInteger.ONE)
+                .withBoardId(1L)
                 .build()).collect(toList());
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,12 +29,12 @@ public class BoardRepository {
     }
 
     @Transactional
-    public Board create(BigInteger gameId) {
+    public Board create(long gameId) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         template.update("INSERT INTO boards(game_id) VALUE(:id)",
                 new MapSqlParameterSource("id", gameId), holder);
 
-        BigInteger id = BigInteger.valueOf(holder.getKey().longValue());
+        long id = holder.getKey().longValue();
 
         return Board.builder()
                 .withId(id)
@@ -48,14 +47,14 @@ public class BoardRepository {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Board> get(BigInteger id) {
+    public Optional<Board> get(long id) {
         return template.query("SELECT * FROM boards WHERE id = :id",
                 new MapSqlParameterSource("id", id),
                 buildBoard()
         ).stream().findFirst();
     }
 
-    public List<Board> getAll(BigInteger gameId) {
+    public List<Board> getAll(long gameId) {
         return template.query("SELECT * FROM boards WHERE game_id = :game_id",
                 new MapSqlParameterSource("game_id", gameId),
                 buildBoard());
@@ -75,18 +74,18 @@ public class BoardRepository {
 
     private RowMapper<Board> buildBoard() {
         return (rs, rowNum) -> Board.builder()
-                .withId(BigInteger.valueOf(rs.getLong("id")))
-                .withGameId(BigInteger.valueOf(rs.getLong("game_id")))
+                .withId(rs.getLong("id"))
+                .withGameId(rs.getLong("game_id"))
                 .withWinner(rs.getBoolean("winner"))
-                .withShips(ships.getAll(BigInteger.valueOf(rs.getLong("id"))))
+                .withShips(ships.getAll(rs.getLong("id")))
                 .withOpponentShips(ships.getAllOpponents(
-                        BigInteger.valueOf(rs.getLong("game_id")),
-                        BigInteger.valueOf(rs.getLong("id"))
+                        rs.getLong("game_id"),
+                        rs.getLong("id")
                 ))
-                .withMoves(moves.getAll(BigInteger.valueOf(rs.getLong("id"))))
+                .withMoves(moves.getAll(rs.getLong("id")))
                 .withOpponentMoves(moves.getAllOpponents(
-                        BigInteger.valueOf(rs.getLong("game_id")),
-                        BigInteger.valueOf(rs.getLong("id"))
+                        rs.getLong("game_id"),
+                        rs.getLong("id")
                 )).build();
     }
 }

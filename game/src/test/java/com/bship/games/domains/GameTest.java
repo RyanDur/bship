@@ -5,7 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class GameTest {
     @Before
     public void setup() {
         List<Board> boards = Arrays.asList(Board.builder().build(), Board.builder().build());
-        game = Game.builder().withId(BigInteger.valueOf(19L)).withBoards(boards).build();
+        game = Game.builder().withId(19L).withBoards(boards).build();
     }
 
     @Test

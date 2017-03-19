@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.math.BigInteger;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -50,7 +49,7 @@ public class GameController implements BadRequestHandler {
             value = "/games/{gameId}",
             produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(OK)
-    public Game placeMove(@PathVariable BigInteger gameId,
+    public Game placeMove(@PathVariable long gameId,
                           @Valid @RequestBody Move move) throws GameValidation {
         return service.placeMove(gameId, move);
     }

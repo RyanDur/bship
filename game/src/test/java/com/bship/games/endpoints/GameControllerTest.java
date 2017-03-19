@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.math.BigInteger;
 import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -26,6 +25,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -94,7 +94,7 @@ public class GameControllerTest {
         Point point = new Point(0, 0);
         Move move = Move.builder().withPoint(point).build();
 
-        when(mockService.placeMove(any(BigInteger.class), any(Move.class)))
+        when(mockService.placeMove(anyLong(), any(Move.class)))
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
@@ -131,7 +131,7 @@ public class GameControllerTest {
         Point point = new Point(10, 0);
         Move move = Move.builder().withPoint(point).build();
 
-        when(mockService.placeMove(any(BigInteger.class), any(Move.class)))
+        when(mockService.placeMove(anyLong(), any(Move.class)))
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
@@ -151,7 +151,7 @@ public class GameControllerTest {
         Point point = new Point(0, -1);
         Move move = Move.builder().withPoint(point).build();
 
-        when(mockService.placeMove(any(BigInteger.class), any(Move.class)))
+        when(mockService.placeMove(anyLong(), any(Move.class)))
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
@@ -171,7 +171,7 @@ public class GameControllerTest {
         Point point = new Point(0, 10);
         Move move = Move.builder().withPoint(point).build();
 
-        when(mockService.placeMove(any(BigInteger.class), any(Move.class)))
+        when(mockService.placeMove(anyLong(), any(Move.class)))
                 .thenReturn(Game.builder()
                         .withBoards(Collections.singletonList(Board.builder().addMove(move).build())).build());
 
@@ -192,7 +192,7 @@ public class GameControllerTest {
         Move move = Move.builder().withPoint(point).build();
 
         doThrow(new MoveCollision())
-                .when(mockService).placeMove(any(BigInteger.class), any(Move.class));
+                .when(mockService).placeMove(anyLong(), any(Move.class));
 
         GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -211,7 +211,7 @@ public class GameControllerTest {
         Move move = Move.builder().withPoint(point).build();
 
         doThrow(new TurnCheck())
-                .when(mockService).placeMove(any(BigInteger.class), any(Move.class));
+                .when(mockService).placeMove(anyLong(), any(Move.class));
 
         GameErrors actual = mapper.readValue(mockMvc.perform(patch("/games/1")
                 .contentType(MediaType.APPLICATION_JSON)

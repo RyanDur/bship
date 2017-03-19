@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -37,20 +36,20 @@ public class ShipRepository {
         this.template = template;
     }
 
-    public List<Ship> createAll(BigInteger boardId) {
+    public List<Ship> createAll(long boardId) {
         template.batchUpdate(INSERT_INTO_SHIPS,
                 createBatch(getNewShipBatch(boardId)));
 
         return getAll(boardId);
     }
 
-    public List<Ship> getAll(BigInteger boardId) {
+    public List<Ship> getAll(long boardId) {
         return template.query(SELECT_MY_SHIPS,
                 new MapSqlParameterSource("ship_board_id", boardId),
                 buildShip);
     }
 
-    public List<Ship> getAllOpponents(BigInteger gameId, BigInteger boardId) {
+    public List<Ship> getAllOpponents(long gameId, long boardId) {
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("game_id", gameId);
         source.addValue("ship_board_id", boardId);
@@ -72,13 +71,13 @@ public class ShipRepository {
     }
 
     private RowMapper<Ship> buildShip = (rs, rowNum) -> Ship.builder()
-            .withId(BigInteger.valueOf(rs.getLong("id")))
+            .withId(rs.getLong("id"))
             .withType(Harbor.valueOf(rs.getString("type")))
             .withStart(getPoint(rs.getString("start")))
             .withEnd(getPoint(rs.getString("end")))
             .withSunk(rs.getBoolean("sunk"))
             .withSize(rs.getInt("size"))
-            .withBoardId(BigInteger.valueOf(rs.getLong("ship_board_id"))).build();
+            .withBoardId(rs.getLong("ship_board_id")).build();
 
     private Point getPoint(String point) throws SQLException {
         return ofNullable(point)
@@ -87,7 +86,7 @@ public class ShipRepository {
                 .orElse(new Point());
     }
 
-    private HashMap[] getNewShipBatch(final BigInteger boardId) {
+    private HashMap[] getNewShipBatch(final long boardId) {
         return Harbor.getShips().stream().map(ship ->
                 new HashMap<String, Object>() {{
                     put("type", ship.name());

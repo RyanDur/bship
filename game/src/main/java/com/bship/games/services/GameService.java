@@ -9,8 +9,6 @@ import com.bship.games.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
-
 @Service
 public class GameService {
     private GameRepository repository;
@@ -26,7 +24,7 @@ public class GameService {
         return repository.create();
     }
 
-    public Game placeMove(BigInteger gameId, Move move) throws GameValidation {
+    public Game placeMove(long gameId, Move move) throws GameValidation {
         return repository.get(gameId)
                 .map(logic.valid(move))
                 .map(logic.play(move))

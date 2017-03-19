@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,13 +33,13 @@ public class MoveRepository {
         template.batchUpdate(INSERT_MOVES, createBatch(getNewMoveBatch(moves)));
     }
 
-    public List<Move> getAll(BigInteger boardId) {
+    public List<Move> getAll(long boardId) {
         return template.query(SELECT_ALL_MOVES_FOR_BOARD,
                 new MapSqlParameterSource("board_id", boardId),
                 buildMove);
     }
 
-    public List<Move> getAllOpponents(BigInteger gameId, BigInteger boardId) {
+    public List<Move> getAllOpponents(long gameId, long boardId) {
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("game_id", gameId);
         source.addValue("board_id", boardId);
@@ -60,7 +59,7 @@ public class MoveRepository {
 
     private RowMapper<Move> buildMove = (rs, rowNum) -> Move.builder()
             .withStatus(MoveStatus.valueOf(rs.getString("status")))
-            .withId(BigInteger.valueOf(rs.getLong("id")))
-            .withBoardId(BigInteger.valueOf(rs.getLong("move_board_id")))
+            .withId(rs.getLong("id"))
+            .withBoardId(rs.getLong("move_board_id"))
             .withPoint(toPoint(rs.getInt("point"))).build();
 }

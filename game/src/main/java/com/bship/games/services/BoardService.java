@@ -9,7 +9,6 @@ import com.bship.games.repositories.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -26,7 +25,7 @@ public class BoardService {
         this.logic = logic;
     }
 
-    public Board placeShip(BigInteger boardId, Ship ship) throws BoardValidation {
+    public Board placeShip(long boardId, Ship ship) throws BoardValidation {
         return boards.get(boardId)
                 .map(logic.placementCheck(ship))
                 .map(board -> board.copy()

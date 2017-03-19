@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,7 +22,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,13 +42,13 @@ public class BoardRepositoryTest {
         moves = mock(MoveRepository.class);
         boards = new BoardRepository(template, ships, moves);
 
-        game = Game.builder().withId(BigInteger.ONE).build();
+        game = Game.builder().withId(1L).build();
         template.update("INSERT INTO games(id) VALUE(:id)",
                 new MapSqlParameterSource("id", game.getId()));
         template.update("INSERT INTO games(id) VALUE(:id)",
-                new MapSqlParameterSource("id", game.getId().add(BigInteger.ONE)));
+                new MapSqlParameterSource("id", game.getId() + 1L));
         shipList = getShips();
-        when(ships.createAll(any(BigInteger.class))).thenReturn(shipList);
+        when(ships.createAll(anyLong())).thenReturn(shipList);
     }
 
     @Test
@@ -61,14 +60,14 @@ public class BoardRepositoryTest {
     @Test
     public void create_shouldHaveAListOfUnplacedShips() {
         Board expected = Board.builder().withShips(shipList)
-                .withId(BigInteger.ONE)
-                .withGameId(BigInteger.ONE)
+                .withId(1L)
+                .withGameId(1L)
                 .withOpponentShips(emptyList())
                 .withMoves(emptyList())
                 .withOpponentMoves(emptyList())
                 .build();
 
-        when(ships.createAll(any(BigInteger.class))).thenReturn(shipList);
+        when(ships.createAll(anyLong())).thenReturn(shipList);
 
         Board board = boards.create(game.getId());
 
@@ -77,7 +76,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void get_shouldRetrieveABordFromTheRepository() {
-        when(ships.getAll(any(BigInteger.class))).thenReturn(shipList);
+        when(ships.getAll(anyLong())).thenReturn(shipList);
         Board board = boards.create(game.getId());
         Board actual = boards.get(board.getId()).get();
 
@@ -87,15 +86,15 @@ public class BoardRepositoryTest {
     @Test
     public void get_shouldReturnEmptyWhenThereIsNotAGame() {
         Board board = boards.create(game.getId());
-        Optional<Board> actual = boards.get(board.getId().add(BigInteger.ONE));
+        Optional<Board> actual = boards.get(board.getId() + 1L);
 
         assertThat(actual, is(Optional.empty()));
     }
 
     @Test
     public void getAll_shouldGetAllTheBoardsForAGame() {
-        when(ships.getAll(any(BigInteger.class))).thenReturn(shipList);
-        boards.create(game.getId().add(BigInteger.ONE));
+        when(ships.getAll(anyLong())).thenReturn(shipList);
+        boards.create(game.getId() + 1L);
         Board board1 = boards.create(game.getId());
         Board board2 = boards.create(game.getId());
 
@@ -106,18 +105,18 @@ public class BoardRepositoryTest {
 
     @Test
     public void getAll_shouldGetEmptyForAGameThatDoesNotExist() {
-        when(ships.getAll(any(BigInteger.class))).thenReturn(shipList);
-        boards.create(game.getId().add(BigInteger.ONE));
+        when(ships.getAll(anyLong())).thenReturn(shipList);
+        boards.create(game.getId() + 1L);
         boards.create(game.getId());
         boards.create(game.getId());
 
-        List<Board> boardList = boards.getAll(game.getId().add(BigInteger.TEN));
+        List<Board> boardList = boards.getAll(game.getId() + 10L);
         assertThat(boardList, is(empty()));
     }
 
     @Test
     public void save_shouldSaveABoard() {
-        when(ships.getAll(any(BigInteger.class))).thenReturn(shipList);
+        when(ships.getAll(anyLong())).thenReturn(shipList);
         Board board = boards.create(game.getId());
         Board expected = board.copy().withWinner(true).build();
         boards.save(expected);
@@ -128,7 +127,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void save_shouldReturnTheSavedBoard() {
-        when(ships.getAll(any(BigInteger.class))).thenReturn(shipList);
+        when(ships.getAll(anyLong())).thenReturn(shipList);
         Board board = boards.create(game.getId());
         Board expected = board.copy().withWinner(true).build();
         Optional<Board> actual = boards.save(expected);
@@ -152,21 +151,12 @@ public class BoardRepositoryTest {
         verify(moves).save(board.getMoves());
     }
 
-//    @Test
-//    public void save_shouldSaveAShipToTheBoard() {
-//        Ship ship = Ship.builder().build();
-//        Ship shipToSave = ship.copy().withBoardId(BigInteger.ONE).build();
-//        boards.save(ship, BigInteger.ONE);
-//
-//        verify(ships).save(shipToSave);
-//    }
-
     public List<Ship> getShips() {
         return Harbor.getShips().stream().map(ship -> Ship.builder()
                 .withType(ship)
                 .withStart(new Point())
                 .withEnd(new Point())
-                .withBoardId(BigInteger.ONE)
+                .withBoardId(1L)
                 .build()).collect(Collectors.toList());
     }
 }

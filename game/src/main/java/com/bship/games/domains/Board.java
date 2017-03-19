@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
-import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
 
 import static com.bship.games.util.Util.addTo;
 
@@ -13,8 +13,8 @@ import static com.bship.games.util.Util.addTo;
 public class Board {
 
     @JsonIgnore
-    private BigInteger gameId;
-    private BigInteger id;
+    private Long gameId;
+    private Long id;
 
     private List<Ship> ships;
     private List<Ship> opponentShips;
@@ -32,11 +32,11 @@ public class Board {
         winner = builder.winner;
     }
 
-    public BigInteger getGameId() {
+    public Long getGameId() {
         return gameId;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
@@ -76,22 +76,44 @@ public class Board {
         return new Builder();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Board that = (Board) o;
+
+        return Objects.equals(this.gameId, that.gameId) &&
+                Objects.equals(this.id, that.id) &&
+                Objects.equals(this.moves, that.moves) &&
+                Objects.equals(this.opponentMoves, that.opponentMoves) &&
+                Objects.equals(this.opponentShips, that.opponentShips) &&
+                Objects.equals(this.ships, that.ships) &&
+                Objects.equals(this.winner, that.winner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameId, id, moves, opponentMoves, opponentShips, ships,
+                winner);
+    }
+
     @JsonPOJOBuilder
     public static final class Builder {
-        private BigInteger id;
-        private BigInteger gameId;
+        private Long id;
+        private Long gameId;
         private List<Ship> ships;
         private List<Ship> opponentShips;
         private List<Move> moves;
         private List<Move> opponentMoves;
         private boolean winner;
 
-        public Builder withId(BigInteger id) {
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder withGameId(BigInteger gameId) {
+        public Builder withGameId(Long gameId) {
             this.gameId = gameId;
             return this;
         }
@@ -144,35 +166,6 @@ public class Board {
         public Board build() {
             return new Board(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Board board = (Board) o;
-
-        if (winner != board.winner) return false;
-        if (gameId != null ? !gameId.equals(board.gameId) : board.gameId != null) return false;
-        if (id != null ? !id.equals(board.id) : board.id != null) return false;
-        if (ships != null ? !ships.equals(board.ships) : board.ships != null) return false;
-        if (opponentShips != null ? !opponentShips.equals(board.opponentShips) : board.opponentShips != null)
-            return false;
-        if (moves != null ? !moves.equals(board.moves) : board.moves != null) return false;
-        return opponentMoves != null ? opponentMoves.equals(board.opponentMoves) : board.opponentMoves == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = gameId != null ? gameId.hashCode() : 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        result = 31 * result + (ships != null ? ships.hashCode() : 0);
-        result = 31 * result + (opponentShips != null ? opponentShips.hashCode() : 0);
-        result = 31 * result + (moves != null ? moves.hashCode() : 0);
-        result = 31 * result + (opponentMoves != null ? opponentMoves.hashCode() : 0);
-        result = 31 * result + (winner ? 1 : 0);
-        return result;
     }
 
     @Override

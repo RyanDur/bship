@@ -6,16 +6,14 @@ import com.bship.games.domains.validations.ValidPoint;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
-import java.math.BigInteger;
-
 import static java.util.Optional.ofNullable;
 
 @JsonDeserialize(builder = Move.Builder.class)
 public class Move {
 
-    private BigInteger boardId;
+    private Long boardId;
 
-    private BigInteger id;
+    private Long id;
 
     private MoveStatus status;
 
@@ -41,11 +39,11 @@ public class Move {
         return status;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public BigInteger getBoardId() {
+    public Long getBoardId() {
         return boardId;
     }
 
@@ -64,8 +62,8 @@ public class Move {
     public static class Builder {
         private Point point;
         private MoveStatus status;
-        private BigInteger id;
-        private BigInteger boardId;
+        private Long id;
+        private Long boardId;
 
         public Move build() {
             return new Move(this);
@@ -81,12 +79,12 @@ public class Move {
             return this;
         }
 
-        public Builder withId(BigInteger id) {
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder withBoardId(BigInteger boardId) {
+        public Builder withBoardId(Long boardId) {
             this.boardId = boardId;
             return this;
         }
