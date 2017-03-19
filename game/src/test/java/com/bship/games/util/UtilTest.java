@@ -1,6 +1,7 @@
 package com.bship.games.util;
 
 import com.bship.games.domains.Point;
+import com.bship.games.domains.Ship;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -304,5 +305,67 @@ public class UtilTest {
 
         assertThat(actual.size(), is(4));
         assertThat(actual, contains(1, 2, 3, 4));
+    }
+//
+//    @Test
+//    public void isSet_shouldKnowIfAPointIsSet() {
+//        Point point = new Point(1, 2);
+//        boolean set = Util.isSet(point);
+//        assertThat(set, is(true));
+//    }
+//
+//    @Test
+//    public void isSet_shouldBeFalseIfXIsNotSet() {
+//        Point point = new Point(null, 2);
+//        boolean set = Util.isSet(point);
+//        assertThat(set, is(false));
+//    }
+//
+//    @Test
+//    public void isSet_shouldBeFalseIfYIsNotSet() {
+//        Point point = new Point(5, null);
+//        boolean set = Util.isSet(point);
+//        assertThat(set, is(false));
+//    }
+//
+//    @Test
+//    public void isSet_shouldBeFalseIfThereIsNoPoint() {
+//        boolean set = Util.isSet(null);
+//        assertThat(set, is(false));
+//    }
+
+    @Test
+    public void isPlaced_shouldKnowIfAShipIsPlaced() {
+        Ship ship = Ship.builder()
+                .withStart(new Point(1, 2))
+                .withEnd(new Point(3, 4)).build();
+        boolean placed = Util.isPlaced(ship);
+
+        assertThat(placed, is(true));
+    }
+
+    @Test
+    public void isPlaced_shouldKnowIfAShipStartIsNotSet() {
+        Ship ship = Ship.builder()
+                .withEnd(new Point(3, 4)).build();
+        boolean placed = Util.isPlaced(ship);
+
+        assertThat(placed, is(false));
+    }
+
+    @Test
+    public void isPlaced_shouldKnowIfAShipEndIsNotSet() {
+        Ship ship = Ship.builder()
+                .withStart(new Point(3, 4)).build();
+        boolean placed = Util.isPlaced(ship);
+
+        assertThat(placed, is(false));
+    }
+
+    @Test
+    public void isPlaced_shouldKnowIfAShipDoesNotExist() {
+        boolean placed = Util.isPlaced(null);
+
+        assertThat(placed, is(false));
     }
 }

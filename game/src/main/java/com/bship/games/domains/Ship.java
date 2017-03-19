@@ -12,8 +12,6 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import static java.util.Optional.ofNullable;
-
 @JsonDeserialize(builder = Ship.Builder.class)
 @PlacementCheck
 public class Ship {
@@ -30,11 +28,12 @@ public class Ship {
     @BoundsCheck
     private Point end;
 
-    private BigInteger boardId;
+    @NonEmpty
+    private BigInteger id;
 
+    private BigInteger boardId;
     private Integer size;
     private boolean sunk;
-    private BigInteger id;
 
     private Ship(Builder builder) {
         type = builder.type;
@@ -72,12 +71,6 @@ public class Ship {
 
     public Integer getSize() {
         return size;
-    }
-
-    @JsonIgnore
-    public boolean isPlaced() {
-        return ofNullable(start).map(Point::isSet).orElse(false) &&
-                ofNullable(end).map(Point::isSet).orElse(false);
     }
 
     @JsonIgnore

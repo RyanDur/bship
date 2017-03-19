@@ -1,11 +1,11 @@
 package com.bship.games.util;
 
 import com.bship.games.domains.Point;
+import com.bship.games.domains.Ship;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
@@ -23,7 +24,7 @@ public class Util {
     public static final int SIDE = 10;
 
     public static Integer toIndex(Point point) {
-        return ofNullable(point).filter(Point::isSet)
+        return ofNullable(point).filter(Util::isSet)
                 .map(p -> p.getY() + (p.getX() * SIDE))
                 .orElse(null);
     }
@@ -33,25 +34,27 @@ public class Util {
     }
 
     public static List<Point> pointsRange(Point start, Point end) {
-        Optional<Integer> startY = ofNullable(start).map(Point::getY);
-        Optional<Integer> startX = ofNullable(start).map(Point::getX);
-        Optional<Integer> endY = ofNullable(end).map(Point::getY);
-        Optional<Integer> endX = ofNullable(end).map(Point::getX);
-
-        if (startX.isPresent() && startY.isPresent() && endX.isPresent() && endY.isPresent()) {
+        if (isSet(start) && isSet(end)) {
             IntFunction<Point> mapper;
             IntStream range;
-            if (Objects.equals(startY, endY)) {
-                mapper = x -> new Point(x, startY.get());
-                range = rangeClosed(startX.get(), endX.get());
+            if (Objects.equals(start.getY(), end.getY())) {
+                mapper = x -> new Point(x, start.getY());
+                range = rangeClosed(start.getX(), end.getX());
             } else {
-                mapper = y -> new Point(startX.get(), y);
-                range = rangeClosed(startY.get(), endY.get());
+                mapper = y -> new Point(start.getX(), y);
+                range = rangeClosed(start.getY(), end.getY());
             }
 
             return range.mapToObj(mapper).collect(toList());
         }
         return asList(start, end);
+    }
+
+    public static boolean isPlaced(Ship ship) {
+        return ofNullable(ship)
+                .filter(s -> isSet(s.getStart()))
+                .filter(s -> isSet(s.getEnd()))
+                .isPresent();
     }
 
     public static Boolean detectCollision(List<Point> a, List<Point> b) {
@@ -79,5 +82,12 @@ public class Util {
                 .filter(Objects::nonNull)
                 .flatMap(list -> list.stream().filter(Objects::nonNull))
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+    }
+
+    private static boolean isSet(Point point) {
+        return ofNullable(point)
+                .filter(p -> nonNull(p.getX()))
+                .filter(p -> nonNull(p.getY()))
+                .isPresent();
     }
 }

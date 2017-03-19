@@ -1,7 +1,6 @@
 package com.bship.games.domains;
 
 import com.bship.games.domains.validations.BoundsCheck;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -26,11 +25,6 @@ public class Point {
 
     public Integer getY() {
         return y;
-    }
-
-    @JsonIgnore
-    public boolean isSet() {
-        return x != null && y != null;
     }
 
     @Override

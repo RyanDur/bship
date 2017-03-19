@@ -10,6 +10,7 @@ import com.bship.games.exceptions.MoveCollision;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.exceptions.TurnCheck;
+import com.bship.games.util.Util;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -100,7 +101,7 @@ public class GameLogic {
         return ofNullable(ship).isPresent() && ofNullable(board)
                 .map(Board::getShips)
                 .map(Collection::stream)
-                .filter(ships -> ships.filter(Ship::isPlaced)
+                .filter(ships -> ships.filter(Util::isPlaced)
                         .map(Ship::getType)
                         .anyMatch(type -> type.equals(ship.getType()))).isPresent();
     }

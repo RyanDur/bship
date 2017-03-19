@@ -52,16 +52,17 @@ public class BoardsControllerTest {
                 .thenReturn(Board.builder().build());
 
         mockMvc.perform(put("/boards/9").contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"BATTLESHIP\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 4,\n" +
-                        "    \"y\": 5\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 1,\n" +
-                        "    \"y\": 5\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"BATTLESHIP\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 4," +
+                        "    \"y\": 5" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 1," +
+                        "    \"y\": 5" +
+                        "  }" +
                         "}"
                 ))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
@@ -74,16 +75,17 @@ public class BoardsControllerTest {
 
         mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"BATTLESHIP\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 4,\n" +
-                        "    \"y\": 5\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 1,\n" +
-                        "    \"y\": 5\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"BATTLESHIP\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 4," +
+                        "    \"y\": 5" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 1," +
+                        "    \"y\": 5" +
+                        "  }" +
                         "}"
                 ))
                 .andExpect(status().isOk());
@@ -93,15 +95,16 @@ public class BoardsControllerTest {
     public void placeShip_shouldRequireATypeOfShip() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 4,\n" +
-                        "    \"y\": 5\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 1,\n" +
-                        "    \"y\": 5\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"start\": {" +
+                        "    \"x\": 4," +
+                        "    \"y\": 5" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 1," +
+                        "    \"y\": 5" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -115,16 +118,17 @@ public class BoardsControllerTest {
     public void placeShip_shouldRequireAnExistingTypeOfShip() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"GAS_STATION\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 4,\n" +
-                        "    \"y\": 5\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 1,\n" +
-                        "    \"y\": 5\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"GAS_STATION\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 4," +
+                        "    \"y\": 5" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 1," +
+                        "    \"y\": 5" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -138,12 +142,13 @@ public class BoardsControllerTest {
     public void placeShip_shouldRequireAStartingPointForAShip() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 1,\n" +
-                        "    \"y\": 5\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"end\": {" +
+                        "    \"x\": 1," +
+                        "    \"y\": 5" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -157,12 +162,13 @@ public class BoardsControllerTest {
     public void placeShip_shouldRequireAnEndingPointForAShip() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 1,\n" +
-                        "    \"y\": 5\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 1," +
+                        "    \"y\": 5" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -176,16 +182,17 @@ public class BoardsControllerTest {
     public void placeShip_shouldNotAllowTheStartXToBeLessThanTheWidthOfTheBoard() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": -1,\n" +
-                        "    \"y\": 0\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 0\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": -1," +
+                        "    \"y\": 0" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -199,16 +206,17 @@ public class BoardsControllerTest {
     public void placeShip_shouldNotAllowTheStartXToBeGreaterThanTheWidthOfTheBoard() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 11,\n" +
-                        "    \"y\": 0\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 0\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 11," +
+                        "    \"y\": 0" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -222,16 +230,17 @@ public class BoardsControllerTest {
     public void placeShip_shouldNotAllowTheStartYToBeLessThanTheHeightOfTheBoard() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": -1\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 0\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": -1" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -245,16 +254,17 @@ public class BoardsControllerTest {
     public void placeShip_shouldNotAllowTheStartYToBeGreaterThanTheHeightOfTheBoard() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 11\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 0\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 11" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -268,16 +278,17 @@ public class BoardsControllerTest {
     public void placeShip_shouldNotAllowTheEndXToBeLessThanTheWidthOfTheBoard() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 0\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": -1,\n" +
-                        "    \"y\": 0\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": -1," +
+                        "    \"y\": 0" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -291,16 +302,17 @@ public class BoardsControllerTest {
     public void placeShip_shouldNotAllowTheEndXToBeGreaterThanTheWidthOfTheBoard() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 0\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 11,\n" +
-                        "    \"y\": 0\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 11," +
+                        "    \"y\": 0" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -314,16 +326,17 @@ public class BoardsControllerTest {
     public void placeShip_shouldNotAllowTheEndYToBeLessThanTheHeightOfTheBoard() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 0\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": -1\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": -1" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -337,16 +350,17 @@ public class BoardsControllerTest {
     public void placeShip_shouldNotAllowTheEndYToBeGreaterThanTheHeightOfTheBoard() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 0\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 11\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 11" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -360,16 +374,17 @@ public class BoardsControllerTest {
     public void placeShip_shouldNotAllowAnIncorrectLengthOfShipToBePlacedOnTheBoard() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 0\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 4\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 4" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -384,16 +399,17 @@ public class BoardsControllerTest {
         doThrow(new ShipExistsCheck()).when(mockService).placeShip(any(BigInteger.class), any(Ship.class));
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
                         "  \"start\": {\n" +
                         "    \"x\": 0,\n" +
                         "    \"y\": 0\n" +
-                        "  },\n" +
+                        "  }," +
                         "  \"end\": {\n" +
                         "    \"x\": 0,\n" +
                         "    \"y\": 1\n" +
-                        "  }\n" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -408,16 +424,17 @@ public class BoardsControllerTest {
         doThrow(new ShipCollisionCheck()).when(mockService).placeShip(any(BigInteger.class), any(Ship.class));
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"type\": \"DESTROYER\",\n" +
-                        "  \"start\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 0\n" +
-                        "  },\n" +
-                        "  \"end\": {\n" +
-                        "    \"x\": 0,\n" +
-                        "    \"y\": 1\n" +
-                        "  }\n" +
+                .content("{" +
+                        "\"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 1" +
+                        "  }" +
                         "}"
                 )).andReturn()
                 .getResponse()
@@ -425,5 +442,29 @@ public class BoardsControllerTest {
 
         ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
         assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Ship collision."));
+    }
+
+    @Test
+    public void placeShip_shouldNeedAnId() throws Exception {
+        doThrow(new ShipCollisionCheck()).when(mockService).placeShip(any(BigInteger.class), any(Ship.class));
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{" +
+                        "  \"type\": \"DESTROYER\"," +
+                        "  \"start\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }," +
+                        "  \"end\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 1" +
+                        "  }" +
+                        "}"
+                )).andReturn()
+                .getResponse()
+                .getContentAsString(), GameErrors.class);
+
+        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Cannot be empty or null."));
     }
 }
