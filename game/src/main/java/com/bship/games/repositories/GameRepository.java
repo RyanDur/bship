@@ -39,13 +39,13 @@ public class GameRepository {
     }
 
     public Game create() {
-        long id = generateGame();
+        Long id = generateGame();
         return Game.builder().withId(id)
                 .withBoards(asList(boards.create(id), boards.create(id)))
                 .build();
     }
 
-    public Optional<Game> get(long id) {
+    public Optional<Game> get(Long id) {
         return template.query(join(SELECT_FROM_GAMES, WHERE, ID_ID),
                 new MapSqlParameterSource("id", id),
                 buildGame(boards))
@@ -66,7 +66,7 @@ public class GameRepository {
         return get(game.getId());
     }
 
-    private long generateGame() {
+    private Long generateGame() {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         template.update(join(INSERT_INTO_GAMES_ID, VALUE_DEFAULT), null, holder);
         return holder.getKey().longValue();

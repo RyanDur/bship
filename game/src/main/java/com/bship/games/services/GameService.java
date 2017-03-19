@@ -24,7 +24,7 @@ public class GameService {
         return repository.create();
     }
 
-    public Game placeMove(long gameId, Move move) throws GameValidation {
+    public Game placeMove(Long gameId, Move move) throws GameValidation {
         return repository.get(gameId)
                 .map(logic.valid(move))
                 .map(logic.play(move))

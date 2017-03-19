@@ -2,7 +2,7 @@ package com.bship.games.domains.validations;
 
 import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Point;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,9 +24,9 @@ public class PlacementCheckValidationTest {
         Point end = new Point(0, 4);
         Harbor type = Harbor.AIRCRAFT_CARRIER;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
-        assertThat(validation.isValid(ship, null), is(true));
+        assertThat(validation.isValid(piece, null), is(true));
     }
 
     @Test
@@ -35,9 +35,9 @@ public class PlacementCheckValidationTest {
         Point end = new Point(0, 3);
         Harbor type = Harbor.AIRCRAFT_CARRIER;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
-        assertThat(validation.isValid(ship, null), is(false));
+        assertThat(validation.isValid(piece, null), is(false));
     }
 
     @Test
@@ -46,9 +46,9 @@ public class PlacementCheckValidationTest {
         Point end = new Point(9, 9);
         Harbor type = Harbor.BATTLESHIP;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
-        assertThat(validation.isValid(ship, null), is(true));
+        assertThat(validation.isValid(piece, null), is(true));
     }
 
     @Test
@@ -57,9 +57,9 @@ public class PlacementCheckValidationTest {
         Point end = new Point(9, 9);
         Harbor type = Harbor.BATTLESHIP;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
-        assertThat(validation.isValid(ship, null), is(false));
+        assertThat(validation.isValid(piece, null), is(false));
     }
 
     @Test
@@ -68,9 +68,9 @@ public class PlacementCheckValidationTest {
         Point end = new Point(9, 9);
         Harbor type = Harbor.SUBMARINE;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
-        assertThat(validation.isValid(ship, null), is(true));
+        assertThat(validation.isValid(piece, null), is(true));
     }
 
     @Test
@@ -79,9 +79,9 @@ public class PlacementCheckValidationTest {
         Point end = new Point(9, 9);
         Harbor type = Harbor.SUBMARINE;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
-        assertThat(validation.isValid(ship, null), is(false));
+        assertThat(validation.isValid(piece, null), is(false));
     }
 
     @Test
@@ -90,9 +90,9 @@ public class PlacementCheckValidationTest {
         Point end = new Point(0, 9);
         Harbor type = Harbor.CRUISER;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
-        assertThat(validation.isValid(ship, null), is(true));
+        assertThat(validation.isValid(piece, null), is(true));
     }
 
     @Test
@@ -101,9 +101,9 @@ public class PlacementCheckValidationTest {
         Point end = new Point(0, 9);
         Harbor type = Harbor.CRUISER;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
-        assertThat(validation.isValid(ship, null), is(false));
+        assertThat(validation.isValid(piece, null), is(false));
     }
 
     @Test
@@ -112,9 +112,9 @@ public class PlacementCheckValidationTest {
         Point end = new Point(9, 0);
         Harbor type = Harbor.DESTROYER;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
-        assertThat(validation.isValid(ship, null), is(true));
+        assertThat(validation.isValid(piece, null), is(true));
     }
 
     @Test
@@ -123,9 +123,9 @@ public class PlacementCheckValidationTest {
         Point end = new Point(9, 0);
         Harbor type = Harbor.DESTROYER;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
-        assertThat(validation.isValid(ship, null), is(false));
+        assertThat(validation.isValid(piece, null), is(false));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class PlacementCheckValidationTest {
         Point end = new Point(9, 0);
         Harbor type = Harbor.INVALID_SHIP;
 
-        Ship ship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
-        assertThat(validation.isValid(ship, null), is(true));
+        Piece piece = Piece.builder().withType(type).withStart(start).withEnd(end).build();
+        assertThat(validation.isValid(piece, null), is(true));
     }
 }

@@ -1,7 +1,7 @@
 package com.bship.games.util;
 
 import com.bship.games.domains.Point;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,8 +50,8 @@ public class Util {
         return asList(start, end);
     }
 
-    public static boolean isPlaced(Ship ship) {
-        return ofNullable(ship)
+    public static boolean isPlaced(Piece piece) {
+        return ofNullable(piece)
                 .filter(s -> isSet(s.getStart()))
                 .filter(s -> isSet(s.getEnd()))
                 .isPresent();

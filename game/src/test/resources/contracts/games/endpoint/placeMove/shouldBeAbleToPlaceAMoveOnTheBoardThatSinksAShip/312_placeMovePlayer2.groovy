@@ -24,7 +24,7 @@ Contract.make {
     body([
         boards: [[
                      id           : 1,
-                     ships        : [[
+                     pieces        : [[
                                          type   : 'AIRCRAFT_CARRIER',
                                          start  : [
                                              x: 0,
@@ -99,7 +99,7 @@ Contract.make {
                                          sunk   : true,
                                          id     : 5
                                      ]],
-                     opponentShips: [],
+                     opponentPieces: [],
                      moves        : [[
                                          point : [
                                              x: 0,
@@ -136,7 +136,7 @@ Contract.make {
                  ],
                  [
                      id           : 2,
-                     ships        : [[
+                     pieces        : [[
                                          type   : 'AIRCRAFT_CARRIER',
                                          start  : [
                                              x: 0,
@@ -211,7 +211,7 @@ Contract.make {
                                          sunk   : false,
                                          id     : 10
                                      ]],
-                     opponentShips: [[
+                     opponentPieces: [[
                                          type   : 'DESTROYER',
                                          start  : [
                                              x: 4,

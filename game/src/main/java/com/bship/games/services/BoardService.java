@@ -1,7 +1,7 @@
 package com.bship.games.services;
 
 import com.bship.games.domains.Board;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 import com.bship.games.exceptions.BoardExistence;
 import com.bship.games.exceptions.BoardValidation;
 import com.bship.games.logic.GameLogic;
@@ -25,20 +25,20 @@ public class BoardService {
         this.logic = logic;
     }
 
-    public Board placeShip(long boardId, Ship ship) throws BoardValidation {
+    public Board placePiece(Long boardId, Piece piece) throws BoardValidation {
         return boards.get(boardId)
-                .map(logic.placementCheck(ship))
+                .map(logic.placementCheck(piece))
                 .map(board -> board.copy()
-                        .withShips(otherShips(board, ship))
-                        .addShip(ship.copy().withBoardId(boardId).build())
+                        .withPieces(otherPieces(board, piece))
+                        .addShip(piece.copy().withBoardId(boardId).build())
                         .build())
                 .flatMap(boards::save)
                 .orElseThrow(BoardExistence::new);
     }
 
-    private List<Ship> otherShips(Board board, Ship ship) {
-        return board.getShips().stream()
-                .filter(o -> !o.getType().equals(ship.getType()))
+    private List<Piece> otherPieces(Board board, Piece piece) {
+        return board.getPieces().stream()
+                .filter(o -> !o.getType().equals(piece.getType()))
                 .collect(toList());
     }
 }

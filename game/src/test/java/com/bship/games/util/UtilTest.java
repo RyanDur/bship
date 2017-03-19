@@ -1,7 +1,7 @@
 package com.bship.games.util;
 
 import com.bship.games.domains.Point;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -336,28 +336,28 @@ public class UtilTest {
 
     @Test
     public void isPlaced_shouldKnowIfAShipIsPlaced() {
-        Ship ship = Ship.builder()
+        Piece piece = Piece.builder()
                 .withStart(new Point(1, 2))
                 .withEnd(new Point(3, 4)).build();
-        boolean placed = Util.isPlaced(ship);
+        boolean placed = Util.isPlaced(piece);
 
         assertThat(placed, is(true));
     }
 
     @Test
     public void isPlaced_shouldKnowIfAShipStartIsNotSet() {
-        Ship ship = Ship.builder()
+        Piece piece = Piece.builder()
                 .withEnd(new Point(3, 4)).build();
-        boolean placed = Util.isPlaced(ship);
+        boolean placed = Util.isPlaced(piece);
 
         assertThat(placed, is(false));
     }
 
     @Test
     public void isPlaced_shouldKnowIfAShipEndIsNotSet() {
-        Ship ship = Ship.builder()
+        Piece piece = Piece.builder()
                 .withStart(new Point(3, 4)).build();
-        boolean placed = Util.isPlaced(ship);
+        boolean placed = Util.isPlaced(piece);
 
         assertThat(placed, is(false));
     }

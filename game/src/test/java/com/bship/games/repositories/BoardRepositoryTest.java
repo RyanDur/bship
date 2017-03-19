@@ -5,7 +5,7 @@ import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Point;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -32,7 +32,7 @@ public class BoardRepositoryTest {
     private BoardRepository boards;
     private Game game;
     private ShipRepository ships;
-    private List<Ship> shipList;
+    private List<Piece> pieceList;
     private MoveRepository moves;
 
     @Before
@@ -47,8 +47,8 @@ public class BoardRepositoryTest {
                 new MapSqlParameterSource("id", game.getId()));
         template.update("INSERT INTO games(id) VALUE(:id)",
                 new MapSqlParameterSource("id", game.getId() + 1L));
-        shipList = getShips();
-        when(ships.createAll(anyLong())).thenReturn(shipList);
+        pieceList = getShips();
+        when(ships.createAll(anyLong())).thenReturn(pieceList);
     }
 
     @Test
@@ -59,15 +59,15 @@ public class BoardRepositoryTest {
 
     @Test
     public void create_shouldHaveAListOfUnplacedShips() {
-        Board expected = Board.builder().withShips(shipList)
+        Board expected = Board.builder().withPieces(pieceList)
                 .withId(1L)
                 .withGameId(1L)
-                .withOpponentShips(emptyList())
+                .withOpponentPieces(emptyList())
                 .withMoves(emptyList())
                 .withOpponentMoves(emptyList())
                 .build();
 
-        when(ships.createAll(anyLong())).thenReturn(shipList);
+        when(ships.createAll(anyLong())).thenReturn(pieceList);
 
         Board board = boards.create(game.getId());
 
@@ -76,7 +76,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void get_shouldRetrieveABordFromTheRepository() {
-        when(ships.getAll(anyLong())).thenReturn(shipList);
+        when(ships.getAll(anyLong())).thenReturn(pieceList);
         Board board = boards.create(game.getId());
         Board actual = boards.get(board.getId()).get();
 
@@ -93,7 +93,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void getAll_shouldGetAllTheBoardsForAGame() {
-        when(ships.getAll(anyLong())).thenReturn(shipList);
+        when(ships.getAll(anyLong())).thenReturn(pieceList);
         boards.create(game.getId() + 1L);
         Board board1 = boards.create(game.getId());
         Board board2 = boards.create(game.getId());
@@ -105,7 +105,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void getAll_shouldGetEmptyForAGameThatDoesNotExist() {
-        when(ships.getAll(anyLong())).thenReturn(shipList);
+        when(ships.getAll(anyLong())).thenReturn(pieceList);
         boards.create(game.getId() + 1L);
         boards.create(game.getId());
         boards.create(game.getId());
@@ -116,7 +116,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void save_shouldSaveABoard() {
-        when(ships.getAll(anyLong())).thenReturn(shipList);
+        when(ships.getAll(anyLong())).thenReturn(pieceList);
         Board board = boards.create(game.getId());
         Board expected = board.copy().withWinner(true).build();
         boards.save(expected);
@@ -127,7 +127,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void save_shouldReturnTheSavedBoard() {
-        when(ships.getAll(anyLong())).thenReturn(shipList);
+        when(ships.getAll(anyLong())).thenReturn(pieceList);
         Board board = boards.create(game.getId());
         Board expected = board.copy().withWinner(true).build();
         Optional<Board> actual = boards.save(expected);
@@ -140,7 +140,7 @@ public class BoardRepositoryTest {
         Board board = boards.create(game.getId());
         boards.save(board);
 
-        verify(ships).save(board.getShips());
+        verify(ships).save(board.getPieces());
     }
 
     @Test
@@ -151,8 +151,8 @@ public class BoardRepositoryTest {
         verify(moves).save(board.getMoves());
     }
 
-    public List<Ship> getShips() {
-        return Harbor.getShips().stream().map(ship -> Ship.builder()
+    public List<Piece> getShips() {
+        return Harbor.getShips().stream().map(ship -> Piece.builder()
                 .withType(ship)
                 .withStart(new Point())
                 .withEnd(new Point())

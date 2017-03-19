@@ -1,7 +1,7 @@
 package com.bship.games.endpoints;
 
 import com.bship.games.domains.Board;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 import com.bship.games.endpoints.RequestErrors.FieldValidation;
 import com.bship.games.endpoints.RequestErrors.GameErrors;
 import com.bship.games.endpoints.RequestErrors.ObjectValidation;
@@ -47,7 +47,7 @@ public class BoardsControllerTest {
 
     @Test
     public void placeShip_shouldProduceJSONWithCharsetUTF8() throws Exception {
-        when(mockService.placeShip(anyLong(), any(Ship.class)))
+        when(mockService.placePiece(anyLong(), any(Piece.class)))
                 .thenReturn(Board.builder().build());
 
         mockMvc.perform(put("/boards/9").contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +69,7 @@ public class BoardsControllerTest {
 
     @Test
     public void placeShip_shouldRespondWith200() throws Exception {
-        when(mockService.placeShip(anyLong(), any(Ship.class)))
+        when(mockService.placePiece(anyLong(), any(Piece.class)))
                 .thenReturn(Board.builder().build());
 
         mockMvc.perform(put("/boards/9")
@@ -395,7 +395,7 @@ public class BoardsControllerTest {
 
     @Test
     public void placeShip_shouldHandleShipExistence() throws Exception {
-        doThrow(new ShipExistsCheck()).when(mockService).placeShip(anyLong(), any(Ship.class));
+        doThrow(new ShipExistsCheck()).when(mockService).placePiece(anyLong(), any(Piece.class));
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{" +
@@ -420,7 +420,7 @@ public class BoardsControllerTest {
 
     @Test
     public void placeShip_shouldHandleShipCollisions() throws Exception {
-        doThrow(new ShipCollisionCheck()).when(mockService).placeShip(anyLong(), any(Ship.class));
+        doThrow(new ShipCollisionCheck()).when(mockService).placePiece(anyLong(), any(Piece.class));
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{" +
@@ -445,7 +445,7 @@ public class BoardsControllerTest {
 
     @Test
     public void placeShip_shouldNeedAnId() throws Exception {
-        doThrow(new ShipCollisionCheck()).when(mockService).placeShip(anyLong(), any(Ship.class));
+        doThrow(new ShipCollisionCheck()).when(mockService).placePiece(anyLong(), any(Piece.class));
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{" +

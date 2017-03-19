@@ -31,7 +31,7 @@ Contract.make {
         errors: [[
                      validations: [[
                                        code   : 'PlacementCheck',
-                                       type   : 'ship',
+                                       type   : 'piece',
                                        message: 'Incorrect ship placement.'
                                    ]]
                  ]]

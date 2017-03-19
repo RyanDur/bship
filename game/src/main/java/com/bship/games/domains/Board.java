@@ -16,8 +16,8 @@ public class Board {
     private Long gameId;
     private Long id;
 
-    private List<Ship> ships;
-    private List<Ship> opponentShips;
+    private List<Piece> pieces;
+    private List<Piece> opponentPieces;
     private List<Move> moves;
     private List<Move> opponentMoves;
     private final boolean winner;
@@ -25,8 +25,8 @@ public class Board {
     private Board(Builder builder) {
         id = builder.id;
         gameId = builder.gameId;
-        ships = builder.ships;
-        opponentShips = builder.opponentShips;
+        pieces = builder.pieces;
+        opponentPieces = builder.opponentPieces;
         moves = builder.moves;
         opponentMoves = builder.opponentMoves;
         winner = builder.winner;
@@ -40,12 +40,12 @@ public class Board {
         return id;
     }
 
-    public List<Ship> getShips() {
-        return ships;
+    public List<Piece> getPieces() {
+        return pieces;
     }
 
-    public List<Ship> getOpponentShips() {
-        return opponentShips;
+    public List<Piece> getOpponentPieces() {
+        return opponentPieces;
     }
 
     public List<Move> getMoves() {
@@ -64,8 +64,8 @@ public class Board {
         return builder()
                 .withId(getId())
                 .withGameId(getGameId())
-                .withShips(getShips())
-                .withOpponentShips(getOpponentShips())
+                .withPieces(getPieces())
+                .withOpponentPieces(getOpponentPieces())
                 .withMoves(getMoves())
                 .withOpponentMoves(getOpponentMoves())
                 .withWinner(isWinner());
@@ -87,14 +87,14 @@ public class Board {
                 Objects.equals(this.id, that.id) &&
                 Objects.equals(this.moves, that.moves) &&
                 Objects.equals(this.opponentMoves, that.opponentMoves) &&
-                Objects.equals(this.opponentShips, that.opponentShips) &&
-                Objects.equals(this.ships, that.ships) &&
+                Objects.equals(this.opponentPieces, that.opponentPieces) &&
+                Objects.equals(this.pieces, that.pieces) &&
                 Objects.equals(this.winner, that.winner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gameId, id, moves, opponentMoves, opponentShips, ships,
+        return Objects.hash(gameId, id, moves, opponentMoves, opponentPieces, pieces,
                 winner);
     }
 
@@ -102,8 +102,8 @@ public class Board {
     public static final class Builder {
         private Long id;
         private Long gameId;
-        private List<Ship> ships;
-        private List<Ship> opponentShips;
+        private List<Piece> pieces;
+        private List<Piece> opponentPieces;
         private List<Move> moves;
         private List<Move> opponentMoves;
         private boolean winner;
@@ -118,23 +118,23 @@ public class Board {
             return this;
         }
 
-        public Builder addShip(Ship ship) {
-            ships = addTo(ships, ship);
+        public Builder addShip(Piece piece) {
+            pieces = addTo(pieces, piece);
             return this;
         }
 
-        public Builder withShips(List<Ship> ships) {
-            this.ships = ships;
+        public Builder withPieces(List<Piece> pieces) {
+            this.pieces = pieces;
             return this;
         }
 
-        public Builder withOpponentShips(List<Ship> opponentShips) {
-            this.opponentShips = opponentShips;
+        public Builder withOpponentPieces(List<Piece> opponentPieces) {
+            this.opponentPieces = opponentPieces;
             return this;
         }
 
-        public Builder addOpponentShip(Ship ship) {
-            opponentShips = addTo(opponentShips, ship);
+        public Builder addOpponentPieces(Piece piece) {
+            opponentPieces = addTo(opponentPieces, piece);
             return this;
         }
 
@@ -173,8 +173,8 @@ public class Board {
         return "{" +
                 "\"gameId\":" + getGameId() +
                 ", \"id\":" + getId() +
-                ", \"ships\":" + getShips() +
-                ", \"opponentShips\":" + getOpponentShips() +
+                ", \"ships\":" + getPieces() +
+                ", \"opponentPieces\":" + getOpponentPieces() +
                 ", \"moves\":" + getMoves() +
                 ", \"opponentMoves\":" + getOpponentMoves() +
                 ", \"winner\":" + isWinner() +

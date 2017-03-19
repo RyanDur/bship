@@ -5,7 +5,7 @@ import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.MoveStatus;
 import com.bship.games.domains.Point;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 import com.bship.games.exceptions.MoveCollision;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
@@ -33,10 +33,10 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class GameLogic {
 
-    public Function<Board, Board> placementCheck(Ship ship) throws ShipExistsCheck, ShipCollisionCheck {
+    public Function<Board, Board> placementCheck(Piece piece) throws ShipExistsCheck, ShipCollisionCheck {
         return rethrowFunction(board -> {
-            if (exists(board, ship)) throw new ShipExistsCheck();
-            if (collision(board, ship)) throw new ShipCollisionCheck();
+            if (exists(board, piece)) throw new ShipExistsCheck();
+            if (collision(board, piece)) throw new ShipCollisionCheck();
             return board;
         });
     }
@@ -84,43 +84,43 @@ public class GameLogic {
         )).build());
     }
 
-    private Function<Ship, Optional<Game>> updateBoardsWithSunkShip(Game game, Board current, Board other, Move playedMove) {
+    private Function<Piece, Optional<Game>> updateBoardsWithSunkShip(Game game, Board current, Board other, Move playedMove) {
         return sunk -> of(game).map(Game::copy).map(copy -> copy.withBoards(asList(
                 current.copy()
                         .addMove(playedMove)
-                        .addOpponentShip(sunk)
+                        .addOpponentPieces(sunk)
                         .build(),
                 other.copy()
                         .addOpponentMove(playedMove)
-                        .withShips(without(other, recentlySunk.apply(sunk)))
+                        .withPieces(without(other, recentlySunk.apply(sunk)))
                         .addShip(sunk)
                         .build()
         )).build());
     }
 
-    private boolean exists(Board board, Ship ship) {
-        return ofNullable(ship).isPresent() && ofNullable(board)
-                .map(Board::getShips)
+    private boolean exists(Board board, Piece piece) {
+        return ofNullable(piece).isPresent() && ofNullable(board)
+                .map(Board::getPieces)
                 .map(Collection::stream)
                 .filter(ships -> ships.filter(Util::isPlaced)
-                        .map(Ship::getType)
-                        .anyMatch(type -> type.equals(ship.getType()))).isPresent();
+                        .map(Piece::getType)
+                        .anyMatch(type -> type.equals(piece.getType()))).isPresent();
     }
 
-    private boolean collision(Board board, Ship ship) {
-        return ofNullable(ship).isPresent() && ofNullable(board)
-                .map(Board::getShips).map(Collection::stream)
+    private boolean collision(Board board, Piece piece) {
+        return ofNullable(piece).isPresent() && ofNullable(board)
+                .map(Board::getPieces).map(Collection::stream)
                 .filter(ships -> ships.anyMatch(savedShip ->
-                        detectCollision(getRange(savedShip), getRange(ship))))
+                        detectCollision(getRange(savedShip), getRange(piece))))
                 .isPresent();
     }
 
-    private List<Ship> without(Board other, Predicate<Ship> test) {
-        return other.getShips().stream().filter(test).collect(toList());
+    private List<Piece> without(Board other, Predicate<Piece> test) {
+        return other.getPieces().stream().filter(test).collect(toList());
     }
 
     private Move getPlayedMove(Move move, Board other) {
-        MoveStatus status = getStatus(move, other.getShips());
+        MoveStatus status = getStatus(move, other.getPieces());
         return move.copy().withStatus(status).build();
     }
 
@@ -134,22 +134,22 @@ public class GameLogic {
                 .collect(toList());
     }
 
-    private Optional<Ship> getSunk(List<Point> moves, Board other) {
-        List<Ship> unSunk = without(other, notSunk);
+    private Optional<Piece> getSunk(List<Point> moves, Board other) {
+        List<Piece> unSunk = without(other, notSunk);
         return unSunk.stream()
                 .filter(ship -> moves.containsAll(getRange(ship)))
                 .findFirst()
-                .map(Ship::copy)
+                .map(Piece::copy)
                 .map(ship -> ship.withSunk(true))
-                .map(Ship.Builder::build);
+                .map(Piece.Builder::build);
     }
 
-    private List<Point> getRange(Ship ship) {
-        return pointsRange(ship.getStart(), ship.getEnd());
+    private List<Point> getRange(Piece piece) {
+        return pointsRange(piece.getStart(), piece.getEnd());
     }
 
-    private MoveStatus getStatus(Move move, List<Ship> ships) {
-        return ships.stream()
+    private MoveStatus getStatus(Move move, List<Piece> pieces) {
+        return pieces.stream()
                 .map(this::getRange)
                 .flatMap(Collection::stream)
                 .filter(point -> point.equals(move.getPoint()))
@@ -164,7 +164,7 @@ public class GameLogic {
         return boards -> boards.getId() == move.getBoardId();
     }
 
-    private Function<Ship, Predicate<Ship>> recentlySunk = sunk -> ship -> !ship.getType().equals(sunk.getType());
+    private Function<Piece, Predicate<Piece>> recentlySunk = sunk -> ship -> !ship.getType().equals(sunk.getType());
 
-    private Predicate<Ship> notSunk = ship -> !ship.isSunk();
+    private Predicate<Piece> notSunk = ship -> !ship.isSunk();
 }

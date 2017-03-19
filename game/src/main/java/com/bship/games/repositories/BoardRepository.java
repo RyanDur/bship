@@ -29,7 +29,7 @@ public class BoardRepository {
     }
 
     @Transactional
-    public Board create(long gameId) {
+    public Board create(Long gameId) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         template.update("INSERT INTO boards(game_id) VALUE(:id)",
                 new MapSqlParameterSource("id", gameId), holder);
@@ -39,29 +39,29 @@ public class BoardRepository {
         return Board.builder()
                 .withId(id)
                 .withGameId(gameId)
-                .withShips(ships.createAll(id))
-                .withOpponentShips(emptyList())
+                .withPieces(ships.createAll(id))
+                .withOpponentPieces(emptyList())
                 .withMoves(emptyList())
                 .withOpponentMoves(emptyList())
                 .build();
     }
 
     @Transactional(readOnly = true)
-    public Optional<Board> get(long id) {
+    public Optional<Board> get(Long id) {
         return template.query("SELECT * FROM boards WHERE id = :id",
                 new MapSqlParameterSource("id", id),
                 buildBoard()
         ).stream().findFirst();
     }
 
-    public List<Board> getAll(long gameId) {
+    public List<Board> getAll(Long gameId) {
         return template.query("SELECT * FROM boards WHERE game_id = :game_id",
                 new MapSqlParameterSource("game_id", gameId),
                 buildBoard());
     }
 
     public Optional<Board> save(Board board) {
-        ships.save(board.getShips());
+        ships.save(board.getPieces());
         moves.save(board.getMoves());
 
         MapSqlParameterSource source = new MapSqlParameterSource();
@@ -77,8 +77,8 @@ public class BoardRepository {
                 .withId(rs.getLong("id"))
                 .withGameId(rs.getLong("game_id"))
                 .withWinner(rs.getBoolean("winner"))
-                .withShips(ships.getAll(rs.getLong("id")))
-                .withOpponentShips(ships.getAllOpponents(
+                .withPieces(ships.getAll(rs.getLong("id")))
+                .withOpponentPieces(ships.getAllOpponents(
                         rs.getLong("game_id"),
                         rs.getLong("id")
                 ))

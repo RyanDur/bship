@@ -13,27 +13,27 @@ public class BoardTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    private Ship battleship;
-    private Ship aircraftCarrier;
+    private Piece battleship;
+    private Piece aircraftCarrier;
 
     @Before
     public void setup() {
         Point start = new Point(0, 0);
         Point end = new Point(0, 2);
         Harbor type = Harbor.BATTLESHIP;
-        battleship = Ship.builder().withType(type).withStart(start).withEnd(end).build();
+        battleship = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
         Point start1 = new Point(1, 0);
         Point end1 = new Point(1, 5);
         Harbor type1 = Harbor.AIRCRAFT_CARRIER;
-        aircraftCarrier = Ship.builder().withType(type1).withStart(start1).withEnd(end1).build();
+        aircraftCarrier = Piece.builder().withType(type1).withStart(start1).withEnd(end1).build();
     }
 
     @Test
     public void addShip_shouldBeAbleToAddAShipToTheBoard() {
         Board board = Board.builder().addShip(battleship).build();
 
-        assertThat(board.getShips(), contains(battleship));
+        assertThat(board.getPieces(), contains(battleship));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class BoardTest {
         Board board = Board.builder().addShip(battleship).build();
         Board newBoard = board.copy().addShip(aircraftCarrier).build();
 
-        assertThat(newBoard.getShips(), contains(battleship, aircraftCarrier));
+        assertThat(newBoard.getPieces(), contains(battleship, aircraftCarrier));
     }
 
     @Test
@@ -50,16 +50,16 @@ public class BoardTest {
 
         Board board = Board.builder().addShip(battleship).build();
 
-        board.getShips().add(aircraftCarrier);
+        board.getPieces().add(aircraftCarrier);
     }
 
     @Test
     public void getShips__with_withShips_shouldBeImmutable() {
         thrown.expect(UnsupportedOperationException.class);
 
-        Board board = Board.builder().withShips(singletonList(battleship)).build();
+        Board board = Board.builder().withPieces(singletonList(battleship)).build();
 
-        board.getShips().add(aircraftCarrier);
+        board.getPieces().add(aircraftCarrier);
     }
 
 }

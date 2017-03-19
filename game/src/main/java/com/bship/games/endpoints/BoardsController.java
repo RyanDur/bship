@@ -1,7 +1,7 @@
 package com.bship.games.endpoints;
 
 import com.bship.games.domains.Board;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 import com.bship.games.exceptions.BoardValidation;
 import com.bship.games.services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +28,11 @@ public class BoardsController implements BadRequestHandler {
 
     private BoardService service;
 
-    private Function<Exception, ObjectError> shipError;
+    private Function<Exception, ObjectError> pieceError;
 
     @Autowired
     public BoardsController(BoardService service) {
-        shipError = error.apply("board");
+        pieceError = error.apply("board");
         this.service = service;
     }
 
@@ -40,14 +40,14 @@ public class BoardsController implements BadRequestHandler {
             value = "/boards/{boardId}",
             produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(OK)
-    public Board placeShip(@PathVariable long boardId,
-                           @Valid @RequestBody Ship ship) throws BoardValidation {
-        return service.placeShip(boardId, ship);
+    public Board placeShip(@PathVariable Long boardId,
+                           @Valid @RequestBody Piece piece) throws BoardValidation {
+        return service.placePiece(boardId, piece);
     }
 
     @Override
     @ExceptionHandler({BoardValidation.class})
     public ResponseEntity processValidationError(Exception check) {
-        return badRequest().body(getErrors(of(check).map(shipError).map(Stream::of).map(objectErrors)));
+        return badRequest().body(getErrors(of(check).map(pieceError).map(Stream::of).map(objectErrors)));
     }
 }

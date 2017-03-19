@@ -3,7 +3,7 @@ package com.bship.games.services;
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Point;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 import com.bship.games.exceptions.BoardExistence;
 import com.bship.games.exceptions.BoardValidation;
 import com.bship.games.exceptions.ShipCollisionCheck;
@@ -49,24 +49,24 @@ public class BoardServiceTest {
     @Test
     public void placeShip_shouldPlaceAShipOnTheBoard() throws BoardValidation {
         long boardId = 1L;
-        Board board = Board.builder().withId(boardId).withShips(getShips()).build();
-        Ship ship = Ship.builder()
+        Board board = Board.builder().withId(boardId).withPieces(getShips()).build();
+        Piece piece = Piece.builder()
                 .withStart(new Point(3,2))
                 .withEnd(new Point(0,2))
                 .withBoardId(boardId)
                 .withType(AIRCRAFT_CARRIER).build();
 
-        List<Ship> unplaced = board.getShips().stream()
-                .filter(o -> !o.getType().equals(ship.getType()))
+        List<Piece> unplaced = board.getPieces().stream()
+                .filter(o -> !o.getType().equals(piece.getType()))
                 .collect(toList());
 
-        Board expected = board.copy().withShips(unplaced).addShip(ship).build();
+        Board expected = board.copy().withPieces(unplaced).addShip(piece).build();
 
         when(repository.get(boardId)).thenReturn(of(board));
-        when(logic.placementCheck(ship)).thenReturn(b -> b);
+        when(logic.placementCheck(piece)).thenReturn(b -> b);
         when(repository.save(any(Board.class))).thenReturn(of(expected));
 
-        Board actual = service.placeShip(boardId, ship);
+        Board actual = service.placePiece(boardId, piece);
 
         verify(repository).save(expected);
         assertThat(actual, is(equalTo(expected)));
@@ -79,14 +79,14 @@ public class BoardServiceTest {
 
         long boardId = 1L;
         Board board = Board.builder().build();
-        Ship ship = Ship.builder().build();
-        Board expected = board.copy().addShip(ship).build();
+        Piece piece = Piece.builder().build();
+        Board expected = board.copy().addShip(piece).build();
 
         when(repository.get(boardId)).thenReturn(Optional.empty());
-        when(logic.placementCheck(ship)).thenReturn(b -> b);
+        when(logic.placementCheck(piece)).thenReturn(b -> b);
         when(repository.save(expected)).thenReturn(of(expected));
 
-        service.placeShip(boardId, ship);
+        service.placePiece(boardId, piece);
     }
 
     @Test
@@ -95,14 +95,14 @@ public class BoardServiceTest {
         thrown.expectMessage("Board Does Not Exist!");
 
         long boardId = 1L;
-        Board board = Board.builder().withShips(emptyList()).build();
-        Ship ship = Ship.builder().build();
+        Board board = Board.builder().withPieces(emptyList()).build();
+        Piece piece = Piece.builder().build();
 
         when(repository.get(boardId)).thenReturn(of(board));
-        when(logic.placementCheck(ship)).thenReturn(b -> b);
+        when(logic.placementCheck(piece)).thenReturn(b -> b);
         when(repository.save(any(Board.class))).thenReturn(Optional.empty());
 
-        service.placeShip(boardId, ship);
+        service.placePiece(boardId, piece);
     }
 
     @Test
@@ -111,18 +111,18 @@ public class BoardServiceTest {
 
         long boardId = 1L;
         Board board = Board.builder().build();
-        Ship ship = Ship.builder().build();
-        Board expected = board.copy().addShip(ship).build();
+        Piece piece = Piece.builder().build();
+        Board expected = board.copy().addShip(piece).build();
 
         when(repository.get(boardId)).thenReturn(of(board));
-        doThrow(new ShipCollisionCheck()).when(logic).placementCheck(ship);
+        doThrow(new ShipCollisionCheck()).when(logic).placementCheck(piece);
         when(repository.save(expected)).thenReturn(Optional.empty());
 
-        service.placeShip(boardId, ship);
+        service.placePiece(boardId, piece);
     }
 
-    public List<Ship> getShips() {
-        return Harbor.getShips().stream().map(ship -> Ship.builder()
+    public List<Piece> getShips() {
+        return Harbor.getShips().stream().map(ship -> Piece.builder()
                 .withType(ship)
                 .withStart(new Point())
                 .withEnd(new Point())

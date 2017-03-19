@@ -11,9 +11,9 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-@JsonDeserialize(builder = Ship.Builder.class)
+@JsonDeserialize(builder = Piece.Builder.class)
 @PlacementCheck
-public class Ship {
+public class Piece {
 
     @NonEmpty
     @ShipExists
@@ -34,7 +34,7 @@ public class Ship {
     private Integer size;
     private boolean sunk;
 
-    private Ship(Builder builder) {
+    private Piece(Builder builder) {
         type = builder.type;
         start = builder.start;
         end = builder.end;
@@ -135,8 +135,8 @@ public class Ship {
             return this;
         }
 
-        public Ship build() {
-            return new Ship(this);
+        public Piece build() {
+            return new Piece(this);
         }
 
     }
@@ -146,7 +146,7 @@ public class Ship {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Ship that = (Ship) o;
+        Piece that = (Piece) o;
 
         return Objects.equals(this.boardId, that.boardId) &&
                 Objects.equals(this.end, that.end) &&

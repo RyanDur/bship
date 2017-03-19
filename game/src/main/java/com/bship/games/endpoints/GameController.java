@@ -49,7 +49,7 @@ public class GameController implements BadRequestHandler {
             value = "/games/{gameId}",
             produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(OK)
-    public Game placeMove(@PathVariable long gameId,
+    public Game placeMove(@PathVariable Long gameId,
                           @Valid @RequestBody Move move) throws GameValidation {
         return service.placeMove(gameId, move);
     }

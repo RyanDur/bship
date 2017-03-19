@@ -2,7 +2,7 @@ package com.bship.games.repositories;
 
 import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Point;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 import com.bship.games.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,41 +36,41 @@ public class ShipRepository {
         this.template = template;
     }
 
-    public List<Ship> createAll(long boardId) {
+    public List<Piece> createAll(Long boardId) {
         template.batchUpdate(INSERT_INTO_SHIPS,
                 createBatch(getNewShipBatch(boardId)));
 
         return getAll(boardId);
     }
 
-    public List<Ship> getAll(long boardId) {
+    public List<Piece> getAll(Long boardId) {
         return template.query(SELECT_MY_SHIPS,
                 new MapSqlParameterSource("ship_board_id", boardId),
                 buildShip);
     }
 
-    public List<Ship> getAllOpponents(long gameId, long boardId) {
+    public List<Piece> getAllOpponents(Long gameId, Long boardId) {
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("game_id", gameId);
         source.addValue("ship_board_id", boardId);
         return template.query(SELECT_OPPONENTS_SUNK_SHIPS, source, buildShip);
     }
 
-    public void save(List<Ship> ships) {
-        of(ships).map(getUpdateShipBatch()).map(batch ->
+    public void save(List<Piece> pieces) {
+        of(pieces).map(getUpdateShipBatch()).map(batch ->
                 template.batchUpdate(UPDATE_SHIPS, createBatch(batch)));
     }
 
-    public void save(Ship ship) {
+    public void save(Piece piece) {
         MapSqlParameterSource source = new MapSqlParameterSource();
-        source.addValue("id", ship.getId());
-        source.addValue("start", toIndex(ship.getStart()));
-        source.addValue("end", toIndex(ship.getEnd()));
+        source.addValue("id", piece.getId());
+        source.addValue("start", toIndex(piece.getStart()));
+        source.addValue("end", toIndex(piece.getEnd()));
 
         template.update(UPDATE_SHIP_POSITION, source);
     }
 
-    private RowMapper<Ship> buildShip = (rs, rowNum) -> Ship.builder()
+    private RowMapper<Piece> buildShip = (rs, rowNum) -> Piece.builder()
             .withId(rs.getLong("id"))
             .withType(Harbor.valueOf(rs.getString("type")))
             .withStart(getPoint(rs.getString("start")))
@@ -86,7 +86,7 @@ public class ShipRepository {
                 .orElse(new Point());
     }
 
-    private HashMap[] getNewShipBatch(final long boardId) {
+    private HashMap[] getNewShipBatch(final Long boardId) {
         return Harbor.getShips().stream().map(ship ->
                 new HashMap<String, Object>() {{
                     put("type", ship.name());
@@ -96,7 +96,7 @@ public class ShipRepository {
                 .collect(toList()).toArray(new HashMap[0]);
     }
 
-    private Function<List<Ship>, HashMap[]> getUpdateShipBatch() {
+    private Function<List<Piece>, HashMap[]> getUpdateShipBatch() {
         return ships -> ships.stream().map(ship ->
                 new HashMap<String, Object>() {{
                     put("id", ship.getId());

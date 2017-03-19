@@ -33,13 +33,13 @@ public class MoveRepository {
         template.batchUpdate(INSERT_MOVES, createBatch(getNewMoveBatch(moves)));
     }
 
-    public List<Move> getAll(long boardId) {
+    public List<Move> getAll(Long boardId) {
         return template.query(SELECT_ALL_MOVES_FOR_BOARD,
                 new MapSqlParameterSource("board_id", boardId),
                 buildMove);
     }
 
-    public List<Move> getAllOpponents(long gameId, long boardId) {
+    public List<Move> getAllOpponents(Long gameId, Long boardId) {
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("game_id", gameId);
         source.addValue("board_id", boardId);

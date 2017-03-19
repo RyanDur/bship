@@ -29,7 +29,7 @@ Contract.make {
     }
     body([
         id           : 2,
-        ships        : [[
+        pieces        : [[
                             type   : "AIRCRAFT_CARRIER",
                             start  : [
                                 x: 0,
@@ -104,7 +104,7 @@ Contract.make {
                             sunk   : false,
                             id     : 10
                         ]],
-        opponentShips: [],
+        opponentPieces: [],
         moves        : [],
         opponentMoves: [],
         winner       : false

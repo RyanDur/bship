@@ -3,7 +3,7 @@ package com.bship.games.repositories;
 import com.bship.DBHelper;
 import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Point;
-import com.bship.games.domains.Ship;
+import com.bship.games.domains.Piece;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-public class ShipRepositoryTest {
+public class PieceRepositoryTest {
 
     private NamedParameterJdbcTemplate template;
     private ShipRepository ships;
@@ -34,7 +34,7 @@ public class ShipRepositoryTest {
 
     @Test
     public void createAll_shouldCreateAllTheShips() {
-        List<Ship> expected = Harbor.getShips().stream().map(ship -> Ship.builder()
+        List<Piece> expected = Harbor.getShips().stream().map(ship -> Piece.builder()
                 .withType(ship)
                 .withSize(ship.getSize())
                 .withBoardId(1L)
@@ -43,7 +43,7 @@ public class ShipRepositoryTest {
                 .withId(ship.ordinal() + 1L)
                 .build()).collect(toList());
 
-        List<Ship> actual = ships.createAll(1L);
+        List<Piece> actual = ships.createAll(1L);
 
         assertThat(actual.size(), is(expected.size()));
         assertThat(actual, is(expected));
@@ -51,15 +51,15 @@ public class ShipRepositoryTest {
 
     @Test
     public void getAll_shouldRetrieveAllTheShipsForABoard() {
-        List<Ship> expected = ships.createAll(1L);
-        List<Ship> actual = ships.getAll(1L);
+        List<Piece> expected = ships.createAll(1L);
+        List<Piece> actual = ships.getAll(1L);
 
         assertThat(actual, is(equalTo(expected)));
     }
 
     @Test
     public void getAll_shouldReturnAnEmptyListIfNoShips() {
-        List<Ship> actual = ships.getAll(10L);
+        List<Piece> actual = ships.getAll(10L);
 
         assertThat(actual, is(empty()));
     }
@@ -67,7 +67,7 @@ public class ShipRepositoryTest {
     @Test
     public void save_shouldSaveShips() {
         ships.createAll(1L);
-        List<Ship> opponents = ships.createAll(2L)
+        List<Piece> opponents = ships.createAll(2L)
                 .stream().map(ship -> of(ship)
                         .filter(destroyer -> destroyer.getType().equals(Harbor.DESTROYER))
                         .map(destroyer -> destroyer.copy().withSunk(true).build())
@@ -75,7 +75,7 @@ public class ShipRepositoryTest {
                 .collect(toList());
         ships.save(opponents);
         ships.save(opponents);
-        List<Ship> actual = ships.getAll(2L);
+        List<Piece> actual = ships.getAll(2L);
 
         assertThat(actual, is(equalTo(opponents)));
     }
@@ -84,41 +84,41 @@ public class ShipRepositoryTest {
     public void save_shouldReturnEmptyIfNoShips() {
         ships.createAll(1L);
 
-        List<Ship> actual = ships.getAll(2L);
+        List<Piece> actual = ships.getAll(2L);
 
         assertThat(actual, is(empty()));
     }
 
     @Test
     public void save_shouldSaveAShip() {
-        List<Ship> all = ships.createAll(1L);
-        Ship ship = all.get(0).copy()
+        List<Piece> all = ships.createAll(1L);
+        Piece piece = all.get(0).copy()
                 .withStart(new Point(0, 0))
                 .withEnd(new Point(0, 4))
                 .withBoardId(1L)
                 .build();
-        ships.save(ship);
-        Ship actual = ships.getAll(1L).stream()
+        ships.save(piece);
+        Piece actual = ships.getAll(1L).stream()
                 .filter(o -> o.getId() == 1L)
                 .findFirst().get();
 
-        assertThat(actual, is(equalTo(ship)));
+        assertThat(actual, is(equalTo(piece)));
     }
 
     @Test
     public void getAllOpponents_shouldReturnAllTheOpponentsSunkShip() {
         ships.createAll(1L);
-        List<Ship> opponents = ships.createAll(2L)
+        List<Piece> opponents = ships.createAll(2L)
                 .stream().map(ship -> of(ship)
                         .filter(destroyer -> destroyer.getType().equals(Harbor.DESTROYER))
                         .map(destroyer -> destroyer.copy().withSunk(true).build())
                         .orElse(ship))
                 .collect(toList());
         ships.save(opponents);
-        List<Ship> shipsAllOpponents = ships.getAllOpponents(1L, 1L);
+        List<Piece> shipsAllOpponents = ships.getAllOpponents(1L, 1L);
 
         assertThat(shipsAllOpponents, is(equalTo(opponents.stream()
-                .filter(Ship::isSunk).collect(toList()))));
+                .filter(Piece::isSunk).collect(toList()))));
     }
     @Test
     public void getAllOpponents_shouldReturnAllTheOpponentsSunkShipFromSpecificGame() {
@@ -130,23 +130,23 @@ public class ShipRepositoryTest {
         template.update("INSERT INTO boards(game_id) VALUE (3)", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (3)", new HashMap<>());
 
-        List<Ship> ships1 = ships.createAll(1L);
-        List<Ship> ships2 = ships.createAll(2L);
+        List<Piece> ships1 = ships.createAll(1L);
+        List<Piece> ships2 = ships.createAll(2L);
 
-        List<Ship> ships3 = ships.createAll(3L);
-        List<Ship> ships4 = ships.createAll(4L);
+        List<Piece> ships3 = ships.createAll(3L);
+        List<Piece> ships4 = ships.createAll(4L);
 
-        List<Ship> ships5 = ships.createAll(5L);
-        List<Ship> ships6 = ships.createAll(6L);
+        List<Piece> ships5 = ships.createAll(5L);
+        List<Piece> ships6 = ships.createAll(6L);
 
-        List<Ship> opponents = ships3
+        List<Piece> opponents = ships3
                 .stream().map(ship -> of(ship)
                         .filter(destroyer -> destroyer.getType().equals(Harbor.DESTROYER))
                         .map(destroyer -> destroyer.copy().withSunk(true).build())
                         .orElse(ship))
                 .collect(toList());
         ships.save(opponents);
-        List<Ship> opponents3 = opponents
+        List<Piece> opponents3 = opponents
                 .stream().map(ship -> of(ship)
                         .filter(carrier -> carrier.getType().equals(Harbor.AIRCRAFT_CARRIER))
                         .map(carrier -> carrier.copy().withSunk(true).build())
@@ -154,7 +154,7 @@ public class ShipRepositoryTest {
                 .collect(toList());
         ships.save(opponents3);
 
-        List<Ship> opponents6 = ships6
+        List<Piece> opponents6 = ships6
                 .stream().map(ship -> of(ship)
                         .filter(battleship -> battleship.getType().equals(Harbor.BATTLESHIP))
                         .map(battleship -> battleship.copy().withSunk(true).build())
@@ -163,10 +163,10 @@ public class ShipRepositoryTest {
         ships.save(opponents6);
 
 
-        List<Ship> shipsAllOpponents = ships.getAllOpponents(2L, 4L);
+        List<Piece> shipsAllOpponents = ships.getAllOpponents(2L, 4L);
 
         assertThat(shipsAllOpponents, is(equalTo(opponents3.stream()
-                .filter(Ship::isSunk).collect(toList()))));
+                .filter(Piece::isSunk).collect(toList()))));
     }
 
 }
