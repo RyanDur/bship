@@ -2,8 +2,8 @@ package com.bship.games.services;
 
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Harbor;
-import com.bship.games.domains.Point;
 import com.bship.games.domains.Piece;
+import com.bship.games.domains.Point;
 import com.bship.games.exceptions.BoardExistence;
 import com.bship.games.exceptions.BoardValidation;
 import com.bship.games.exceptions.ShipCollisionCheck;
@@ -17,6 +17,8 @@ import org.junit.rules.ExpectedException;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bship.games.domains.Direction.NONE;
+import static com.bship.games.domains.Direction.RIGHT;
 import static com.bship.games.domains.Harbor.AIRCRAFT_CARRIER;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.of;
@@ -51,10 +53,12 @@ public class BoardServiceTest {
         long boardId = 1L;
         Board board = Board.builder().withId(boardId).withPieces(getShips()).build();
         Piece piece = Piece.builder()
-                .withStart(new Point(3,2))
-                .withEnd(new Point(0,2))
+                .withPlacement(new Point(3,2))
+                .withOrientation(RIGHT)
+                .withSize(5)
                 .withBoardId(boardId)
-                .withType(AIRCRAFT_CARRIER).build();
+                .withType(AIRCRAFT_CARRIER)
+                .build();
 
         List<Piece> unplaced = board.getPieces().stream()
                 .filter(o -> !o.getType().equals(piece.getType()))
@@ -124,8 +128,8 @@ public class BoardServiceTest {
     public List<Piece> getShips() {
         return Harbor.getShips().stream().map(ship -> Piece.builder()
                 .withType(ship)
-                .withStart(new Point())
-                .withEnd(new Point())
+                .withPlacement(new Point())
+                .withOrientation(NONE)
                 .withBoardId(1L)
                 .build()).collect(toList());
     }

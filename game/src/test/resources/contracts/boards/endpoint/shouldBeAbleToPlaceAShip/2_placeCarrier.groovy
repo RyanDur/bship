@@ -10,16 +10,14 @@ Contract.make {
       contentType(applicationJson())
     }
     body([
-        type : 'AIRCRAFT_CARRIER',
-        id   : 1,
-        start: [
+        type       : 'AIRCRAFT_CARRIER',
+        id         : 1,
+        placement  : [
             x: 0,
             y: 0
         ],
-        end  : [
-            x: 0,
-            y: 4
-        ]
+        orientation: 'DOWN',
+        size   : 5
     ])
   }
   response {
@@ -31,14 +29,11 @@ Contract.make {
         id            : 1,
         pieces        : [[
                              type   : "AIRCRAFT_CARRIER",
-                             start  : [
+                             placement  : [
                                  x: 0,
                                  y: 0
                              ],
-                             end    : [
-                                 x: 0,
-                                 y: 4
-                             ],
+                             orientation: 'DOWN',
                              boardId: 1,
                              size   : 5,
                              sunk   : false,
@@ -46,14 +41,11 @@ Contract.make {
                          ],
                          [
                              type   : "BATTLESHIP",
-                             start  : [
+                             placement  : [
                                  x: null,
                                  y: null
                              ],
-                             end    : [
-                                 x: null,
-                                 y: null
-                             ],
+                             orientation: 'NONE',
                              boardId: 1,
                              size   : 4,
                              sunk   : false,
@@ -61,14 +53,11 @@ Contract.make {
                          ],
                          [
                              type   : "SUBMARINE",
-                             start  : [
+                             placement  : [
                                  x: null,
                                  y: null
                              ],
-                             end    : [
-                                 x: null,
-                                 y: null
-                             ],
+                             orientation: 'NONE',
                              boardId: 1,
                              size   : 3,
                              sunk   : false,
@@ -76,14 +65,11 @@ Contract.make {
                          ],
                          [
                              type   : "CRUISER",
-                             start  : [
+                             placement  : [
                                  x: null,
                                  y: null
                              ],
-                             end    : [
-                                 x: null,
-                                 y: null
-                             ],
+                             orientation: 'NONE',
                              boardId: 1,
                              size   : 3,
                              sunk   : false,
@@ -91,14 +77,11 @@ Contract.make {
                          ],
                          [
                              type   : "DESTROYER",
-                             start  : [
+                             placement  : [
                                  x: null,
                                  y: null
                              ],
-                             end    : [
-                                 x: null,
-                                 y: null
-                             ],
+                             orientation: 'NONE',
                              boardId: 1,
                              size   : 2,
                              sunk   : false,

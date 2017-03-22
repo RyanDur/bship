@@ -17,12 +17,12 @@ import static java.util.Collections.emptyList;
 @Repository
 public class BoardRepository {
     private NamedParameterJdbcTemplate template;
-    private final ShipRepository ships;
+    private final PieceRepository ships;
     private final MoveRepository moves;
 
     @Autowired
     public BoardRepository(NamedParameterJdbcTemplate template,
-                           ShipRepository ships, MoveRepository moves) {
+                           PieceRepository ships, MoveRepository moves) {
         this.template = template;
         this.ships = ships;
         this.moves = moves;

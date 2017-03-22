@@ -4,8 +4,8 @@ import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Move;
-import com.bship.games.domains.Point;
 import com.bship.games.domains.Piece;
+import com.bship.games.domains.Point;
 import com.bship.games.exceptions.GameValidation;
 import com.bship.games.exceptions.MoveCollision;
 import com.bship.games.exceptions.ShipCollisionCheck;
@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.bship.games.domains.Direction.DOWN;
+import static com.bship.games.domains.Direction.NONE;
+import static com.bship.games.domains.Direction.RIGHT;
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
 import static java.util.Arrays.asList;
@@ -100,14 +103,16 @@ public class GameLogicTest {
     public void placementCheck_shouldReturnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
         Piece piece1 = Piece.builder()
                 .withType(Harbor.BATTLESHIP)
-                .withStart(new Point(0, 0))
-                .withEnd(new Point(0, 4))
+                .withPlacement(new Point(0, 0))
+                .withSize(3)
+                .withOrientation(DOWN)
                 .build();
 
         Piece piece2 = Piece.builder()
                 .withType(Harbor.AIRCRAFT_CARRIER)
-                .withStart(new Point(1, 0))
-                .withEnd(new Point(1, 4))
+                .withPlacement(new Point(1, 0))
+                .withSize(4)
+                .withOrientation(DOWN)
                 .build();
 
         Board board = Board.builder().addPiece(piece1).build();
@@ -124,14 +129,16 @@ public class GameLogicTest {
 
         Piece piece1 = Piece.builder()
                 .withType(Harbor.BATTLESHIP)
-                .withStart(new Point(0, 0))
-                .withEnd(new Point(0, 4))
+                .withPlacement(new Point(0, 0))
+                .withOrientation(DOWN)
+                .withSize(3)
                 .build();
 
         Piece piece2 = Piece.builder()
                 .withType(Harbor.BATTLESHIP)
-                .withStart(new Point(1, 0))
-                .withEnd(new Point(1, 4))
+                .withPlacement(new Point(1, 0))
+                .withOrientation(DOWN)
+                .withSize(3)
                 .build();
 
         Board board = Board.builder().addPiece(piece1).build();
@@ -143,14 +150,16 @@ public class GameLogicTest {
     public void placementCheck_shouldKnowIfAShipIsAlreadySetOnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
         Piece piece1 = Piece.builder()
                 .withType(Harbor.BATTLESHIP)
-                .withStart(new Point())
-                .withEnd(new Point())
+                .withPlacement(new Point())
+                .withOrientation(NONE)
+                .withSize(3)
                 .build();
 
         Piece piece2 = Piece.builder()
                 .withType(Harbor.BATTLESHIP)
-                .withStart(new Point(1, 0))
-                .withEnd(new Point(1, 4))
+                .withPlacement(new Point(1, 0))
+                .withOrientation(DOWN)
+                .withSize(3)
                 .build();
 
         Board board = Board.builder().addPiece(piece1).build();
@@ -164,8 +173,19 @@ public class GameLogicTest {
         thrown.expect(ShipCollisionCheck.class);
         thrown.expectMessage("Ship collision.");
 
-        Piece battleship = Piece.builder().withType(Harbor.BATTLESHIP).withStart(new Point(0, 0)).withEnd(new Point(0, 3)).build();
-        Piece carrier = Piece.builder().withType(Harbor.AIRCRAFT_CARRIER).withStart(new Point(0, 0)).withEnd(new Point(4, 0)).build();
+        Piece battleship = Piece.builder()
+                .withType(Harbor.BATTLESHIP)
+                .withPlacement(new Point(0, 0))
+                .withOrientation(DOWN)
+                .withSize(3)
+                .build();
+        Piece carrier = Piece.builder()
+                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withPlacement(new Point(0, 0))
+                .withOrientation(RIGHT)
+                .withSize(4)
+                .build();
+
         Board board = Board.builder().withPieces(singletonList(battleship)).build();
 
         logic.placementCheck(carrier).apply(board);
@@ -309,28 +329,34 @@ public class GameLogicTest {
 
     private List<Piece> getShips(long boardId) {
         return asList(Piece.builder().withType(Harbor.AIRCRAFT_CARRIER)
-                        .withStart(new Point(0, 0))
-                        .withEnd(new Point(0, 4))
+                        .withPlacement(new Point(0, 0))
+                        .withOrientation(DOWN)
+                        .withSize(5)
                         .withSunk(false)
-                        .withId(boardId).build(),
+                        .withId(boardId)
+                        .build(),
                 Piece.builder().withType(Harbor.BATTLESHIP)
-                        .withStart(new Point(1, 0))
-                        .withEnd(new Point(1, 3))
+                        .withPlacement(new Point(1, 0))
+                        .withOrientation(DOWN)
+                        .withSize(4)
                         .withSunk(false)
                         .withId(boardId).build(),
                 Piece.builder().withType(Harbor.SUBMARINE)
-                        .withStart(new Point(2, 0))
-                        .withEnd(new Point(2, 2))
+                        .withPlacement(new Point(2, 0))
+                        .withOrientation(DOWN)
+                        .withSize(3)
                         .withSunk(false)
                         .withId(boardId).build(),
                 Piece.builder().withType(Harbor.CRUISER)
-                        .withStart(new Point(3, 0))
-                        .withEnd(new Point(3, 2))
+                        .withPlacement(new Point(3, 0))
+                        .withOrientation(DOWN)
+                        .withSize(3)
                         .withSunk(false)
                         .withId(boardId).build(),
                 Piece.builder().withType(Harbor.DESTROYER)
-                        .withStart(new Point(4, 0))
-                        .withEnd(new Point(4, 1))
+                        .withPlacement(new Point(4, 0))
+                        .withOrientation(DOWN)
+                        .withSize(2)
                         .withSunk(false)
                         .withId(boardId).build());
     }

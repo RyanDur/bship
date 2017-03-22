@@ -1,4 +1,4 @@
-package contracts.games.endpoint.placeMove.shouldNotBeAbleMoveOutOfTurn
+package contracts.games.endpoint.placeMove.shouldBeAbleToPlaceAMoveOnTheBoard
 
 import org.springframework.cloud.contract.spec.Contract
 
@@ -12,14 +12,12 @@ Contract.make {
     body([
         type : 'CRUISER',
         id   : 9,
-        start: [
+        placement: [
             x: 3,
             y: 0
         ],
-        end  : [
-            x: 3,
-            y: 2
-        ]
+        orientation: 'DOWN',
+        size: 3
     ])
   }
   response {
@@ -31,14 +29,11 @@ Contract.make {
         id           : 2,
         pieces        : [[
                             type   : "AIRCRAFT_CARRIER",
-                            start  : [
+                            placement: [
                                 x: 0,
                                 y: 0
                             ],
-                            end    : [
-                                x: 0,
-                                y: 4
-                            ],
+                            orientation: 'DOWN',
                             boardId: 2,
                             size   : 5,
                             sunk   : false,
@@ -46,14 +41,11 @@ Contract.make {
                         ],
                         [
                             type   : "BATTLESHIP",
-                            start  : [
+                            placement: [
                                 x: 1,
                                 y: 0
                             ],
-                            end    : [
-                                x: 1,
-                                y: 3
-                            ],
+                            orientation: 'DOWN',
                             boardId: 2,
                             size   : 4,
                             sunk   : false,
@@ -61,14 +53,11 @@ Contract.make {
                         ],
                         [
                             type   : "SUBMARINE",
-                            start  : [
+                            placement: [
                                 x: 2,
                                 y: 0
                             ],
-                            end    : [
-                                x: 2,
-                                y: 2
-                            ],
+                            orientation: 'DOWN',
                             boardId: 2,
                             size   : 3,
                             sunk   : false,
@@ -76,14 +65,11 @@ Contract.make {
                         ],
                         [
                             type   : "CRUISER",
-                            start  : [
+                            placement: [
                                 x: 3,
                                 y: 0
                             ],
-                            end    : [
-                                x: 3,
-                                y: 2
-                            ],
+                            orientation: 'DOWN',
                             boardId: 2,
                             size   : 3,
                             sunk   : false,
@@ -91,14 +77,11 @@ Contract.make {
                         ],
                         [
                             type   : "DESTROYER",
-                            start  : [
+                            placement: [
                                 x: null,
                                 y: null
                             ],
-                            end    : [
-                                x: null,
-                                y: null
-                            ],
+                            orientation: 'NONE',
                             boardId: 2,
                             size   : 2,
                             sunk   : false,

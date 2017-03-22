@@ -4,6 +4,7 @@ import com.bship.games.domains.validations.BoundsCheck;
 import com.bship.games.domains.validations.NonEmpty;
 import com.bship.games.domains.validations.PlacementCheck;
 import com.bship.games.domains.validations.ShipExists;
+import com.bship.games.domains.validations.ValidPoint;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -21,11 +22,11 @@ public class Piece {
 
     @NonEmpty
     @BoundsCheck
-    private Point start;
+    @ValidPoint
+    private Point placement;
 
     @NonEmpty
-    @BoundsCheck
-    private Point end;
+    private Direction orientation;
 
     @NonEmpty
     private Long id;
@@ -36,8 +37,8 @@ public class Piece {
 
     private Piece(Builder builder) {
         type = builder.type;
-        start = builder.start;
-        end = builder.end;
+        placement = builder.placement;
+        orientation = builder.orientation;
         boardId = builder.boardId;
         id = builder.id;
         sunk = builder.sunk;
@@ -46,14 +47,6 @@ public class Piece {
 
     public Harbor getType() {
         return type;
-    }
-
-    public Point getStart() {
-        return start;
-    }
-
-    public Point getEnd() {
-        return end;
     }
 
     public boolean isSunk() {
@@ -72,13 +65,21 @@ public class Piece {
         return size;
     }
 
+    public Point getPlacement() {
+        return placement;
+    }
+
+    public Direction getOrientation() {
+        return orientation;
+    }
+
     @JsonIgnore
     public Builder copy() {
         return builder()
                 .withId(id)
                 .withType(type)
-                .withStart(start)
-                .withEnd(end)
+                .withPlacement(placement)
+                .withOrientation(orientation)
                 .withBoardId(boardId)
                 .withSunk(sunk)
                 .withSize(size);
@@ -89,29 +90,51 @@ public class Piece {
         return new Builder();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Piece that = (Piece) o;
+
+        return Objects.equals(this.boardId, that.boardId) &&
+                Objects.equals(this.id, that.id) &&
+                Objects.equals(this.orientation, that.orientation) &&
+                Objects.equals(this.placement, that.placement) &&
+                Objects.equals(this.size, that.size) &&
+                Objects.equals(this.sunk, that.sunk) &&
+                Objects.equals(this.type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(boardId, id, orientation, placement, size, sunk,
+                type);
+    }
+
     @JsonPOJOBuilder
     public static final class Builder {
 
         private Harbor type;
-        private Point start;
-        private Point end;
         private Long boardId;
         private Long id;
         private boolean sunk;
         private Integer size;
+        private Point placement;
+        private Direction orientation;
 
         public Builder withType(Harbor shipType) {
             this.type = shipType;
             return this;
         }
 
-        public Builder withStart(Point start) {
-            this.start = start;
+        public Builder withPlacement(Point placement) {
+            this.placement = placement;
             return this;
         }
 
-        public Builder withEnd(Point end) {
-            this.end = end;
+        public Builder withOrientation(Direction orientation) {
+            this.orientation = orientation;
             return this;
         }
 
@@ -138,39 +161,16 @@ public class Piece {
         public Piece build() {
             return new Piece(this);
         }
-
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Piece that = (Piece) o;
-
-        return Objects.equals(this.boardId, that.boardId) &&
-                Objects.equals(this.end, that.end) &&
-                Objects.equals(this.id, that.id) &&
-                Objects.equals(this.size, that.size) &&
-                Objects.equals(this.start, that.start) &&
-                Objects.equals(this.sunk, that.sunk) &&
-                Objects.equals(this.type, that.type);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(boardId, end, id, size, start, sunk,
-                type);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", "{", "}")
-                .add("\"boardId\": " + boardId)
-                .add("\"end\": " + end)
                 .add("\"id\": " + id)
+                .add("\"boardId\": " + boardId)
+                .add("\"placement\": " + placement)
+                .add("\"orientation\": " + "\"" + orientation + "\"")
                 .add("\"size\": " + size)
-                .add("\"start\": " + start)
                 .add("\"sunk\": " + sunk)
                 .add("\"type\": " + "\"" + type + "\"")
                 .toString();

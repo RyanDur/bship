@@ -1,7 +1,7 @@
 package com.bship.games.util;
 
-import com.bship.games.domains.Point;
 import com.bship.games.domains.Piece;
+import com.bship.games.domains.Point;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +11,8 @@ import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
+import static com.bship.games.domains.Direction.NONE;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
@@ -33,31 +34,15 @@ public class Util {
         return new Point(index / SIDE, index % SIDE);
     }
 
-    public static List<Point> pointsRange(Point start, Point end) {
-        if (isSet(start) && isSet(end)) {
-            IntFunction<Point> mapper;
-            IntStream range;
-            if (Objects.equals(start.getY(), end.getY())) {
-                mapper = x -> new Point(x, start.getY());
-                range = rangeClosed(start.getX(), end.getX());
-            } else {
-                mapper = y -> new Point(start.getX(), y);
-                range = rangeClosed(start.getY(), end.getY());
-            }
-
-            return range.mapToObj(mapper).collect(toList());
-        }
-        return asList(start, end);
-    }
-
     public static boolean isPlaced(Piece piece) {
         return ofNullable(piece)
-                .filter(s -> isSet(s.getStart()))
-                .filter(s -> isSet(s.getEnd()))
+                .filter(s -> isSet(s.getPlacement()))
                 .isPresent();
     }
 
-    public static Boolean detectCollision(List<Point> a, List<Point> b) {
+    public static Boolean detectCollision(Piece pieceA, Piece pieceB) {
+        List<Point> a = pointsRange(pieceA);
+        List<Point> b = pointsRange(pieceB);
         return a.stream().anyMatch(b::contains);
     }
 
@@ -75,6 +60,53 @@ public class Util {
 
     public static <T> List<T> concat(List<T> listA, List<T> listB) {
         return toImmutableList(listA, listB);
+    }
+
+    public static boolean validRange(Piece piece) {
+        List<Point> points = pointsRange(piece);
+        return points.stream()
+                .noneMatch(p -> p.getX() < 0) &&
+                points.stream()
+                .noneMatch(p -> p.getX() > 9) &&
+                points.stream()
+                .noneMatch(p -> p.getY() < 0)&&
+                points.stream()
+                .noneMatch(p -> p.getY() > 9);
+    }
+
+    public static List<Point> pointsRange(Piece piece) {
+        if(isSet(piece.getPlacement()) && nonNull(piece.getSize()) &&
+                nonNull(piece.getOrientation()) && !NONE.equals(piece.getOrientation())) {
+            IntFunction<Point> mapper;
+            IntStream range;
+            switch (piece.getOrientation()) {
+                case LEFT:
+                    mapper = x -> new Point(x, piece.getPlacement().getY());
+                    range = IntStream.rangeClosed(
+                            piece.getPlacement().getX() - piece.getSize() + 1,
+                            piece.getPlacement().getX());
+                    break;
+                case RIGHT:
+                    mapper = x -> new Point(x, piece.getPlacement().getY());
+                    range = IntStream.rangeClosed(
+                            piece.getPlacement().getX(),
+                            piece.getPlacement().getX() + piece.getSize() - 1);
+                    break;
+                case DOWN:
+                    mapper = y -> new Point(piece.getPlacement().getX(), y);
+                    range = IntStream.rangeClosed(
+                            piece.getPlacement().getY(),
+                            piece.getPlacement().getY() + piece.getSize() - 1);
+                    break;
+                default:
+                    mapper = y -> new Point(piece.getPlacement().getX(), y);
+                    range = rangeClosed(
+                            piece.getPlacement().getY() - piece.getSize() + 1,
+                            piece.getPlacement().getY());
+            }
+            return range.mapToObj(mapper).collect(toList());
+        }
+        return emptyList();
     }
 
     private static <T> List<T> toImmutableList(List<T> originalList, List<T> newList) {

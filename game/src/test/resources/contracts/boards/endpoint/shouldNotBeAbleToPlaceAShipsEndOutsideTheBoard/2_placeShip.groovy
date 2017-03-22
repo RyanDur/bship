@@ -12,14 +12,12 @@ Contract.make {
     body([
         type : 'AIRCRAFT_CARRIER',
         id   : 1,
-        start: [
+        placement: [
             x: 9,
             y: 6
         ],
-        end  : [
-            x: 9,
-            y: 10
-        ]
+        orientation: 'DOWN',
+        size: 5
     ])
   }
   response {
@@ -30,13 +28,9 @@ Contract.make {
     body([
         errors: [[
                      validations: [[
-                                       code   : 'BoundsCheck',
-                                       field  : 'end',
-                                       value  : [
-                                           x: 9,
-                                           y: 10
-                                       ],
-                                       message: 'out of bounds.'
+                                       code   : 'PlacementCheck',
+                                       type  : 'piece',
+                                       message: 'Incorrect ship placement.'
                                    ]]
                  ]]
     ])

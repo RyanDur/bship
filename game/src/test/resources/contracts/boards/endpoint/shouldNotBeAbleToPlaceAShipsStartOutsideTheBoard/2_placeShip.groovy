@@ -12,14 +12,12 @@ Contract.make {
     body([
         type : 'AIRCRAFT_CARRIER',
         id   : 1,
-        start: [
+        placement: [
             x: -1,
             y: 0
         ],
-        end  : [
-            x: 3,
-            y: 0
-        ]
+        orientation: 'DOWN',
+        size: 5
     ])
   }
   response {
@@ -31,7 +29,7 @@ Contract.make {
         errors: [[
                      validations: [[
                                        code   : 'BoundsCheck',
-                                       field  : 'start',
+                                       field  : 'placement',
                                        value  : [
                                            x: -1,
                                            y: 0

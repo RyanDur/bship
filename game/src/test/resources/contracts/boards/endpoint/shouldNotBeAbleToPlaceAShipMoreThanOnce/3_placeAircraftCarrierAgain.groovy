@@ -10,16 +10,14 @@ Contract.make {
       contentType(applicationJson())
     }
     body([
-        type : 'AIRCRAFT_CARRIER',
-        id   : 1,
-        start: [
+        type       : 'AIRCRAFT_CARRIER',
+        id         : 1,
+        placement  : [
             x: 9,
             y: 0
         ],
-        end  : [
-            x: 9,
-            y: 4
-        ]
+        orientation: 'LEFT',
+        size       : 5
     ])
   }
   response {

@@ -1,7 +1,7 @@
 package com.bship.games.util;
 
-import com.bship.games.domains.Point;
 import com.bship.games.domains.Piece;
+import com.bship.games.domains.Point;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -9,6 +9,11 @@ import org.junit.rules.ExpectedException;
 import java.util.Collections;
 import java.util.List;
 
+import static com.bship.games.domains.Direction.DOWN;
+import static com.bship.games.domains.Direction.LEFT;
+import static com.bship.games.domains.Direction.NONE;
+import static com.bship.games.domains.Direction.RIGHT;
+import static com.bship.games.domains.Direction.UP;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.of;
@@ -120,13 +125,19 @@ public class UtilTest {
     }
 
     @Test
-    public void pointsRange_shouldReturnAListOfPointsWithinTheXRange() {
-        Point start = new Point(3, 3);
+    public void pointsRange_shouldReturnAListOfPointsWithinTheXRangeGoingRight() {
+        Point placement = new Point(3, 3);
         Point end = new Point(7, 3);
-        List<Point> actual = Util.pointsRange(start, end);
+        Piece piece = Piece.builder()
+                .withPlacement(placement)
+                .withSize(5)
+                .withOrientation(RIGHT)
+                .build();
 
-        assertThat(actual, containsInAnyOrder(
-                start,
+        List<Point> actual = Util.pointsRange(piece);
+
+        assertThat(actual, contains(
+                placement,
                 new Point(4, 3),
                 new Point(5, 3),
                 new Point(6, 3),
@@ -134,80 +145,155 @@ public class UtilTest {
     }
 
     @Test
-    public void pointsRange_shouldReturnAListOfPointsWithinTheYRange() {
-        Point start = new Point(4, 2);
-        Point end = new Point(4, 5);
-        List<Point> actual = Util.pointsRange(start, end);
+    public void pointsRange_shouldReturnAListOfPointsWithinTheXRangeGoingLeft() {
+        Point placement = new Point(9, 9);
+        Point end = new Point(5, 9);
+        Piece piece = Piece.builder()
+                .withPlacement(placement)
+                .withSize(5)
+                .withOrientation(LEFT)
+                .build();
+
+        List<Point> actual = Util.pointsRange(piece);
 
         assertThat(actual, containsInAnyOrder(
-                start,
+                placement,
+                new Point(8, 9),
+                new Point(7, 9),
+                new Point(6, 9),
+                end));
+    }
+
+    @Test
+    public void pointsRange_shouldReturnAListOfPointsWithinTheYRangeGoingDown() {
+        Point placement = new Point(4, 2);
+        Point end = new Point(4, 5);
+        Piece piece = Piece.builder()
+                .withPlacement(placement)
+                .withSize(4)
+                .withOrientation(DOWN)
+                .build();
+
+        List<Point> actual = Util.pointsRange(piece);
+
+        assertThat(actual, containsInAnyOrder(
+                placement,
                 new Point(4, 3),
                 new Point(4, 4),
                 end));
     }
 
     @Test
-    public void pointsRange_shouldHandleStartWithNoX() {
-        Point start = new Point(null, 3);
-        Point end = new Point(7, 3);
+    public void pointsRange_shouldReturnAListOfPointsWithinTheYRangeGoingUP() {
+        Point placement = new Point(7, 8);
+        Point end = new Point(7, 5);
+        Piece piece = Piece.builder()
+                .withPlacement(placement)
+                .withSize(4)
+                .withOrientation(UP)
+                .build();
 
-        List<Point> points = Util.pointsRange(start, end);
-        assertThat(points, is(equalTo(asList(start, end))));
+
+        List<Point> actual = Util.pointsRange(piece);
+
+        assertThat(actual, containsInAnyOrder(
+                placement,
+                new Point(7, 7),
+                new Point(7, 6),
+                end));
     }
 
     @Test
-    public void pointsRange_shouldHandleStartWithNoY() {
-        Point start = new Point(0, null);
-        Point end = new Point(7, 3);
+    public void pointsRange_shouldHandlePlacementWithNoX() {
+        Piece piece = Piece.builder()
+                .withPlacement(new Point(null, 3))
+                .withSize(4)
+                .withOrientation(DOWN)
+                .build();
 
-        List<Point> points = Util.pointsRange(start, end);
-        assertThat(points, is(equalTo(asList(start, end))));
+        List<Point> points = Util.pointsRange(piece);
+        assertThat(points, is(equalTo(emptyList())));
     }
 
     @Test
-    public void pointsRange_shouldHandleEndWithNoX() {
-        Point start = new Point(0, 3);
-        Point end = new Point(null, 3);
+    public void pointsRange_shouldHandlePlacementWithNoY() {
+        Piece piece = Piece.builder()
+                .withOrientation(UP)
+                .withPlacement(new Point(0, null))
+                .withSize(3)
+                .build();
 
-        List<Point> points = Util.pointsRange(start, end);
-        assertThat(points, is(equalTo(asList(start, end))));
+        List<Point> points = Util.pointsRange(piece);
+        assertThat(points, is(equalTo(emptyList())));
     }
 
     @Test
-    public void pointsRange_shouldHandleEndWithNoY() {
-        Point start = new Point(0, 3);
-        Point end = new Point(7, null);
+    public void pointsRange_shouldHandleNoSize() {
+        Piece piece = Piece.builder()
+                .withPlacement(new Point(0, 3))
+                .withOrientation(DOWN)
+                .build();
 
-        List<Point> points = Util.pointsRange(start, end);
-        assertThat(points, is(equalTo(asList(start, end))));
+        List<Point> points = Util.pointsRange(piece);
+        assertThat(points, is(equalTo(emptyList())));
+    }
+
+    @Test
+    public void pointsRange_shouldHandleNullDirection() {
+        Piece piece = Piece.builder()
+                .withPlacement(new Point(0, 3))
+                .withSize(5)
+                .build();
+
+        List<Point> points = Util.pointsRange(piece);
+        assertThat(points, is(equalTo(emptyList())));
+    }
+
+    @Test
+    public void pointsRange_shouldHandleNoneDirection() {
+        Piece piece = Piece.builder()
+                .withPlacement(new Point(0, 3))
+                .withSize(5)
+                .withOrientation(NONE)
+                .build();
+        List<Point> points = Util.pointsRange(piece);
+        assertThat(points, is(equalTo(emptyList())));
     }
 
     @Test
     public void detectCollision_shouldDetectACollisionIfPointsIntersect() {
-        Point startA = new Point(3, 3);
-        Point endA = new Point(7, 3);
-        List<Point> a = Util.pointsRange(startA, endA);
+        Piece pieceA = Piece.builder()
+                .withPlacement(new Point(3, 3))
+                .withOrientation(RIGHT)
+                .withSize(5)
+                .build();
 
-        Point startB = new Point(4, 2);
-        Point endB = new Point(4, 5);
-        List<Point> b = Util.pointsRange(startB, endB);
+        Piece pieceB = Piece.builder()
+                .withPlacement(new Point(4, 2))
+                .withSize(4)
+                .withOrientation(DOWN)
+                .build();
 
-        Boolean actual = Util.detectCollision(a, b);
+        Boolean actual = Util.detectCollision(pieceA, pieceB);
 
         assertThat(actual, is(true));
     }
 
     @Test
     public void detectCollision_shouldNotDetectACollisionIfPointsDoNotIntersect() {
-        Point startA = new Point(0, 3);
-        Point endA = new Point(0, 9);
-        List<Point> a = Util.pointsRange(startA, endA);
+        Piece pieceA = Piece.builder()
+                .withPlacement(new Point(0, 3))
+                .withSize(7)
+                .withOrientation(DOWN)
+                .build();
 
-        Point startB = new Point(4, 2);
-        Point endB = new Point(4, 5);
-        List<Point> b = Util.pointsRange(startB, endB);
+        Piece pieceB = Piece.builder()
+                .withPlacement(new Point(4, 5))
+                .withSize(4)
+                .withOrientation(UP)
+                .build();
 
-        Boolean actual = Util.detectCollision(a, b);
+        Boolean actual = Util.detectCollision(pieceA, pieceB);
 
         assertThat(actual, is(false));
     }
@@ -306,60 +392,15 @@ public class UtilTest {
         assertThat(actual.size(), is(4));
         assertThat(actual, contains(1, 2, 3, 4));
     }
-//
-//    @Test
-//    public void isSet_shouldKnowIfAPointIsSet() {
-//        Point point = new Point(1, 2);
-//        boolean set = Util.isSet(point);
-//        assertThat(set, is(true));
-//    }
-//
-//    @Test
-//    public void isSet_shouldBeFalseIfXIsNotSet() {
-//        Point point = new Point(null, 2);
-//        boolean set = Util.isSet(point);
-//        assertThat(set, is(false));
-//    }
-//
-//    @Test
-//    public void isSet_shouldBeFalseIfYIsNotSet() {
-//        Point point = new Point(5, null);
-//        boolean set = Util.isSet(point);
-//        assertThat(set, is(false));
-//    }
-//
-//    @Test
-//    public void isSet_shouldBeFalseIfThereIsNoPoint() {
-//        boolean set = Util.isSet(null);
-//        assertThat(set, is(false));
-//    }
 
     @Test
-    public void isPlaced_shouldKnowIfAShipIsPlaced() {
+    public void isPlaced_shouldKnowIfAPieceIsPlaced() {
         Piece piece = Piece.builder()
-                .withStart(new Point(1, 2))
-                .withEnd(new Point(3, 4)).build();
+                .withPlacement(new Point(1, 2))
+                .build();
         boolean placed = Util.isPlaced(piece);
 
         assertThat(placed, is(true));
-    }
-
-    @Test
-    public void isPlaced_shouldKnowIfAShipStartIsNotSet() {
-        Piece piece = Piece.builder()
-                .withEnd(new Point(3, 4)).build();
-        boolean placed = Util.isPlaced(piece);
-
-        assertThat(placed, is(false));
-    }
-
-    @Test
-    public void isPlaced_shouldKnowIfAShipEndIsNotSet() {
-        Piece piece = Piece.builder()
-                .withStart(new Point(3, 4)).build();
-        boolean placed = Util.isPlaced(piece);
-
-        assertThat(placed, is(false));
     }
 
     @Test
@@ -367,5 +408,60 @@ public class UtilTest {
         boolean placed = Util.isPlaced(null);
 
         assertThat(placed, is(false));
+    }
+
+    @Test
+    public void validRange_shouldKnowIfARangeGoesOffTheLeftSideOfBoard() {
+        Piece piece = Piece.builder()
+                .withPlacement(new Point(0, 0))
+                .withSize(3)
+                .withOrientation(LEFT)
+                .build();
+        boolean actual = Util.validRange(piece);
+        assertThat(actual, is(false));
+    }
+
+    @Test
+    public void validRange_shouldKnowIfARangeGoesOffTheRightSideOfBoard() {
+        Piece piece = Piece.builder()
+                .withPlacement(new Point(9, 9))
+                .withSize(3)
+                .withOrientation(RIGHT)
+                .build();
+        boolean actual = Util.validRange(piece);
+        assertThat(actual, is(false));
+    }
+
+    @Test
+    public void validRange_shouldKnowIfARangeGoesOffTheTopOfTheBoard() {
+        Piece piece = Piece.builder()
+                .withPlacement(new Point(9, 0))
+                .withSize(3)
+                .withOrientation(UP)
+                .build();
+        boolean actual = Util.validRange(piece);
+        assertThat(actual, is(false));
+    }
+
+    @Test
+    public void validRange_shouldKnowIfARangeGoesOffTheBottomOfTheBoard() {
+        Piece piece = Piece.builder()
+                .withPlacement(new Point(0, 9))
+                .withSize(3)
+                .withOrientation(DOWN)
+                .build();
+        boolean actual = Util.validRange(piece);
+        assertThat(actual, is(false));
+    }
+
+    @Test
+    public void validRange_shouldKnowIfARangeIsGood() {
+        Piece piece = Piece.builder()
+                .withPlacement(new Point(0, 9))
+                .withSize(3)
+                .withOrientation(UP)
+                .build();
+        boolean actual = Util.validRange(piece);
+        assertThat(actual, is(true));
     }
 }

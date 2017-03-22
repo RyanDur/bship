@@ -1,5 +1,6 @@
 package com.bship.games.repositories;
 
+import com.bship.games.domains.Direction;
 import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Point;
 import com.bship.games.domains.Piece;
@@ -22,17 +23,17 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils.createBatch;
 
 @Repository
-public class ShipRepository {
+public class PieceRepository {
 
     private static final String INSERT_INTO_SHIPS = "INSERT INTO ships(type, size, ship_board_id) VALUES (:type, :size, :ship_board_id)";
     private static final String SELECT_OPPONENTS_SUNK_SHIPS = "SELECT s.* FROM ships s JOIN boards b ON s.ship_board_id = b.id WHERE b.game_id = :game_id AND s.ship_board_id <> :ship_board_id AND s.sunk IS TRUE;";
     private static final String SELECT_MY_SHIPS = "SELECT * FROM ships WHERE ship_board_id = :ship_board_id";
-    private static final String UPDATE_SHIPS = "UPDATE ships SET sunk = :sunk, start = :start, end = :end WHERE id = :id";
-    private static final String UPDATE_SHIP_POSITION = "UPDATE ships SET start = :start, end = :end WHERE id = :id";
+    private static final String UPDATE_SHIPS = "UPDATE ships SET sunk = :sunk, placement = :placement, orientation = :orientation WHERE id = :id";
+    private static final String UPDATE_SHIP_POSITION = "UPDATE ships SET placement = :placement, orientation = :orientation WHERE id = :id";
     private final NamedParameterJdbcTemplate template;
 
     @Autowired
-    public ShipRepository(NamedParameterJdbcTemplate template) {
+    public PieceRepository(NamedParameterJdbcTemplate template) {
         this.template = template;
     }
 
@@ -64,8 +65,8 @@ public class ShipRepository {
     public void save(Piece piece) {
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("id", piece.getId());
-        source.addValue("start", toIndex(piece.getStart()));
-        source.addValue("end", toIndex(piece.getEnd()));
+        source.addValue("placement", toIndex(piece.getPlacement()));
+        source.addValue("orientation", piece.getOrientation().name());
 
         template.update(UPDATE_SHIP_POSITION, source);
     }
@@ -73,8 +74,8 @@ public class ShipRepository {
     private RowMapper<Piece> buildShip = (rs, rowNum) -> Piece.builder()
             .withId(rs.getLong("id"))
             .withType(Harbor.valueOf(rs.getString("type")))
-            .withStart(getPoint(rs.getString("start")))
-            .withEnd(getPoint(rs.getString("end")))
+            .withPlacement(getPoint(rs.getString("placement")))
+            .withOrientation(Direction.valueOf(rs.getString("orientation")))
             .withSunk(rs.getBoolean("sunk"))
             .withSize(rs.getInt("size"))
             .withBoardId(rs.getLong("ship_board_id")).build();
@@ -87,22 +88,22 @@ public class ShipRepository {
     }
 
     private HashMap[] getNewShipBatch(final Long boardId) {
-        return Harbor.getShips().stream().map(ship ->
+        return Harbor.getShips().stream().map(piece ->
                 new HashMap<String, Object>() {{
-                    put("type", ship.name());
-                    put("size", ship.getSize());
+                    put("type", piece.name());
+                    put("size", piece.getSize());
                     put("ship_board_id", boardId);
                 }})
                 .collect(toList()).toArray(new HashMap[0]);
     }
 
     private Function<List<Piece>, HashMap[]> getUpdateShipBatch() {
-        return ships -> ships.stream().map(ship ->
+        return ships -> ships.stream().map(piece ->
                 new HashMap<String, Object>() {{
-                    put("id", ship.getId());
-                    put("sunk", ship.isSunk());
-                    put("start", toIndex(ship.getStart()));
-                    put("end", toIndex(ship.getEnd()));
+                    put("id", piece.getId());
+                    put("sunk", piece.isSunk());
+                    put("placement", toIndex(piece.getPlacement()));
+                    put("orientation", piece.getOrientation().name());
                 }})
                 .collect(toList()).toArray(new HashMap[0]);
     }

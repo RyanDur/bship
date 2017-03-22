@@ -12,14 +12,12 @@ Contract.make {
     body([
         type : 'SUBMARINE',
         id   : 8,
-        start: [
+        placement: [
             x: 2,
             y: 0
         ],
-        end  : [
-            x: 2,
-            y: 2
-        ]
+        orientation: 'DOWN',
+        size: 3
     ])
   }
   response {
@@ -28,86 +26,71 @@ Contract.make {
       contentType(applicationJson())
     }
     body([
-        id           : 2,
+        id            : 2,
         pieces        : [[
-                            type   : "AIRCRAFT_CARRIER",
-                            start  : [
-                                x: 0,
-                                y: 0
-                            ],
-                            end    : [
-                                x: 0,
-                                y: 4
-                            ],
-                            boardId: 2,
-                            size   : 5,
-                            sunk   : false,
-                            id     : 6
-                        ],
-                        [
-                            type   : "BATTLESHIP",
-                            start  : [
-                                x: 1,
-                                y: 0
-                            ],
-                            end    : [
-                                x: 1,
-                                y: 3
-                            ],
-                            boardId: 2,
-                            size   : 4,
-                            sunk   : false,
-                            id     : 7
-                        ],
-                        [
-                            type   : "SUBMARINE",
-                            start  : [
-                                x: 2,
-                                y: 0
-                            ],
-                            end    : [
-                                x: 2,
-                                y: 2
-                            ],
-                            boardId: 2,
-                            size   : 3,
-                            sunk   : false,
-                            id     : 8
-                        ],
-                        [
-                            type   : "CRUISER",
-                            start  : [
-                                x: null,
-                                y: null
-                            ],
-                            end    : [
-                                x: null,
-                                y: null
-                            ],
-                            boardId: 2,
-                            size   : 3,
-                            sunk   : false,
-                            id     : 9
-                        ],
-                        [
-                            type   : "DESTROYER",
-                            start  : [
-                                x: null,
-                                y: null
-                            ],
-                            end    : [
-                                x: null,
-                                y: null
-                            ],
-                            boardId: 2,
-                            size   : 2,
-                            sunk   : false,
-                            id     : 10
-                        ]],
+                             type       : "AIRCRAFT_CARRIER",
+                             placement  : [
+                                 x: 0,
+                                 y: 0
+                             ],
+                             orientation: 'DOWN',
+                             boardId    : 2,
+                             size       : 5,
+                             sunk       : false,
+                             id         : 6
+                         ],
+                         [
+                             type       : "BATTLESHIP",
+                             placement  : [
+                                 x: 1,
+                                 y: 0
+                             ],
+                             orientation: 'DOWN',
+                             boardId    : 2,
+                             size       : 4,
+                             sunk       : false,
+                             id         : 7
+                         ],
+                         [
+                             type       : "SUBMARINE",
+                             placement  : [
+                                 x: 2,
+                                 y: 0
+                             ],
+                             orientation: 'DOWN',
+                             boardId    : 2,
+                             size       : 3,
+                             sunk       : false,
+                             id         : 8
+                         ],
+                         [
+                             type       : "CRUISER",
+                             placement  : [
+                                 x: null,
+                                 y: null
+                             ],
+                             orientation: 'NONE',
+                             boardId    : 2,
+                             size       : 3,
+                             sunk       : false,
+                             id         : 9
+                         ],
+                         [
+                             type       : "DESTROYER",
+                             placement  : [
+                                 x: null,
+                                 y: null
+                             ],
+                             orientation: 'NONE',
+                             boardId    : 2,
+                             size       : 2,
+                             sunk       : false,
+                             id         : 10
+                         ]],
         opponentPieces: [],
-        moves        : [],
-        opponentMoves: [],
-        winner       : false
+        moves         : [],
+        opponentMoves : [],
+        winner        : false
     ])
   }
 }

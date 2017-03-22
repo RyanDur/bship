@@ -34,19 +34,16 @@ public class ShouldNotBeAbleToPlaceAShipMoreThanOnceTest extends EndpointShouldN
 			assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(2);
 		assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
 	assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(6);
-assertThatJson(parsedJson).array("boards").array("pieces").field("start").field("y").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").field("end").field("y").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(8);
-assertThatJson(parsedJson).array("boards").array("pieces").field("start").field("x").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(2);
 assertThatJson(parsedJson).field("id").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("boards").array("pieces").field("end").field("x").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(1);
@@ -56,9 +53,11 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(5);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("AIRCRAFT_CARRIER");
+assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("NONE");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(4);
 assertThatJson(parsedJson).field("turn").isNull();
+assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("y").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
@@ -69,7 +68,7 @@ public void validate_2_placeAircraftCarrier() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"start\":{\"x\":0,\"y\":0},\"end\":{\"x\":0,\"y\":4}}");
+.body("{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":0,\"y\":0},\"orientation\":\"DOWN\",\"size\":5}");
 
 // when:
 ResponseOptions response = given().spec(request)
@@ -80,31 +79,29 @@ assertThat(response.statusCode()).isEqualTo(200);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("pieces").field("start").field("y").isEqualTo(0);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(5);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
+assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(1);
-assertThatJson(parsedJson).array("pieces").field("start").field("x").isEqualTo(0);
+assertThatJson(parsedJson).array("pieces").field("placement").field("x").isNull();
+assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("NONE");
+assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("DOWN");
+assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(1);
-assertThatJson(parsedJson).array("pieces").field("end").field("x").isEqualTo(0);
-assertThatJson(parsedJson).array("pieces").field("end").field("y").isNull();
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("AIRCRAFT_CARRIER");
+assertThatJson(parsedJson).array("pieces").field("placement").field("x").isEqualTo(0);
+assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("CRUISER");
+assertThatJson(parsedJson).array("pieces").field("placement").field("y").isEqualTo(0);
+assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(4);
+assertThatJson(parsedJson).array("pieces").field("placement").field("y").isNull();
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).field("id").isEqualTo(1);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
-assertThatJson(parsedJson).array("pieces").field("end").field("x").isNull();
-assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
-assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(4);
-assertThatJson(parsedJson).array("pieces").field("start").field("x").isNull();
-assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(2);
-assertThatJson(parsedJson).array("pieces").field("end").field("y").isEqualTo(4);
-assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("CRUISER");
-assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).field("winner").isEqualTo(false);
-assertThatJson(parsedJson).array("pieces").field("start").field("y").isNull();
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(5);
 }
 
@@ -113,7 +110,7 @@ public void validate_3_placeAircraftCarrierAgain() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"start\":{\"x\":9,\"y\":0},\"end\":{\"x\":9,\"y\":4}}");
+.body("{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":9,\"y\":0},\"orientation\":\"LEFT\",\"size\":5}");
 
 // when:
 ResponseOptions response = given().spec(request)

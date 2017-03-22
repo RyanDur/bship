@@ -12,14 +12,12 @@ Contract.make {
     body([
         type : 'SCHOONER',
         id   : 1,
-        start: [
+        placement: [
             x: 0,
             y: 0
         ],
-        end  : [
-            x: 0,
-            y: 1
-        ]
+        orientation: 'RIGHT',
+        size: 1
     ])
   }
   response {

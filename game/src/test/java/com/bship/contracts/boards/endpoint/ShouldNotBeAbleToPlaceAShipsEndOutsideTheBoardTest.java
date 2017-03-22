@@ -34,19 +34,16 @@ public class ShouldNotBeAbleToPlaceAShipsEndOutsideTheBoardTest extends Endpoint
 			assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(2);
 		assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
 	assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(6);
-assertThatJson(parsedJson).array("boards").array("pieces").field("start").field("y").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").field("end").field("y").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(8);
-assertThatJson(parsedJson).array("boards").array("pieces").field("start").field("x").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(2);
 assertThatJson(parsedJson).field("id").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("boards").array("pieces").field("end").field("x").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(1);
@@ -56,9 +53,11 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(5);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("AIRCRAFT_CARRIER");
+assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("NONE");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(4);
 assertThatJson(parsedJson).field("turn").isNull();
+assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("y").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
@@ -69,7 +68,7 @@ public void validate_2_placeShip() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"start\":{\"x\":9,\"y\":6},\"end\":{\"x\":9,\"y\":10}}");
+.body("{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":9,\"y\":6},\"orientation\":\"DOWN\",\"size\":5}");
 
 // when:
 ResponseOptions response = given().spec(request)
@@ -80,11 +79,9 @@ assertThat(response.statusCode()).isEqualTo(400);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("end");
-assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("out of bounds.");
-assertThatJson(parsedJson).array("errors").array("validations").field("value").field("x").isEqualTo(9);
-assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("BoundsCheck");
-assertThatJson(parsedJson).array("errors").array("validations").field("value").field("y").isEqualTo(10);
+assertThatJson(parsedJson).array("errors").array("validations").contains("type").isEqualTo("piece");
+assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("PlacementCheck");
+assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Incorrect ship placement.");
 }
 
 }

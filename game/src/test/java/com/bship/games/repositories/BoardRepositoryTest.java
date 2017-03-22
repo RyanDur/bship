@@ -4,8 +4,8 @@ import com.bship.DBHelper;
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Harbor;
-import com.bship.games.domains.Point;
 import com.bship.games.domains.Piece;
+import com.bship.games.domains.Point;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.bship.games.domains.Direction.NONE;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -31,14 +32,14 @@ public class BoardRepositoryTest {
 
     private BoardRepository boards;
     private Game game;
-    private ShipRepository ships;
+    private PieceRepository ships;
     private List<Piece> pieceList;
     private MoveRepository moves;
 
     @Before
     public void setup() {
         NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(DBHelper.reset());
-        ships = mock(ShipRepository.class);
+        ships = mock(PieceRepository.class);
         moves = mock(MoveRepository.class);
         boards = new BoardRepository(template, ships, moves);
 
@@ -154,8 +155,9 @@ public class BoardRepositoryTest {
     public List<Piece> getShips() {
         return Harbor.getShips().stream().map(ship -> Piece.builder()
                 .withType(ship)
-                .withStart(new Point())
-                .withEnd(new Point())
+                .withPlacement(new Point())
+                .withOrientation(NONE)
+                .withSize(ship.getSize())
                 .withBoardId(1L)
                 .build()).collect(Collectors.toList());
     }

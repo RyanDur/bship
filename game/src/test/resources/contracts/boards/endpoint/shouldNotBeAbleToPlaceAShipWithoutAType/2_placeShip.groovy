@@ -10,15 +10,13 @@ Contract.make {
       contentType(applicationJson())
     }
     body([
-        id   : 1,
-        start: [
+        id       : 1,
+        placement: [
             x: 0,
             y: 0
         ],
-        end  : [
-            x: 0,
-            y: 4
-        ]
+        orientation: 'DOWN',
+        size: 5
     ])
   }
   response {

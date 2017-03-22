@@ -1,29 +1,37 @@
 package com.bship.games.domains.validations;
 
 import com.bship.games.domains.Harbor;
-import com.bship.games.domains.Point;
 import com.bship.games.domains.Piece;
+import com.bship.games.util.Util;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Objects;
+import java.util.function.Predicate;
 
-import java.util.Optional;
-
-import static java.lang.Math.abs;
+import static com.bship.games.domains.Direction.NONE;
+import static com.bship.games.util.Util.pointsRange;
+import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 
 public class PlacementCheckValidation implements ConstraintValidator<PlacementCheck, Piece> {
     public void initialize(PlacementCheck constraint) {
     }
 
     public boolean isValid(Piece piece, ConstraintValidatorContext context) {
-        return Optional.ofNullable(piece).map(s -> {
-            Point start = s.getStart();
-            Point end = s.getEnd();
-            Harbor type = s.getType();
-
-            return type == null || start == null || end == null || type == Harbor.INVALID_SHIP ||
-                    (start.getX() == end.getX()) && (abs(start.getY() - end.getY()) + 1) == type.getSize()
-                    || (start.getY() == end.getY()) && (abs(start.getX() - end.getX()) + 1) == type.getSize();
-        }).orElse(false);
+        return ofNullable(piece)
+                .filter(Util::isPlaced)
+                .filter(p -> nonNull(p.getType()))
+                .filter(validOrientation)
+                .filter(p -> Harbor.getShips().contains(p.getType()))
+                .filter(p -> Harbor.valueOf(p.getType().name()).getSize().equals(p.getSize()))
+                .filter(p -> Objects.equals(p.getSize(), pointsRange(p).size()))
+                .filter(Util::validRange)
+                .isPresent();
     }
+
+    private Predicate<Piece> validOrientation = piece ->
+            nonNull(piece.getSize()) &&
+                    nonNull(piece.getOrientation()) &&
+                    !piece.getOrientation().equals(NONE);
 }

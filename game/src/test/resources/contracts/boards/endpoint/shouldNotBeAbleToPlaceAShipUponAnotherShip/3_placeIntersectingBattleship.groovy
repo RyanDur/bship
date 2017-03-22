@@ -10,16 +10,14 @@ Contract.make {
       contentType(applicationJson())
     }
     body([
-        type : 'BATTLESHIP',
-        id   : 2,
-        start: [
+        type       : 'BATTLESHIP',
+        id         : 2,
+        placement  : [
             x: 4,
             y: 2
         ],
-        end  : [
-            x: 4,
-            y: 5
-        ]
+        orientation: 'DOWN',
+        size       : 4
     ])
   }
   response {

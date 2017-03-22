@@ -12,10 +12,11 @@ Contract.make {
     body([
         type : 'AIRCRAFT_CARRIER',
         id   : 1,
-        start: [
+        placement: [
             x: 0,
             y: 1
-        ]
+        ],
+        size: 5
     ])
   }
   response {
@@ -27,7 +28,7 @@ Contract.make {
         errors: [[
                      validations: [[
                                        code   : 'NonEmpty',
-                                       field  : 'end',
+                                       field  : 'orientation',
                                        value  : null,
                                        message: 'Cannot be empty or null.'
                                    ]]

@@ -4,8 +4,8 @@ import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.MoveStatus;
-import com.bship.games.domains.Point;
 import com.bship.games.domains.Piece;
+import com.bship.games.domains.Point;
 import com.bship.games.exceptions.MoveCollision;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -110,8 +111,8 @@ public class GameLogic {
     private boolean collision(Board board, Piece piece) {
         return ofNullable(piece).isPresent() && ofNullable(board)
                 .map(Board::getPieces).map(Collection::stream)
-                .filter(ships -> ships.anyMatch(savedShip ->
-                        detectCollision(getRange(savedShip), getRange(piece))))
+                .filter(ships -> ships.anyMatch(savedPiece ->
+                        detectCollision(savedPiece, piece)))
                 .isPresent();
     }
 
@@ -137,20 +138,16 @@ public class GameLogic {
     private Optional<Piece> getSunk(List<Point> moves, Board other) {
         List<Piece> unSunk = without(other, notSunk);
         return unSunk.stream()
-                .filter(ship -> moves.containsAll(getRange(ship)))
+                .filter(ship -> moves.containsAll(pointsRange(ship)))
                 .findFirst()
                 .map(Piece::copy)
                 .map(ship -> ship.withSunk(true))
                 .map(Piece.Builder::build);
     }
 
-    private List<Point> getRange(Piece piece) {
-        return pointsRange(piece.getStart(), piece.getEnd());
-    }
-
     private MoveStatus getStatus(Move move, List<Piece> pieces) {
         return pieces.stream()
-                .map(this::getRange)
+                .map(Util::pointsRange)
                 .flatMap(Collection::stream)
                 .filter(point -> point.equals(move.getPoint()))
                 .findAny().map(p -> HIT).orElse(MISS);
@@ -161,7 +158,7 @@ public class GameLogic {
     }
 
     private Predicate<Board> currentBoard(Move move) {
-        return boards -> boards.getId() == move.getBoardId();
+        return boards -> Objects.equals(boards.getId(), move.getBoardId());
     }
 
     private Function<Piece, Predicate<Piece>> recentlySunk = sunk -> ship -> !ship.getType().equals(sunk.getType());

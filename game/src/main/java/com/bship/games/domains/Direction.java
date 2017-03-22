@@ -1,5 +1,5 @@
 package com.bship.games.domains;
 
-public enum Directions {
+public enum Direction {
     LEFT, RIGHT, UP, DOWN, NONE
 }
