@@ -11,7 +11,6 @@ import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.bship.games.domains.Direction.NONE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
@@ -67,16 +66,16 @@ public class Util {
         return points.stream()
                 .noneMatch(p -> p.getX() < 0) &&
                 points.stream()
-                .noneMatch(p -> p.getX() > 9) &&
+                        .noneMatch(p -> p.getX() > SIDE - 1) &&
                 points.stream()
-                .noneMatch(p -> p.getY() < 0)&&
+                        .noneMatch(p -> p.getY() < 0) &&
                 points.stream()
-                .noneMatch(p -> p.getY() > 9);
+                        .noneMatch(p -> p.getY() > SIDE - 1);
     }
 
     public static List<Point> pointsRange(Piece piece) {
-        if(isSet(piece.getPlacement()) && nonNull(piece.getSize()) &&
-                nonNull(piece.getOrientation()) && !NONE.equals(piece.getOrientation())) {
+        if (isSet(piece.getPlacement()) && nonNull(piece.getSize()) &&
+                nonNull(piece.getOrientation())) {
             IntFunction<Point> mapper;
             IntStream range;
             switch (piece.getOrientation()) {
@@ -98,11 +97,14 @@ public class Util {
                             piece.getPlacement().getY(),
                             piece.getPlacement().getY() + piece.getSize() - 1);
                     break;
-                default:
+                case UP:
                     mapper = y -> new Point(piece.getPlacement().getX(), y);
                     range = rangeClosed(
                             piece.getPlacement().getY() - piece.getSize() + 1,
                             piece.getPlacement().getY());
+                    break;
+                default:
+                    return singletonList(piece.getPlacement());
             }
             return range.mapToObj(mapper).collect(toList());
         }

@@ -16,6 +16,7 @@ import static com.bship.games.domains.Direction.RIGHT;
 import static com.bship.games.domains.Direction.UP;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -204,6 +205,20 @@ public class UtilTest {
     }
 
     @Test
+    public void pointsRange_shouldReturnAListOfPointRangeGoingNONE() {
+        Point placement = new Point(7, 8);
+        Piece piece = Piece.builder()
+                .withPlacement(placement)
+                .withSize(1)
+                .withOrientation(NONE)
+                .build();
+
+        List<Point> actual = Util.pointsRange(piece);
+
+        assertThat(actual, is(equalTo(singletonList(placement))));
+    }
+
+    @Test
     public void pointsRange_shouldHandlePlacementWithNoX() {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(null, 3))
@@ -245,17 +260,6 @@ public class UtilTest {
                 .withSize(5)
                 .build();
 
-        List<Point> points = Util.pointsRange(piece);
-        assertThat(points, is(equalTo(emptyList())));
-    }
-
-    @Test
-    public void pointsRange_shouldHandleNoneDirection() {
-        Piece piece = Piece.builder()
-                .withPlacement(new Point(0, 3))
-                .withSize(5)
-                .withOrientation(NONE)
-                .build();
         List<Point> points = Util.pointsRange(piece);
         assertThat(points, is(equalTo(emptyList())));
     }
