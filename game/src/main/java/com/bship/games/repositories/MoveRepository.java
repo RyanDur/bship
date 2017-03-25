@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -13,8 +14,8 @@ import java.util.List;
 
 import static com.bship.games.util.Util.toIndex;
 import static com.bship.games.util.Util.toPoint;
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
-import static org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils.createBatch;
 
 @Component
 public class MoveRepository {
@@ -30,7 +31,7 @@ public class MoveRepository {
     }
 
     public void save(List<Move> moves) {
-        template.batchUpdate(INSERT_MOVES, createBatch(getNewMoveBatch(moves)));
+        template.batchUpdate(INSERT_MOVES, createBatch(getNewMoves(moves)));
     }
 
     public List<Move> getAll(Long boardId) {
@@ -47,14 +48,19 @@ public class MoveRepository {
         return template.query(SELECT_All_OPPONENTS_MOVES, source, buildMove);
     }
 
-    private HashMap[] getNewMoveBatch(final List<Move> moves) {
+    public static SqlParameterSource[] createBatch(List<Move> moves) {
         return moves.stream().map(move ->
                 new HashMap<String, Object>() {{
                     put("board_id", move.getBoardId());
                     put("point", toIndex(move.getPoint()));
                     put("status", move.getStatus().name());
-                }})
-                .collect(toList()).toArray(new HashMap[0]);
+                }}).map(MapSqlParameterSource::new)
+                .collect(toList())
+                .toArray(new MapSqlParameterSource[0]);
+    }
+
+    private List<Move> getNewMoves(List<Move> moves) {
+        return moves.stream().filter(move -> isNull(move.getId())).collect(toList());
     }
 
     private RowMapper<Move> buildMove = (rs, rowNum) -> Move.builder()

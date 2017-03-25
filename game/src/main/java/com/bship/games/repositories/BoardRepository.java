@@ -17,14 +17,14 @@ import static java.util.Collections.emptyList;
 @Repository
 public class BoardRepository {
     private NamedParameterJdbcTemplate template;
-    private final PieceRepository ships;
+    private final PieceRepository pieces;
     private final MoveRepository moves;
 
     @Autowired
     public BoardRepository(NamedParameterJdbcTemplate template,
                            PieceRepository ships, MoveRepository moves) {
         this.template = template;
-        this.ships = ships;
+        this.pieces = ships;
         this.moves = moves;
     }
 
@@ -39,7 +39,7 @@ public class BoardRepository {
         return Board.builder()
                 .withId(id)
                 .withGameId(gameId)
-                .withPieces(ships.createAll(id))
+                .withPieces(pieces.createAll(id))
                 .withOpponentPieces(emptyList())
                 .withMoves(emptyList())
                 .withOpponentMoves(emptyList())
@@ -61,7 +61,7 @@ public class BoardRepository {
     }
 
     public Optional<Board> save(Board board) {
-        ships.save(board.getPieces());
+        pieces.save(board.getPieces());
         moves.save(board.getMoves());
 
         MapSqlParameterSource source = new MapSqlParameterSource();
@@ -77,8 +77,8 @@ public class BoardRepository {
                 .withId(rs.getLong("id"))
                 .withGameId(rs.getLong("game_id"))
                 .withWinner(rs.getBoolean("winner"))
-                .withPieces(ships.getAll(rs.getLong("id")))
-                .withOpponentPieces(ships.getAllOpponents(
+                .withPieces(pieces.getAll(rs.getLong("id")))
+                .withOpponentPieces(pieces.getAllOpponents(
                         rs.getLong("game_id"),
                         rs.getLong("id")
                 ))
