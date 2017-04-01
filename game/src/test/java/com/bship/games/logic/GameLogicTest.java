@@ -11,6 +11,7 @@ import com.bship.games.exceptions.MoveCollision;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.exceptions.TurnCheck;
+import com.bship.games.util.Util;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,11 +19,14 @@ import org.junit.rules.ExpectedException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.bship.games.domains.Direction.DOWN;
 import static com.bship.games.domains.Direction.NONE;
 import static com.bship.games.domains.Direction.RIGHT;
+import static com.bship.games.domains.Harbor.AIRCRAFT_CARRIER;
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
 import static java.util.Arrays.asList;
@@ -33,6 +37,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 public class GameLogicTest {
 
@@ -109,7 +114,7 @@ public class GameLogicTest {
                 .build();
 
         Piece piece2 = Piece.builder()
-                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withType(AIRCRAFT_CARRIER)
                 .withPlacement(new Point(1, 0))
                 .withSize(4)
                 .withOrientation(DOWN)
@@ -180,7 +185,7 @@ public class GameLogicTest {
                 .withSize(3)
                 .build();
         Piece carrier = Piece.builder()
-                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withType(AIRCRAFT_CARRIER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(RIGHT)
                 .withSize(4)
@@ -249,43 +254,166 @@ public class GameLogicTest {
         long boardId = 1L;
         long opponentBoardId = 2L;
 
-        Move move = getMove(4, 0, boardId);
-        Game game = getGame(gameId, boardId, opponentBoardId);
+        Move move1 = getMove(4, 0, boardId);
+        Game game1 = getGame(gameId, boardId, opponentBoardId);
+        Game game2 = logic.play(move1).apply(game1);
 
-        Game game1 = logic.play(move).apply(game);
+        Move move2 = getMove(4, 1, boardId);
+        Game actual = logic.play(move2).apply(game2);
 
-        Move move2 = move.copy().withPoint(new Point(4, 1)).build();
-        Game actual = logic.play(move2).apply(game1);
+        Map<Boolean, Board> boardMap = partitionBoards(actual, move2);
 
-        Map<Boolean, Board> boardMap = partitionBoards(game1, boardId);
-        Board current = boardMap.get(move.getBoardId() == boardId);
-        Board other = boardMap.get(move.getBoardId() != boardId);
+        Board other = boardMap.get(move2.getBoardId() != boardId);
+        Optional<Piece> sunk = other.getPieces().stream().filter(Piece::isSunk).findFirst();
 
-        Piece sunkShip = getShips(boardId).stream()
-                .filter(o -> o.getType().equals(Harbor.DESTROYER))
-                .findFirst()
-                .map(Piece::copy)
-                .map(o -> o.withSunk(true))
-                .map(Piece.Builder::build).get();
+        assertThat(sunk.get().isSunk(), is(true));
+        assertThat(sunk.get().getType(), is(Harbor.DESTROYER));
+    }
 
-        List<Piece> pieceList = getShips(boardId).stream()
-                .filter(o -> !o.getType().equals(Harbor.DESTROYER))
+    @Test
+    public void playMove_shouldSetGameOverIfItIs() {
+        long gameId = 1L;
+        long boardId = 1L;
+        long opponentBoardId = 2L;
+
+        Move move1 = getMove(4, 0, boardId);
+        Game game1 = getGame(gameId, boardId, opponentBoardId);
+        Map<Boolean, Board> boards = partitionBoards(game1, move1);
+
+        Board current = boards.get(game1.getTurn().equals(boardId));
+        Board other = boards.get(!game1.getTurn().equals(boardId));
+
+        Map<Boolean, List<Piece>> pieceMap = other.getPieces().stream()
+                .collect(partitioningBy(piece -> piece.getType().equals(AIRCRAFT_CARRIER)));
+
+        List<Piece> carrier = pieceMap.get(true);
+        List<Piece> theRest = pieceMap.get(false);
+
+        List<Piece> sunk = theRest.stream().map(o -> o.copy().withSunk(true).build()).collect(Collectors.toList());
+        List<Piece> otherShips = Util.concat(carrier, sunk);
+
+        List<Move> moves = otherShips.stream().flatMap(p -> Util.pointsRange(p).stream())
+                .filter(p -> !p.equals(new Point(0, 0)))
+                .map(p -> Move.builder().withPoint(p))
+                .map(m -> m.withBoardId(current.getId()))
+                .map(m -> m.withStatus(HIT))
+                .map(Move.Builder::build)
                 .collect(Collectors.toList());
 
-        Game expected = game.copy().withBoards(asList(
-                current.copy().withMoves(asList(
-                        move.copy().withStatus(HIT).build(),
-                        move2.copy().withStatus(HIT).build()
-                )).addOpponentPieces(sunkShip).build(),
+        Board board = current.copy().withMoves(moves)
+                .withOpponentMoves(emptyList())
+                .withOpponentPieces(sunk).build();
+        Board board1 = other.copy().withPieces(otherShips).build();
 
-                other.copy().withOpponentMoves(asList(
-                        move.copy().withStatus(HIT).build(),
-                        move2.copy().withStatus(HIT).build()
-                )).withPieces(pieceList).addPiece(sunkShip).build()
+        Game game2 = logic.play(Move.builder()
+                .withPoint(new Point(0, 0))
+                .withBoardId(current.getId())
+                .build())
+                .apply(game1.copy().withBoards(asList(board, board1)).build());
 
-        )).build();
+        assertThat(game2.isOver(), is(true));
+    }
 
-        assertThat(actual, is(equalTo(expected)));
+    @Test
+    public void playMove_shouldSetWinnerIfGameIsOver() {
+        long gameId = 1L;
+        long boardId = 1L;
+        long opponentBoardId = 2L;
+
+        Move move1 = getMove(4, 0, boardId);
+        Game game1 = getGame(gameId, boardId, opponentBoardId);
+        Map<Boolean, Board> boards = partitionBoards(game1, move1);
+
+        Board current = boards.get(game1.getTurn().equals(boardId));
+        Board other = boards.get(!game1.getTurn().equals(boardId));
+
+        Map<Boolean, List<Piece>> pieceMap = other.getPieces().stream()
+                .collect(partitioningBy(piece -> piece.getType().equals(AIRCRAFT_CARRIER)));
+
+        List<Piece> carrier = pieceMap.get(true);
+        List<Piece> theRest = pieceMap.get(false);
+
+        List<Piece> sunk = theRest.stream().map(o -> o.copy().withSunk(true).build()).collect(Collectors.toList());
+        List<Piece> otherShips = Util.concat(carrier, sunk);
+
+        List<Move> moves = otherShips.stream().flatMap(p -> Util.pointsRange(p).stream())
+                .filter(p -> !p.equals(new Point(0, 0)))
+                .map(p -> Move.builder().withPoint(p))
+                .map(m -> m.withBoardId(current.getId()))
+                .map(m -> m.withStatus(HIT))
+                .map(Move.Builder::build)
+                .collect(Collectors.toList());
+
+        Board board = current.copy().withMoves(moves)
+                .withOpponentMoves(emptyList())
+                .withOpponentPieces(sunk).build();
+        Board board1 = other.copy().withPieces(otherShips).build();
+
+        Game game2 = logic.play(Move.builder()
+                .withPoint(new Point(0, 0))
+                .withBoardId(current.getId())
+                .build())
+                .apply(game1.copy().withBoards(asList(board, board1)).build());
+
+        assertThat(game2.isOver(), is(true));
+        Optional<Board> winner = game2.getBoards().stream()
+                .filter(o -> !o.getId().equals(current.getId()))
+                .findFirst();
+        assertThat(winner.get().isWinner(), is(true));
+    }
+
+    @Test
+    public void setNextTurn_shouldSetToNullIfGameIsOver() {
+        long gameId = 1L;
+        long boardId = 1L;
+        long opponentBoardId = 2L;
+
+        Move move1 = getMove(4, 0, boardId);
+        Game game1 = getGame(gameId, boardId, opponentBoardId);
+        Map<Boolean, Board> boards = partitionBoards(game1, move1);
+
+        Board current = boards.get(game1.getTurn().equals(boardId));
+        Board other = boards.get(!game1.getTurn().equals(boardId));
+
+        Map<Boolean, List<Piece>> pieceMap = other.getPieces().stream()
+                .collect(partitioningBy(piece -> piece.getType().equals(AIRCRAFT_CARRIER)));
+
+        List<Piece> carrier = pieceMap.get(true);
+        List<Piece> theRest = pieceMap.get(false);
+
+        List<Piece> sunk = theRest.stream().map(o -> o.copy().withSunk(true).build()).collect(Collectors.toList());
+        List<Piece> otherShips = Util.concat(carrier, sunk);
+
+        List<Move> moves = otherShips.stream().flatMap(p -> Util.pointsRange(p).stream())
+                .filter(p -> !p.equals(new Point(0, 0)))
+                .map(p -> Move.builder().withPoint(p))
+                .map(m -> m.withBoardId(current.getId()))
+                .map(m -> m.withStatus(HIT))
+                .map(Move.Builder::build)
+                .collect(Collectors.toList());
+
+        Board board = current.copy().withMoves(moves)
+                .withOpponentMoves(emptyList())
+                .withOpponentPieces(sunk).build();
+        Board board1 = other.copy().withPieces(otherShips).build();
+
+        Move move = Move.builder()
+                .withPoint(new Point(0, 0))
+                .withBoardId(current.getId())
+                .build();
+
+        Game game2 = logic.play(move)
+                .apply(game1.copy().withBoards(asList(board, board1)).build());
+
+        assertThat(game2.isOver(), is(true));
+        Optional<Board> winner = game2.getBoards().stream()
+                .filter(o -> !o.getId().equals(current.getId()))
+                .findFirst();
+        assertThat(winner.get().isWinner(), is(true));
+
+        Game game = logic.setNextTurn(move).apply(game2);
+
+        assertThat(game.getTurn(), is(nullValue()));
     }
 
     @Test
@@ -304,12 +432,13 @@ public class GameLogicTest {
 
     private Game getGame(long gameId, long boardId, long opponentBoardId) {
         List<Piece> pieces = getShips(boardId);
-        List<Piece> opponentPieces = getShips(boardId);
+        List<Piece> opponentPieces = getShips(opponentBoardId);
         Board board = getBoard(boardId, pieces);
         Board opponentBoard = getBoard(opponentBoardId, opponentPieces);
         return Game.builder()
                 .withBoards(asList(board, opponentBoard))
                 .withId(gameId)
+                .withTurn(boardId)
                 .build();
     }
 
@@ -328,25 +457,26 @@ public class GameLogicTest {
     }
 
     private List<Piece> getShips(long boardId) {
-        return asList(Piece.builder().withType(Harbor.AIRCRAFT_CARRIER)
+        return asList(
+                Piece.builder().withType(AIRCRAFT_CARRIER)
                         .withPlacement(new Point(0, 0))
                         .withOrientation(DOWN)
                         .withSize(5)
                         .withSunk(false)
-                        .withId(boardId)
+                        .withBoardId(boardId)
                         .build(),
                 Piece.builder().withType(Harbor.BATTLESHIP)
                         .withPlacement(new Point(1, 0))
                         .withOrientation(DOWN)
                         .withSize(4)
                         .withSunk(false)
-                        .withId(boardId).build(),
+                        .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.SUBMARINE)
                         .withPlacement(new Point(2, 0))
                         .withOrientation(DOWN)
                         .withSize(3)
                         .withSunk(false)
-                        .withId(boardId).build(),
+                        .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.CRUISER)
                         .withPlacement(new Point(3, 0))
                         .withOrientation(DOWN)
@@ -358,16 +488,12 @@ public class GameLogicTest {
                         .withOrientation(DOWN)
                         .withSize(2)
                         .withSunk(false)
-                        .withId(boardId).build());
+                        .withBoardId(boardId).build());
     }
 
-    private Map<Boolean, Board> partitionBoards(Game game, long boardId) {
-        return game.getBoards()
-                .stream()
-                .collect(partitioningBy(board -> board.getId() == boardId))
-                .entrySet()
-                .stream()
-                .collect(toMap(Map.Entry::getKey,
-                        entry -> entry.getValue().stream().findFirst().get()));
+    private Map<Boolean, Board> partitionBoards(Game game, Move move) {
+        return game.getBoards().stream().collect(toMap(
+                board -> board.getId().equals(move.getBoardId()),
+                Function.identity()));
     }
 }

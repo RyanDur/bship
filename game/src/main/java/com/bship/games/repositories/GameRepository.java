@@ -28,6 +28,7 @@ public class GameRepository {
     private static final String UPDATE_GAMES = "UPDATE games";
     private static final String SET = "SET";
     private static final String TURN_TURN = "turn = :turn";
+    private static final String OVER_OVER = ",over = :over";
     private final NamedParameterJdbcTemplate template;
     private final BoardRepository boards;
 
@@ -62,7 +63,8 @@ public class GameRepository {
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("id", game.getId());
         source.addValue("turn", game.getTurn());
-        template.update(join(UPDATE_GAMES, SET, TURN_TURN, WHERE, ID_ID), source);
+        source.addValue("over", game.isOver());
+        template.update(join(UPDATE_GAMES, SET, TURN_TURN, OVER_OVER, WHERE, ID_ID), source);
         return get(game.getId());
     }
 
@@ -80,6 +82,7 @@ public class GameRepository {
         return (rs, rowNum) -> Game.builder()
                 .withId(rs.getLong("id"))
                 .withBoards(boards.getAll(rs.getLong("id")))
+                .withOver(rs.getBoolean("over"))
                 .withTurn(of(rs.getLong("turn"))
                         .filter(turn -> turn.compareTo(0L) > 0)
                         .orElse(null))

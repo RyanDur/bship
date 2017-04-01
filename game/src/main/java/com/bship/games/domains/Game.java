@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -16,11 +17,13 @@ public class Game {
     private final List<Board> boards;
     private final Long id;
     private final Long turn;
+    private final boolean over;
 
     private Game(Builder builder) {
         boards = builder.boards;
         id = builder.id;
         turn = builder.turn;
+        over = builder.over;
     }
 
     public List<Board> getBoards() {
@@ -35,8 +38,16 @@ public class Game {
         return turn;
     }
 
+    public boolean isOver() {
+        return over;
+    }
+
     public Builder copy() {
-        return builder().withId(id).withBoards(boards);
+        return builder()
+                .withId(id)
+                .withBoards(boards)
+                .withTurn(turn)
+                .withOver(over);
     }
 
     public static Builder builder() {
@@ -52,12 +63,23 @@ public class Game {
 
         return Objects.equals(this.boards, that.boards) &&
                 Objects.equals(this.id, that.id) &&
+                Objects.equals(this.over, that.over) &&
                 Objects.equals(this.turn, that.turn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(boards, id, turn);
+        return Objects.hash(boards, id, over, turn);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", "{", "}")
+                .add("\"boards\": " + boards)
+                .add("\"id\":" + id)
+                .add("\"over\":" + over)
+                .add("\"turn\":" + turn)
+                .toString();
     }
 
     @JsonPOJOBuilder
@@ -65,6 +87,7 @@ public class Game {
         private Long id;
         private List<Board> boards;
         private Long turn;
+        public boolean over;
 
         public Builder withId(Long id) {
             this.id = id;
@@ -76,6 +99,11 @@ public class Game {
             return this;
         }
 
+        public Builder withOver(boolean over) {
+            this.over = over;
+            return this;
+        }
+
         public Game build() {
             return new Game(this);
         }
@@ -84,14 +112,5 @@ public class Game {
             this.turn = turn;
             return this;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "\"boards\":" + getBoards() +
-                ", \"id\":" + getId() +
-                ", \"turn\":" + getTurn() +
-                '}';
     }
 }

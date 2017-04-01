@@ -2,6 +2,7 @@ package com.bship.games.logic;
 
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
+import com.bship.games.domains.Harbor;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.MoveStatus;
 import com.bship.games.domains.Piece;
@@ -63,16 +64,44 @@ public class GameLogic {
 
     public Function<Game, Game> setNextTurn(Move move) {
         return game -> {
+            if (game.isOver()) return game.copy().withTurn(null).build();
             Board other = game.getBoards().stream().filter(currentBoard(move).negate()).findFirst().get();
             return game.copy().withTurn(other.getId()).build();
         };
     }
 
     private Optional<Game> getUpdatedGame(Game game, Board current, Board other, Move playedMove) {
-        return getSunk(getMoves(current, playedMove), other)
-                .map(updateBoardsWithSunkShip(game, current, other, playedMove))
-                .orElse(updateBoardsWithoutSunkShip(game, current, other, playedMove));
+        List<Point> moves = getMoves(current, playedMove);
+        return getSunk(moves, other)
+                .flatMap(updateBoardsWithSunkShip(game, current, other, playedMove))
+                .map(updateStateOfGame())
+                .orElseGet(() -> updateBoardsWithoutSunkShip(game, current, other, playedMove));
     }
+
+    private Function<Game, Optional<Game>> updateStateOfGame() {
+        return game ->
+                setWinner(game).map(o -> o.copy().withOver(isOver(o)).build());
+    }
+
+    private Optional<Game> setWinner(Game game) {
+        Function<Board, Board> toWinner = board -> board.copy().withWinner(of(board.getPieces()).filter(isWinner).isPresent()).build();
+        return ofNullable(game)
+                .map(Game::copy)
+                .map(copy -> copy.withBoards(game.getBoards().stream()
+                        .map(toWinner)
+                        .collect(toList()))
+                        .build());
+    }
+
+    private Predicate<List<Piece>> isWinner = pieces -> Harbor.size().equals(pieces.stream()
+            .filter(Piece::isSunk)
+            .collect(toList()).size());
+
+    private boolean isOver(Game game) {
+        return game.getBoards().stream().map(Board::getPieces)
+                .anyMatch(isWinner);
+    }
+
 
     private Optional<Game> updateBoardsWithoutSunkShip(Game game, Board current, Board other, Move playedMove) {
         return of(game).map(Game::copy).map(copy -> copy.withBoards(asList(
@@ -86,15 +115,15 @@ public class GameLogic {
     }
 
     private Function<Piece, Optional<Game>> updateBoardsWithSunkShip(Game game, Board current, Board other, Move playedMove) {
-        return sunk -> of(game).map(Game::copy).map(copy -> copy.withBoards(asList(
+        return piece -> of(game).map(Game::copy).map(copy -> copy.withBoards(asList(
                 current.copy()
                         .addMove(playedMove)
-                        .addOpponentPieces(sunk)
+                        .addOpponentPieces(piece)
                         .build(),
                 other.copy()
                         .addOpponentMove(playedMove)
-                        .withPieces(without(other, recentlySunk.apply(sunk)))
-                        .addPiece(sunk)
+                        .withPieces(without(other, recentlySunk.apply(piece)))
+                        .addPiece(piece)
                         .build()
         )).build());
     }
@@ -158,7 +187,7 @@ public class GameLogic {
     }
 
     private Predicate<Board> currentBoard(Move move) {
-        return boards -> Objects.equals(boards.getId(), move.getBoardId());
+        return board -> Objects.equals(board.getId(), move.getBoardId());
     }
 
     private Function<Piece, Predicate<Piece>> recentlySunk = sunk -> ship -> !ship.getType().equals(sunk.getType());
