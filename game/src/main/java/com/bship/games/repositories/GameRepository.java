@@ -20,15 +20,16 @@ import static java.util.Optional.of;
 public class GameRepository {
 
     private static final String SELECT_FROM_GAMES = "SELECT * FROM games";
-    private static final String WHERE = "WHERE";
-    private static final String ID_ID = "id = :id";
     private static final String INSERT_INTO_GAMES_ID = "INSERT INTO games(id)";
-    private static final String VALUE_DEFAULT = "VALUE (default)";
-    private static final String SEP = " ";
     private static final String UPDATE_GAMES = "UPDATE games";
+    private static final String WHERE = "WHERE";
+    private static final String VALUE_DEFAULT = "VALUE (default)";
     private static final String SET = "SET";
-    private static final String TURN_TURN = "turn = :turn";
-    private static final String OVER_OVER = ",over = :over";
+    private static final String ID = "id = :id";
+    private static final String TURN = "turn = :turn";
+    private static final String OVER = "over = :over";
+    private static final String SEP = " ";
+    private static final String COMMA = ", ";
     private final NamedParameterJdbcTemplate template;
     private final BoardRepository boards;
 
@@ -47,7 +48,7 @@ public class GameRepository {
     }
 
     public Optional<Game> get(Long id) {
-        return template.query(join(SELECT_FROM_GAMES, WHERE, ID_ID),
+        return template.query(join(SEP, SELECT_FROM_GAMES, WHERE, ID),
                 new MapSqlParameterSource("id", id),
                 buildGame(boards))
                 .stream()
@@ -64,18 +65,18 @@ public class GameRepository {
         source.addValue("id", game.getId());
         source.addValue("turn", game.getTurn());
         source.addValue("over", game.isOver());
-        template.update(join(UPDATE_GAMES, SET, TURN_TURN, OVER_OVER, WHERE, ID_ID), source);
+        template.update(join(SEP, UPDATE_GAMES, SET, join(COMMA, TURN, OVER), WHERE, ID), source);
         return get(game.getId());
     }
 
     private Long generateGame() {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
-        template.update(join(INSERT_INTO_GAMES_ID, VALUE_DEFAULT), null, holder);
+        template.update(join(SEP, INSERT_INTO_GAMES_ID, VALUE_DEFAULT), null, holder);
         return holder.getKey().longValue();
     }
 
-    private String join(String... sqls) {
-        return Stream.of(sqls).collect(Collectors.joining(SEP));
+    private String join(String separator, String... sqls) {
+        return Stream.of(sqls).collect(Collectors.joining(separator));
     }
 
     private RowMapper<Game> buildGame(BoardRepository boards) {
