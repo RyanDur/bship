@@ -39,7 +39,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-public class GameLogicTest {
+public class BattleshipTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -48,7 +48,7 @@ public class GameLogicTest {
 
     @Before
     public void setUp() throws Exception {
-        logic = new GameLogic();
+        logic = new Battleship();
     }
 
     @Test
@@ -205,7 +205,7 @@ public class GameLogicTest {
         Move move = getMove(9, 9, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
 
-        Game actual = logic.play(move).apply(game);
+        Game actual = logic.play(move).apply(game).get();
 
         List<Board> boards = game.getBoards();
         Board board1 = boards.stream().filter(o -> o.getId() == boardId).findFirst().get();
@@ -229,11 +229,11 @@ public class GameLogicTest {
         Move move = getMove(0, 0, boardId);
         Game game = getGame(gameId, boardId, opponentBoardId);
 
-        Game actual = logic.play(move).apply(game);
+        Game actual = logic.play(move).apply(game).get();
 
-        List<Board> boards = game.getBoards();
-        Board board1 = boards.stream().filter(o -> o.getId() == boardId).findFirst().get();
-        Board opponentBoard1 = boards.stream().filter(o -> o.getId() != boardId).findFirst().get();
+        Map<Boolean, Board> boardMap = partitionBoards(game, move);
+        Board board1 = boardMap.get(true);
+        Board opponentBoard1 = boardMap.get(false);
         opponentBoard1.copy().addOpponentMove(move).build();
 
         Game expected = game.copy().withBoards(asList(
@@ -256,10 +256,10 @@ public class GameLogicTest {
 
         Move move1 = getMove(4, 0, boardId);
         Game game1 = getGame(gameId, boardId, opponentBoardId);
-        Game game2 = logic.play(move1).apply(game1);
+        Game game2 = logic.play(move1).apply(game1).get();
 
         Move move2 = getMove(4, 1, boardId);
-        Game actual = logic.play(move2).apply(game2);
+        Game actual = logic.play(move2).apply(game2).get();
 
         Map<Boolean, Board> boardMap = partitionBoards(actual, move2);
 
@@ -309,7 +309,7 @@ public class GameLogicTest {
                 .withPoint(new Point(0, 0))
                 .withBoardId(current.getId())
                 .build())
-                .apply(game1.copy().withBoards(asList(board, board1)).build());
+                .apply(game1.copy().withBoards(asList(board, board1)).build()).get();
 
         assertThat(game2.isOver(), is(true));
     }
@@ -353,11 +353,11 @@ public class GameLogicTest {
                 .withPoint(new Point(0, 0))
                 .withBoardId(current.getId())
                 .build())
-                .apply(game1.copy().withBoards(asList(board, board1)).build());
+                .apply(game1.copy().withBoards(asList(board, board1)).build()).get();
 
         assertThat(game2.isOver(), is(true));
         Optional<Board> winner = game2.getBoards().stream()
-                .filter(o -> !o.getId().equals(current.getId()))
+                .filter(o -> o.getId().equals(current.getId()))
                 .findFirst();
         assertThat(winner.get().isWinner(), is(true));
     }
@@ -403,11 +403,11 @@ public class GameLogicTest {
                 .build();
 
         Game game2 = logic.play(move)
-                .apply(game1.copy().withBoards(asList(board, board1)).build());
+                .apply(game1.copy().withBoards(asList(board, board1)).build()).get();
 
         assertThat(game2.isOver(), is(true));
         Optional<Board> winner = game2.getBoards().stream()
-                .filter(o -> !o.getId().equals(current.getId()))
+                .filter(o -> o.getId().equals(current.getId()))
                 .findFirst();
         assertThat(winner.get().isWinner(), is(true));
 
@@ -445,7 +445,8 @@ public class GameLogicTest {
     private Move getMove(int x, int y, long boardId) {
         return Move.builder()
                 .withBoardId(boardId)
-                .withPoint(new Point(x, y)).build();
+                .withPoint(new Point(x, y))
+                .build();
     }
 
     private Board getBoard(long boardId, List<Piece> pieces) {
@@ -463,8 +464,7 @@ public class GameLogicTest {
                         .withOrientation(DOWN)
                         .withSize(5)
                         .withSunk(false)
-                        .withBoardId(boardId)
-                        .build(),
+                        .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.BATTLESHIP)
                         .withPlacement(new Point(1, 0))
                         .withOrientation(DOWN)
@@ -482,7 +482,7 @@ public class GameLogicTest {
                         .withOrientation(DOWN)
                         .withSize(3)
                         .withSunk(false)
-                        .withId(boardId).build(),
+                        .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.DESTROYER)
                         .withPlacement(new Point(4, 0))
                         .withOrientation(DOWN)

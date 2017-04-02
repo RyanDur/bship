@@ -6,6 +6,8 @@ import com.bship.games.domains.validations.ValidPoint;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+import java.util.Objects;
+
 import static java.util.Optional.ofNullable;
 
 @JsonDeserialize(builder = Move.Builder.class)
@@ -95,14 +97,15 @@ public class Move {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Move move = (Move) o;
+        Move that = (Move) o;
 
-        return point != null ? point.equals(move.point) : move.point == null;
+        return Objects.equals(this.boardId, that.boardId) &&
+                Objects.equals(this.point, that.point);
     }
 
     @Override
     public int hashCode() {
-        return point != null ? point.hashCode() : 0;
+        return Objects.hash(boardId, point);
     }
 
     @Override

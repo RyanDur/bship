@@ -27,7 +27,7 @@ public class GameService {
     public Game placeMove(Long gameId, Move move) throws GameValidation {
         return repository.get(gameId)
                 .map(logic.valid(move))
-                .map(logic.play(move))
+                .flatMap(logic.play(move))
                 .map(logic.setNextTurn(move))
                 .flatMap(repository::save)
                 .orElseThrow(InvalidGame::new);

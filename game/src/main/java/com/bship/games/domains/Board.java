@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.bship.games.util.Util.addTo;
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 
 @JsonDeserialize(builder = Board.Builder.class)
 public class Board {
@@ -41,19 +43,19 @@ public class Board {
     }
 
     public List<Piece> getPieces() {
-        return pieces;
+        return ofNullable(pieces).orElse(emptyList());
     }
 
     public List<Piece> getOpponentPieces() {
-        return opponentPieces;
+        return ofNullable(opponentPieces).orElse(emptyList());
     }
 
     public List<Move> getMoves() {
-        return moves;
+        return ofNullable(moves).orElse(emptyList());
     }
 
     public List<Move> getOpponentMoves() {
-        return opponentMoves;
+        return ofNullable(opponentMoves).orElse(emptyList());
     }
 
     public boolean isWinner() {

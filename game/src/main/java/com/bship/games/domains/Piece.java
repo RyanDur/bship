@@ -98,7 +98,6 @@ public class Piece {
         Piece that = (Piece) o;
 
         return Objects.equals(this.boardId, that.boardId) &&
-                Objects.equals(this.id, that.id) &&
                 Objects.equals(this.orientation, that.orientation) &&
                 Objects.equals(this.placement, that.placement) &&
                 Objects.equals(this.size, that.size) &&
