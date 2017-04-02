@@ -93,7 +93,7 @@ public class BattleshipTest {
 
     @Test
     public void valid_shouldNotCareWhoGoesFirst() throws MoveCollision, TurnCheck {
-        long boardId2 = 1L;
+        long boardId2 = 2L;
         Move move = Move.builder().withBoardId(boardId2).build();
         Board board1 = Board.builder().withMoves(emptyList()).withId(1L).build();
         Board board2 = Board.builder().withMoves(emptyList()).withId(boardId2).build();

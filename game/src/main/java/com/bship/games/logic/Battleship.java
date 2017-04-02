@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -37,12 +36,13 @@ public class Battleship implements GameLogic {
 
     private static final boolean CURRENT_BOARD = true;
     private static final boolean OPPONENT_BOARD = false;
+    private static final boolean SUNK = true;
 
     @Override
     public Function<Board, Board> placementCheck(Piece piece) throws ShipExistsCheck, ShipCollisionCheck {
         return rethrowFunction(board -> {
-            if (exists(board, piece)) throw new ShipExistsCheck();
-            if (collision(board, piece)) throw new ShipCollisionCheck();
+            if (exists(piece, board)) throw new ShipExistsCheck();
+            if (collision(piece, board)) throw new ShipCollisionCheck();
             return board;
         });
     }
@@ -50,19 +50,17 @@ public class Battleship implements GameLogic {
     @Override
     public Function<Game, Game> valid(Move move) throws TurnCheck, MoveCollision {
         return rethrowFunction(game -> {
-            if (nonNull(game.getTurn()) && !game.getTurn().equals(move.getBoardId()))
-                throw new TurnCheck();
-            if (game.getBoards().stream().filter(currentBoard(move)).anyMatch(played(move)))
-                throw new MoveCollision();
+            if (wrongTurn(move, game)) throw new TurnCheck();
+            if (collision(move, game)) throw new MoveCollision();
             return game;
         });
     }
 
     @Override
     public Function<Game, Optional<Game>> play(Move move) {
-        return game -> ofNullable(move)
-                .map(placeMove(game))
-                .map(check(move))
+        return game -> ofNullable(game)
+                .map(Game::getBoards)
+                .map(updateBoards(move))
                 .map(update(game));
     }
 
@@ -82,23 +80,33 @@ public class Battleship implements GameLogic {
                 .build();
     }
 
-    private Function<List<Board>, List<Board>> check(Move move) {
+    private Function<List<Board>, List<Board>> updateBoards(Move move) {
         return boards -> ofNullable(boards)
                 .map(partitionBoards(move))
                 .map(boardMap -> {
                     Board current = boardMap.get(CURRENT_BOARD);
                     Board opponent = boardMap.get(OPPONENT_BOARD);
-                    return asList(updateBoard(current, opponent), updateBoard(opponent, current));
+
+                    MoveStatus status = getStatus(move, opponent.getPieces());
+                    Move newMove = move.copy().withStatus(status).build();
+
+                    Board currentBuild = current.copy().addMove(newMove).build();
+                    Board opponentBuild = opponent.copy().addOpponentMove(newMove).build();
+
+                    return asList(
+                            updateBoard(currentBuild, opponentBuild),
+                            updateBoard(opponentBuild, currentBuild)
+                    );
                 }).orElse(emptyList());
     }
 
     private Board updateBoard(Board current, Board opponent) {
-        List<Piece> opponentSunk = getSunk(sinkShips(current, opponent));
+        List<Piece> sunk = getSunk(sinkShips(current, opponent));
         List<Piece> ships = sinkShips(opponent, current);
         return ofNullable(current).map(Board::copy)
                 .map(board -> board.withPieces(ships))
-                .map(board -> board.withOpponentPieces(opponentSunk))
-                .map(board -> board.withWinner(ships.size() == opponentSunk.size()))
+                .map(board -> board.withOpponentPieces(sunk))
+                .map(board -> board.withWinner(ships.size() == sunk.size()))
                 .map(Board.Builder::build)
                 .orElse(current);
     }
@@ -115,7 +123,7 @@ public class Battleship implements GameLogic {
         return piece -> ofNullable(piece)
                 .filter(isSunk(moves))
                 .map(Piece::copy)
-                .map(p -> p.withSunk(true))
+                .map(p -> p.withSunk(SUNK))
                 .map(Piece.Builder::build)
                 .orElse(piece);
     }
@@ -127,31 +135,7 @@ public class Battleship implements GameLogic {
                 .isPresent();
     }
 
-    private Function<Move, List<Board>> placeMove(Game game) {
-        return move -> ofNullable(game)
-                .map(Game::getBoards)
-                .map(add(move))
-                .orElse(emptyList());
-
-    }
-
-    private Function<List<Board>, List<Board>> add(Move move) {
-        return boards -> ofNullable(boards)
-                .map(partitionBoards(move))
-                .map(boardMap -> {
-                    Board current = boardMap.get(CURRENT_BOARD);
-                    Board opponent = boardMap.get(OPPONENT_BOARD);
-                    MoveStatus status = getStatus(move, opponent.getPieces());
-                    Move newMove = move.copy().withStatus(status).build();
-
-                    return asList(
-                            current.copy().addMove(newMove).build(),
-                            opponent.copy().addOpponentMove(newMove).build()
-                    );
-                }).orElse(emptyList());
-    }
-
-    private boolean exists(Board board, Piece piece) {
+    private boolean exists(Piece piece, Board board) {
         return ofNullable(piece).isPresent() && ofNullable(board)
                 .map(Board::getPieces)
                 .map(Collection::stream)
@@ -160,7 +144,7 @@ public class Battleship implements GameLogic {
                         .anyMatch(type -> type.equals(piece.getType()))).isPresent();
     }
 
-    private boolean collision(Board board, Piece piece) {
+    private boolean collision(Piece piece, Board board) {
         return ofNullable(piece).isPresent() && ofNullable(board)
                 .map(Board::getPieces).map(Collection::stream)
                 .filter(ships -> ships.anyMatch(savedPiece ->
@@ -176,12 +160,16 @@ public class Battleship implements GameLogic {
                 .findAny().map(p -> HIT).orElse(MISS);
     }
 
-    private Predicate<Board> played(Move move) {
-        return board -> board.getMoves().contains(move);
+    private boolean collision(Move move, Game game) {
+        return ofNullable(game).map(Game::getBoards)
+                .map(partitionBoards(move))
+                .map(boards -> boards.get(CURRENT_BOARD))
+                .filter(board -> board.getMoves().contains(move))
+                .isPresent();
     }
 
-    private Predicate<Board> currentBoard(Move move) {
-        return board -> Objects.equals(board.getId(), move.getBoardId());
+    private boolean wrongTurn(Move move, Game game) {
+        return nonNull(game.getTurn()) && !game.getTurn().equals(move.getBoardId());
     }
 
     private Function<List<Board>, Map<Boolean, Board>> partitionBoards(Move move) {
