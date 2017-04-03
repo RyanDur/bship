@@ -154,4 +154,12 @@ public class GameRepositoryTest {
         Optional<Game> gotDeletedGame = repository.get(game.getId());
         assertThat(gotDeletedGame.isPresent(), is(false));
     }
+    @Test
+    public void delete_shouldReturnTheDeletedGame() {
+        Game game = repository.create();
+
+        Optional<Game> gotDeletedGame =  repository.delete(game);
+
+        assertThat(gotDeletedGame.isPresent(), is(true));
+    }
 }
