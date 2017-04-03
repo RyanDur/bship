@@ -144,4 +144,14 @@ public class GameRepositoryTest {
 
         verify(boardRepository, times(2)).save(any(Board.class));
     }
+
+    @Test
+    public void delete_shouldDeleteTheGameFromTheRepository() {
+        Game game = repository.create();
+        Optional<Game> gotGame = repository.get(game.getId());
+        assertThat(gotGame.isPresent(), is(true));
+        repository.delete(game);
+        Optional<Game> gotDeletedGame = repository.get(game.getId());
+        assertThat(gotDeletedGame.isPresent(), is(false));
+    }
 }

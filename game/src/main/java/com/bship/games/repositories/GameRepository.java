@@ -19,9 +19,11 @@ import static java.util.Optional.of;
 @Repository
 public class GameRepository {
 
-    private static final String SELECT_FROM_GAMES = "SELECT * FROM games";
     private static final String INSERT_INTO_GAMES_ID = "INSERT INTO games(id)";
+    private static final String FROM_GAMES = "FROM games";
     private static final String UPDATE_GAMES = "UPDATE games";
+    private static final String SELECT_ALL = "SELECT *";
+    private static final String DELETE = "DELETE";
     private static final String WHERE = "WHERE";
     private static final String VALUE_DEFAULT = "VALUE (default)";
     private static final String SET = "SET";
@@ -48,7 +50,7 @@ public class GameRepository {
     }
 
     public Optional<Game> get(Long id) {
-        return template.query(join(SEP, SELECT_FROM_GAMES, WHERE, ID),
+        return template.query(join(SEP, SELECT_ALL, FROM_GAMES, WHERE, ID),
                 new MapSqlParameterSource("id", id),
                 buildGame(boards))
                 .stream()
@@ -56,7 +58,14 @@ public class GameRepository {
     }
 
     public List<Game> getAll() {
-        return template.query(SELECT_FROM_GAMES, buildGame(boards));
+        return template.query(join(SEP, SELECT_ALL, FROM_GAMES),
+                buildGame(boards));
+    }
+
+    public Optional<Game> delete(Game game) {
+        template.update(join(SEP, DELETE, FROM_GAMES, WHERE, ID),
+                new MapSqlParameterSource("id", game.getId()));
+        return of(game);
     }
 
     public Optional<Game> save(Game game) {

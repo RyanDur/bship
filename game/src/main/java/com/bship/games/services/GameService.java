@@ -29,7 +29,10 @@ public class GameService {
                 .map(logic.valid(move))
                 .flatMap(logic.play(move))
                 .map(logic.setNextTurn(move))
-                .flatMap(repository::save)
+                .flatMap(game -> {
+                    if (game.isOver()) return repository.delete(game);
+                    else return repository.save(game);
+                })
                 .orElseThrow(InvalidGame::new);
     }
 }

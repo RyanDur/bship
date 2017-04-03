@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -129,6 +130,21 @@ public class GameServiceTest {
 
         gameService.placeMove(1L, move);
         verify(gameRepository).save(game.get());
+    }
+
+    @Test
+    public void placeMove_shouldDeleteTheGameIfItIsOver() throws GameValidation {
+        Optional<Game> game = of(Game.builder().withOver(true).build());
+        Move move = Move.builder().build();
+        when(gameRepository.get(1L)).thenReturn(game);
+        when(logic.valid(any(Move.class))).thenReturn(g -> g);
+        when(logic.play(any(Move.class))).thenReturn(Optional::of);
+        when(logic.setNextTurn(any(Move.class))).thenReturn(g -> g);
+        when(gameRepository.delete(any(Game.class))).thenReturn(game);
+
+        gameService.placeMove(1L, move);
+        verify(gameRepository, never()).save(game.get());
+        verify(gameRepository).delete(game.get());
     }
 
     @Test
