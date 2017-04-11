@@ -48,6 +48,7 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -60,7 +61,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEq
 assertThatJson(parsedJson).field("turn").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("y").isNull();
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 }
 
@@ -81,6 +81,7 @@ assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(5);
+assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(4);
@@ -101,7 +102,6 @@ assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).field("id").isEqualTo(1);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).field("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(5);
 }
@@ -123,6 +123,7 @@ assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(5);
+assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("DOWN");
@@ -135,7 +136,6 @@ assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).field("id").isEqualTo(1);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("pieces").field("placement").field("x").isNull();
@@ -166,6 +166,7 @@ assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(5);
+assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("DOWN");
@@ -179,7 +180,6 @@ assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).field("id").isEqualTo(1);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("pieces").field("placement").field("x").isNull();
@@ -210,6 +210,7 @@ assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(5);
+assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("DOWN");
@@ -223,7 +224,6 @@ assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).field("id").isEqualTo(1);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("pieces").field("placement").field("x").isNull();
@@ -255,6 +255,7 @@ assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(5);
+assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("DOWN");
@@ -269,7 +270,6 @@ assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).field("id").isEqualTo(1);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(2);
@@ -297,6 +297,7 @@ assertThat(response.statusCode()).isEqualTo(200);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
+assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(6);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(2);
@@ -317,7 +318,6 @@ assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).field("id").isEqualTo(2);
-assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(10);
 assertThatJson(parsedJson).field("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(5);
@@ -339,6 +339,7 @@ assertThat(response.statusCode()).isEqualTo(200);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
+assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(7);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("DOWN");
@@ -349,7 +350,6 @@ assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(4);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(6);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(2);
@@ -382,6 +382,7 @@ assertThat(response.statusCode()).isEqualTo(200);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
+assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(7);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("DOWN");
@@ -393,7 +394,6 @@ assertThatJson(parsedJson).array("pieces").field("placement").field("x").isEqual
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(6);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(2);
@@ -426,6 +426,7 @@ assertThat(response.statusCode()).isEqualTo(200);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
+assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(7);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("DOWN");
@@ -437,7 +438,6 @@ assertThatJson(parsedJson).array("pieces").field("placement").field("x").isEqual
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(6);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(2);
@@ -471,6 +471,7 @@ assertThat(response.statusCode()).isEqualTo(200);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
+assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(7);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("DOWN");
@@ -483,7 +484,6 @@ assertThatJson(parsedJson).array("pieces").field("placement").field("x").isEqual
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("pieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(6);
 assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(2);
@@ -540,6 +540,7 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).field("turn").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -554,7 +555,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").field("placement").fi
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 }
@@ -603,6 +603,7 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -619,7 +620,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").field("placement").fi
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 }
@@ -654,6 +654,7 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").i
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -687,7 +688,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 }
 
@@ -722,7 +722,9 @@ assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placem
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -734,9 +736,9 @@ assertThatJson(parsedJson).array("boards").array("pieces").field("placement").fi
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -745,7 +747,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
 assertThatJson(parsedJson).field("over").isEqualTo(false);
@@ -764,7 +765,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 }
@@ -801,7 +801,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -814,9 +816,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -824,7 +826,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
 assertThatJson(parsedJson).field("over").isEqualTo(false);
@@ -844,7 +845,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 }
@@ -881,7 +881,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -894,9 +896,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -905,7 +907,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
 assertThatJson(parsedJson).field("over").isEqualTo(false);
@@ -926,7 +927,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 }
@@ -963,7 +963,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -976,9 +978,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -986,7 +988,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
 assertThatJson(parsedJson).field("over").isEqualTo(false);
@@ -1008,7 +1009,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 }
@@ -1045,7 +1045,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -1058,9 +1060,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -1069,7 +1071,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
 assertThatJson(parsedJson).field("over").isEqualTo(false);
@@ -1090,7 +1091,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 }
@@ -1130,7 +1130,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -1144,16 +1146,15 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -1177,7 +1178,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 }
@@ -1219,7 +1219,9 @@ assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placem
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("SUBMARINE");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -1233,9 +1235,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -1244,7 +1246,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -1268,7 +1269,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 }
@@ -1311,7 +1311,9 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -1326,9 +1328,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -1336,7 +1338,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -1361,7 +1362,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 }
@@ -1404,7 +1404,9 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -1419,9 +1421,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -1430,7 +1432,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -1455,7 +1456,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(2);
@@ -1499,7 +1499,9 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -1514,9 +1516,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -1524,7 +1526,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -1550,7 +1551,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(2);
@@ -1594,7 +1594,9 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -1609,9 +1611,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -1620,7 +1622,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -1645,7 +1646,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(2);
@@ -1689,7 +1689,9 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -1704,9 +1706,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -1714,7 +1716,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -1740,7 +1741,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(2);
@@ -1784,7 +1784,9 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -1799,9 +1801,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -1811,7 +1813,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -1838,7 +1839,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(2);
@@ -1882,8 +1882,10 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -1898,9 +1900,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -1910,7 +1912,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -1939,7 +1940,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -1984,8 +1984,10 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -2000,9 +2002,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -2013,7 +2015,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -2041,7 +2042,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -2086,8 +2086,10 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -2102,9 +2104,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -2114,7 +2116,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -2143,7 +2144,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -2188,8 +2188,10 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -2204,9 +2206,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -2217,7 +2219,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -2245,7 +2246,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -2290,8 +2290,10 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -2306,9 +2308,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -2318,7 +2320,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -2347,7 +2348,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -2392,8 +2392,10 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEq
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -2408,9 +2410,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(10);
@@ -2421,7 +2423,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -2449,7 +2450,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -2495,8 +2495,10 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -2511,9 +2513,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").contains("id").matches("-?\\d*(\\.\\d+)?");
@@ -2523,7 +2525,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -2552,7 +2553,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -2598,8 +2598,10 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -2614,9 +2616,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(2);
@@ -2628,7 +2630,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -2656,7 +2657,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -2702,8 +2702,10 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -2718,9 +2720,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(2);
@@ -2731,7 +2733,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -2760,7 +2761,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -2806,8 +2806,10 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -2822,9 +2824,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(2);
@@ -2836,7 +2838,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -2864,7 +2865,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -2910,8 +2910,10 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -2926,9 +2928,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(2);
@@ -2939,7 +2941,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -2968,7 +2969,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -3014,8 +3014,10 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -3030,9 +3032,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(2);
@@ -3044,7 +3046,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -3072,7 +3073,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -3118,8 +3118,10 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -3134,9 +3136,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(2);
@@ -3148,7 +3150,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -3177,7 +3178,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -3223,8 +3223,10 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -3239,9 +3241,9 @@ assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point")
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(4);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(2);
@@ -3254,7 +3256,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -3282,7 +3283,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -3328,8 +3328,10 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -3344,9 +3346,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(2);
@@ -3358,7 +3360,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -3387,7 +3388,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -3433,8 +3433,10 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
@@ -3449,9 +3451,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(2);
@@ -3464,7 +3466,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -3492,7 +3493,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);
@@ -3540,8 +3540,10 @@ assertThatJson(parsedJson).field("over").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(8);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("CRUISER");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(3);
+assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").field("placement").field("x").isEqualTo(1);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").contains("id").isEqualTo(2);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(7);
 assertThatJson(parsedJson).array("boards").contains("winner").isEqualTo(false);
@@ -3556,9 +3558,9 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("y").isEqualTo(2);
+assertThatJson(parsedJson).array("boards").array("pieces").contains("taken").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").field("point").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(9);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("DESTROYER");
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(2);
@@ -3570,7 +3572,6 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqua
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("size").isEqualTo(3);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("size").isEqualTo(5);
-assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("sunk").isEqualTo(true);
 assertThatJson(parsedJson).array("boards").array("moves").contains("id").matches("-?\\d*(\\.\\d+)?");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("type").isEqualTo("BATTLESHIP");
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(2);
@@ -3599,7 +3600,6 @@ assertThatJson(parsedJson).array("boards").array("moves").field("point").field("
 assertThatJson(parsedJson).array("boards").array("pieces").field("placement").field("x").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("orientation").isEqualTo("DOWN");
 assertThatJson(parsedJson).array("boards").array("pieces").contains("id").isEqualTo(9);
-assertThatJson(parsedJson).array("boards").array("pieces").contains("sunk").isEqualTo(false);
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentMoves").field("point").field("y").isEqualTo(1);
 assertThatJson(parsedJson).array("boards").array("opponentPieces").contains("id").isEqualTo(7);

@@ -264,10 +264,10 @@ public class BattleshipTest {
         Map<Boolean, Board> boardMap = partitionBoards(actual, move2);
 
         Board other = boardMap.get(move2.getBoardId() != boardId);
-        Optional<Piece> sunk = other.getPieces().stream().filter(Piece::isSunk).findFirst();
+        Optional<Piece> taken = other.getPieces().stream().filter(Piece::isTaken).findFirst();
 
-        assertThat(sunk.get().isSunk(), is(true));
-        assertThat(sunk.get().getType(), is(Harbor.DESTROYER));
+        assertThat(taken.get().isTaken(), is(true));
+        assertThat(taken.get().getType(), is(Harbor.DESTROYER));
     }
 
     @Test
@@ -289,8 +289,8 @@ public class BattleshipTest {
         List<Piece> carrier = pieceMap.get(true);
         List<Piece> theRest = pieceMap.get(false);
 
-        List<Piece> sunk = theRest.stream().map(o -> o.copy().withSunk(true).build()).collect(Collectors.toList());
-        List<Piece> otherShips = Util.concat(carrier, sunk);
+        List<Piece> taken = theRest.stream().map(o -> o.copy().withTaken(true).build()).collect(Collectors.toList());
+        List<Piece> otherShips = Util.concat(carrier, taken);
 
         List<Move> moves = otherShips.stream().flatMap(p -> Util.pointsRange(p).stream())
                 .filter(p -> !p.equals(new Point(0, 0)))
@@ -302,7 +302,7 @@ public class BattleshipTest {
 
         Board board = current.copy().withMoves(moves)
                 .withOpponentMoves(emptyList())
-                .withOpponentPieces(sunk).build();
+                .withOpponentPieces(taken).build();
         Board board1 = other.copy().withPieces(otherShips).build();
 
         Game game2 = logic.play(Move.builder()
@@ -333,8 +333,8 @@ public class BattleshipTest {
         List<Piece> carrier = pieceMap.get(true);
         List<Piece> theRest = pieceMap.get(false);
 
-        List<Piece> sunk = theRest.stream().map(o -> o.copy().withSunk(true).build()).collect(Collectors.toList());
-        List<Piece> otherShips = Util.concat(carrier, sunk);
+        List<Piece> taken = theRest.stream().map(o -> o.copy().withTaken(true).build()).collect(Collectors.toList());
+        List<Piece> otherShips = Util.concat(carrier, taken);
 
         List<Move> moves = otherShips.stream().flatMap(p -> Util.pointsRange(p).stream())
                 .filter(p -> !p.equals(new Point(0, 0)))
@@ -346,7 +346,7 @@ public class BattleshipTest {
 
         Board board = current.copy().withMoves(moves)
                 .withOpponentMoves(emptyList())
-                .withOpponentPieces(sunk).build();
+                .withOpponentPieces(taken).build();
         Board board1 = other.copy().withPieces(otherShips).build();
 
         Game game2 = logic.play(Move.builder()
@@ -381,8 +381,8 @@ public class BattleshipTest {
         List<Piece> carrier = pieceMap.get(true);
         List<Piece> theRest = pieceMap.get(false);
 
-        List<Piece> sunk = theRest.stream().map(o -> o.copy().withSunk(true).build()).collect(Collectors.toList());
-        List<Piece> otherShips = Util.concat(carrier, sunk);
+        List<Piece> taken = theRest.stream().map(o -> o.copy().withTaken(true).build()).collect(Collectors.toList());
+        List<Piece> otherShips = Util.concat(carrier, taken);
 
         List<Move> moves = otherShips.stream().flatMap(p -> Util.pointsRange(p).stream())
                 .filter(p -> !p.equals(new Point(0, 0)))
@@ -394,7 +394,7 @@ public class BattleshipTest {
 
         Board board = current.copy().withMoves(moves)
                 .withOpponentMoves(emptyList())
-                .withOpponentPieces(sunk).build();
+                .withOpponentPieces(taken).build();
         Board board1 = other.copy().withPieces(otherShips).build();
 
         Move move = Move.builder()
@@ -463,31 +463,31 @@ public class BattleshipTest {
                         .withPlacement(new Point(0, 0))
                         .withOrientation(DOWN)
                         .withSize(5)
-                        .withSunk(false)
+                        .withTaken(false)
                         .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.BATTLESHIP)
                         .withPlacement(new Point(1, 0))
                         .withOrientation(DOWN)
                         .withSize(4)
-                        .withSunk(false)
+                        .withTaken(false)
                         .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.SUBMARINE)
                         .withPlacement(new Point(2, 0))
                         .withOrientation(DOWN)
                         .withSize(3)
-                        .withSunk(false)
+                        .withTaken(false)
                         .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.CRUISER)
                         .withPlacement(new Point(3, 0))
                         .withOrientation(DOWN)
                         .withSize(3)
-                        .withSunk(false)
+                        .withTaken(false)
                         .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.DESTROYER)
                         .withPlacement(new Point(4, 0))
                         .withOrientation(DOWN)
                         .withSize(2)
-                        .withSunk(false)
+                        .withTaken(false)
                         .withBoardId(boardId).build());
     }
 

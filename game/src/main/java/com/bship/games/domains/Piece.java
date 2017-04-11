@@ -33,7 +33,7 @@ public class Piece {
 
     private Long boardId;
     private Integer size;
-    private boolean sunk;
+    private boolean taken;
 
     private Piece(Builder builder) {
         type = builder.type;
@@ -41,7 +41,7 @@ public class Piece {
         orientation = builder.orientation;
         boardId = builder.boardId;
         id = builder.id;
-        sunk = builder.sunk;
+        taken = builder.taken;
         size = builder.size;
     }
 
@@ -49,8 +49,8 @@ public class Piece {
         return type;
     }
 
-    public boolean isSunk() {
-        return sunk;
+    public boolean isTaken() {
+        return taken;
     }
 
     public Long getId() {
@@ -81,7 +81,7 @@ public class Piece {
                 .withPlacement(placement)
                 .withOrientation(orientation)
                 .withBoardId(boardId)
-                .withSunk(sunk)
+                .withTaken(taken)
                 .withSize(size);
     }
 
@@ -101,13 +101,13 @@ public class Piece {
                 Objects.equals(this.orientation, that.orientation) &&
                 Objects.equals(this.placement, that.placement) &&
                 Objects.equals(this.size, that.size) &&
-                Objects.equals(this.sunk, that.sunk) &&
+                Objects.equals(this.taken, that.taken) &&
                 Objects.equals(this.type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(boardId, id, orientation, placement, size, sunk,
+        return Objects.hash(boardId, id, orientation, placement, size, taken,
                 type);
     }
 
@@ -117,7 +117,7 @@ public class Piece {
         private Harbor type;
         private Long boardId;
         private Long id;
-        private boolean sunk;
+        private boolean taken;
         private Integer size;
         private Point placement;
         private Direction orientation;
@@ -147,8 +147,8 @@ public class Piece {
             return this;
         }
 
-        public Builder withSunk(boolean sunk) {
-            this.sunk = sunk;
+        public Builder withTaken(boolean taken) {
+            this.taken = taken;
             return this;
         }
 
@@ -170,7 +170,7 @@ public class Piece {
                 .add("\"placement\": " + placement)
                 .add("\"orientation\": " + "\"" + orientation + "\"")
                 .add("\"size\": " + size)
-                .add("\"sunk\": " + sunk)
+                .add("\"taken\": " + taken)
                 .add("\"type\": " + "\"" + type + "\"")
                 .toString();
     }

@@ -33,7 +33,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 1,
                                           size       : 5,
-                                          sunk       : false,
+                                          taken       : false,
                                           id         : 1
                                       ],
                                       [
@@ -45,7 +45,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 1,
                                           size       : 4,
-                                          sunk       : false,
+                                          taken       : false,
                                           id         : 2
                                       ],
                                       [
@@ -57,7 +57,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 1,
                                           size       : 3,
-                                          sunk       : true,
+                                          taken       : true,
                                           id         : 3
                                       ],
                                       [
@@ -69,7 +69,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 1,
                                           size       : 3,
-                                          sunk       : true,
+                                          taken       : true,
                                           id         : 4
                                       ],
                                       [
@@ -81,7 +81,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 1,
                                           size       : 2,
-                                          sunk       : true,
+                                          taken       : true,
                                           id         : 5
                                       ]],
                      opponentPieces: [[
@@ -93,7 +93,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 2,
                                           size       : 5,
-                                          sunk       : true,
+                                          taken       : true,
                                           id         : 6
                                       ],
                                       [
@@ -105,7 +105,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 2,
                                           size       : 4,
-                                          sunk       : true,
+                                          taken       : true,
                                           id         : 7
                                       ]],
                      moves         : [[
@@ -289,7 +289,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 2,
                                           size       : 5,
-                                          sunk       : true,
+                                          taken       : true,
                                           id         : 6
                                       ],
                                       [
@@ -301,7 +301,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 2,
                                           size       : 4,
-                                          sunk       : true,
+                                          taken       : true,
                                           id         : 7
                                       ],
                                       [
@@ -313,7 +313,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 2,
                                           size       : 3,
-                                          sunk       : false,
+                                          taken       : false,
                                           id         : 8
                                       ],
                                       [
@@ -325,7 +325,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 2,
                                           size       : 3,
-                                          sunk       : false,
+                                          taken       : false,
                                           id         : 9
                                       ],
                                       [
@@ -337,7 +337,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 2,
                                           size       : 2,
-                                          sunk       : false,
+                                          taken       : false,
                                           id         : 10
                                       ]],
                      opponentPieces: [[
@@ -349,7 +349,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 1,
                                           size       : 2,
-                                          sunk       : true,
+                                          taken       : true,
                                           id         : 5
                                       ],
                                       [
@@ -361,7 +361,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 1,
                                           size       : 3,
-                                          sunk       : true,
+                                          taken       : true,
                                           id         : 4
                                       ],
                                       [
@@ -373,7 +373,7 @@ Contract.make {
                                           orientation: 'DOWN',
                                           boardId    : 1,
                                           size       : 3,
-                                          sunk       : true,
+                                          taken       : true,
                                           id         : 3
                                       ]],
                      moves         : [[

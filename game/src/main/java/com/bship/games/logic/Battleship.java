@@ -101,12 +101,12 @@ public class Battleship implements GameLogic {
     }
 
     private Board updateBoard(Board current, Board opponent) {
-        List<Piece> sunk = getSunk(sinkShips(current, opponent));
+        List<Piece> taken = getSunk(sinkShips(current, opponent));
         List<Piece> ships = sinkShips(opponent, current);
         return ofNullable(current).map(Board::copy)
                 .map(board -> board.withPieces(ships))
-                .map(board -> board.withOpponentPieces(sunk))
-                .map(board -> board.withWinner(ships.size() == sunk.size()))
+                .map(board -> board.withOpponentPieces(taken))
+                .map(board -> board.withWinner(ships.size() == taken.size()))
                 .map(Board.Builder::build)
                 .orElse(current);
     }
@@ -116,14 +116,14 @@ public class Battleship implements GameLogic {
     }
 
     private List<Piece> getSunk(List<Piece> pieces) {
-        return pieces.stream().filter(Piece::isSunk).collect(Collectors.toList());
+        return pieces.stream().filter(Piece::isTaken).collect(Collectors.toList());
     }
 
     private Function<Piece, Piece> sinkShip(List<Move> moves) {
         return piece -> ofNullable(piece)
                 .filter(isSunk(moves))
                 .map(Piece::copy)
-                .map(p -> p.withSunk(SUNK))
+                .map(p -> p.withTaken(SUNK))
                 .map(Piece.Builder::build)
                 .orElse(piece);
     }

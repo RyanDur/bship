@@ -14,16 +14,16 @@ CREATE TABLE boards (
     ON DELETE CASCADE
 );
 
-CREATE TABLE ships (
-  id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  type          VARCHAR(50),
-  placement     INT          DEFAULT NULL,
-  orientation   VARCHAR(50)  DEFAULT 'NONE',
-  sunk          BOOL         DEFAULT FALSE,
-  size          INT,
-  ship_board_id INT NOT NULL,
-  CONSTRAINT ship_boards_id_fk
-  FOREIGN KEY (ship_board_id)
+CREATE TABLE pieces (
+  id             INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  type           VARCHAR(50),
+  placement      INT          DEFAULT NULL,
+  orientation    VARCHAR(50)  DEFAULT 'NONE',
+  taken          BOOL         DEFAULT FALSE,
+  size           INT,
+  piece_board_id INT NOT NULL,
+  CONSTRAINT piece_boards_id_fk
+  FOREIGN KEY (piece_board_id)
   REFERENCES boards (id)
     ON DELETE CASCADE
 );
