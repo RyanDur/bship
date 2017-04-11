@@ -11,18 +11,17 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 
 import static com.bship.games.util.Util.toIndex;
 import static com.bship.games.util.Util.toPoint;
 import static java.util.Objects.isNull;
+import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
 @Component
-public class MoveRepository {
+public class MoveRepository implements SQL {
 
-    private static final String INSERT_MOVES = "INSERT INTO moves(move_board_id, point, status) VALUES (:board_id, :point, :status)";
-    private static final String SELECT_ALL_MOVES_FOR_BOARD = "SELECT * FROM moves WHERE move_board_id = :board_id";
-    private static final String SELECT_All_OPPONENTS_MOVES = "SELECT m.* FROM moves m JOIN boards b ON m.move_board_id = b.id WHERE b.game_id = :game_id AND m.move_board_id <> :board_id;";
     private final NamedParameterJdbcTemplate template;
 
     @Autowired
@@ -31,11 +30,13 @@ public class MoveRepository {
     }
 
     public void save(List<Move> moves) {
-        template.batchUpdate(INSERT_MOVES, createBatch(getNewMoves(moves)));
+        of(getNewMoves(moves))
+                .map(movesBatch)
+                .map(batch -> template.batchUpdate(join(SEP, INSERT_INTO, MOVES), batch));
     }
 
     public List<Move> getAll(Long boardId) {
-        return template.query(SELECT_ALL_MOVES_FOR_BOARD,
+        return template.query(join(SEP, SELECT_ALL, MOVES_FOR_BOARD),
                 new MapSqlParameterSource("board_id", boardId),
                 buildMove);
     }
@@ -48,17 +49,6 @@ public class MoveRepository {
         return template.query(SELECT_All_OPPONENTS_MOVES, source, buildMove);
     }
 
-    public static SqlParameterSource[] createBatch(List<Move> moves) {
-        return moves.stream().map(move ->
-                new HashMap<String, Object>() {{
-                    put("board_id", move.getBoardId());
-                    put("point", toIndex(move.getPoint()));
-                    put("status", move.getStatus().name());
-                }}).map(MapSqlParameterSource::new)
-                .collect(toList())
-                .toArray(new MapSqlParameterSource[0]);
-    }
-
     private List<Move> getNewMoves(List<Move> moves) {
         return moves.stream().filter(move -> isNull(move.getId())).collect(toList());
     }
@@ -68,4 +58,12 @@ public class MoveRepository {
             .withId(rs.getLong("id"))
             .withBoardId(rs.getLong("move_board_id"))
             .withPoint(toPoint(rs.getInt("point"))).build();
+
+    private Function<List<Move>, SqlParameterSource[]> movesBatch = createBatch(move ->
+            new HashMap<String, Object>() {{
+                put("board_id", move.getBoardId());
+                put("point", toIndex(move.getPoint()));
+                put("status", move.getStatus().name());
+            }});
+
 }

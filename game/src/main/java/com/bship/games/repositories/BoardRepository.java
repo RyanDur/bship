@@ -15,7 +15,8 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 
 @Repository
-public class BoardRepository {
+public class BoardRepository implements SQL {
+
     private NamedParameterJdbcTemplate template;
     private final PieceRepository pieces;
     private final MoveRepository moves;
@@ -31,7 +32,7 @@ public class BoardRepository {
     @Transactional
     public Board create(Long gameId) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
-        template.update("INSERT INTO boards(game_id) VALUE(:id)",
+        template.update(join(SEP, INSERT_INTO, BOARDS_FOR_GAME, VALUE_ID),
                 new MapSqlParameterSource("id", gameId), holder);
 
         long id = holder.getKey().longValue();
@@ -48,14 +49,15 @@ public class BoardRepository {
 
     @Transactional(readOnly = true)
     public Optional<Board> get(Long id) {
-        return template.query("SELECT * FROM boards WHERE id = :id",
+        return template.query(join(SEP, SELECT_ALL, FROM_BOARDS, WHERE, ID),
                 new MapSqlParameterSource("id", id),
-                buildBoard()
-        ).stream().findFirst();
+                buildBoard())
+                .stream()
+                .findFirst();
     }
 
     public List<Board> getAll(Long gameId) {
-        return template.query("SELECT * FROM boards WHERE game_id = :game_id",
+        return template.query(join(SEP, SELECT_ALL, FROM_BOARDS, WHERE, GAME_ID),
                 new MapSqlParameterSource("game_id", gameId),
                 buildBoard());
     }
@@ -67,7 +69,7 @@ public class BoardRepository {
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("winner", board.isWinner());
         source.addValue("id", board.getId());
-        template.update("UPDATE boards SET winner = :winner WHERE id = :id", source);
+        template.update(join(SEP, UPDATE_BOARDS, SET, WINNER, WHERE, ID), source);
 
         return get(board.getId());
     }

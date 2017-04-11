@@ -10,28 +10,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Optional.of;
 
 @Repository
-public class GameRepository {
+public class GameRepository implements SQL {
 
-    private static final String INSERT_INTO_GAMES_ID = "INSERT INTO games(id)";
-    private static final String FROM_GAMES = "FROM games";
-    private static final String UPDATE_GAMES = "UPDATE games";
-    private static final String SELECT_ALL = "SELECT *";
-    private static final String DELETE = "DELETE";
-    private static final String WHERE = "WHERE";
-    private static final String VALUE_DEFAULT = "VALUE (default)";
-    private static final String SET = "SET";
-    private static final String ID = "id = :id";
-    private static final String TURN = "turn = :turn";
-    private static final String OVER = "over = :over";
-    private static final String SEP = " ";
-    private static final String COMMA = ", ";
     private final NamedParameterJdbcTemplate template;
     private final BoardRepository boards;
 
@@ -80,12 +65,8 @@ public class GameRepository {
 
     private Long generateGame() {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
-        template.update(join(SEP, INSERT_INTO_GAMES_ID, VALUE_DEFAULT), null, holder);
+        template.update(join(SEP, INSERT_INTO, GAMES, VALUE_DEFAULT), null, holder);
         return holder.getKey().longValue();
-    }
-
-    private String join(String separator, String... sqls) {
-        return Stream.of(sqls).collect(Collectors.joining(separator));
     }
 
     private RowMapper<Game> buildGame(BoardRepository boards) {
