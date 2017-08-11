@@ -74,4 +74,38 @@ assertThatJson(parsedJson).field("rules").array("pieceOrientations").arrayField(
 assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").isEqualTo(1);
 }
 
+@Test
+public void validate_shouldGetAListOfGames() throws Exception {
+// given:
+MockMvcRequestSpecification request = given()
+.header("Content-Type", "application/json");
+
+// when:
+ResponseOptions response = given().spec(request)
+.get("/games");
+
+// then:
+assertThat(response.statusCode()).isEqualTo(200);
+// and:
+DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
+assertThatJson(parsedJson).array().contains("name").isEqualTo("BATTLESHIP");
+assertThatJson(parsedJson).array().contains("movesPerTurn").isEqualTo(1);
+assertThatJson(parsedJson).array().array("pieces").contains("name").isEqualTo("AIRCRAFT_CARRIER");
+assertThatJson(parsedJson).array().field("boardDimensions").field("height").isEqualTo(10);
+assertThatJson(parsedJson).array().contains("numberOfPlayers").isEqualTo(2);
+assertThatJson(parsedJson).array().array("pieces").contains("name").isEqualTo("CRUISER");
+assertThatJson(parsedJson).array().field("boardDimensions").field("width").isEqualTo(10);
+assertThatJson(parsedJson).array().array("pieceOrientations").arrayField().isEqualTo("UP").value();
+assertThatJson(parsedJson).array().array("pieces").contains("name").isEqualTo("BATTLESHIP");
+assertThatJson(parsedJson).array().array("pieceOrientations").arrayField().isEqualTo("RIGHT").value();
+assertThatJson(parsedJson).array().array("pieceOrientations").arrayField().isEqualTo("LEFT").value();
+assertThatJson(parsedJson).array().array("pieces").contains("name").isEqualTo("SUBMARINE");
+assertThatJson(parsedJson).array().array("pieceOrientations").arrayField().isEqualTo("DOWN").value();
+assertThatJson(parsedJson).array().array("pieces").contains("size").isEqualTo(5);
+assertThatJson(parsedJson).array().array("pieces").contains("name").isEqualTo("DESTROYER");
+assertThatJson(parsedJson).array().array("pieces").contains("size").isEqualTo(4);
+assertThatJson(parsedJson).array().array("pieces").contains("size").isEqualTo(3);
+assertThatJson(parsedJson).array().array("pieces").contains("size").isEqualTo(2);
+}
+
 }

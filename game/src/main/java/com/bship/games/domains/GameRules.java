@@ -36,6 +36,10 @@ public enum GameRules {
         this.pieceOrientations = pieceOrientations;
     }
 
+    public String getName() {
+        return name();
+    }
+
     public int getNumberOfPlayers() {
         return numberOfPlayers;
     }
