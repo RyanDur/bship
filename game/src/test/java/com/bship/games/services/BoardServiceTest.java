@@ -55,7 +55,6 @@ public class BoardServiceTest {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(3,2))
                 .withOrientation(RIGHT)
-                .withSize(5)
                 .withBoardId(boardId)
                 .withType(AIRCRAFT_CARRIER)
                 .build();

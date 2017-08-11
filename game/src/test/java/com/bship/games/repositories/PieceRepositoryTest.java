@@ -29,7 +29,7 @@ public class PieceRepositoryTest {
     @Before
     public void setup() {
         template = new NamedParameterJdbcTemplate(DBHelper.reset());
-        template.update("INSERT INTO games(id) VALUE (default)", new HashMap<>());
+        template.update("INSERT INTO games(id, name) VALUE (default, 'BATTLESHIP')", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (1)", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (1)", new HashMap<>());
         pieces = new PieceRepository(template);
@@ -118,11 +118,11 @@ public class PieceRepositoryTest {
     }
     @Test
     public void getAllOpponents_shouldReturnAllTheOpponentsSunkShipFromSpecificGame() {
-        template.update("INSERT INTO games(id) VALUE (default)", new HashMap<>());
+        template.update("INSERT INTO games(id, name) VALUE (default, 'BATTLESHIP')", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (2)", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (2)", new HashMap<>());
 
-        template.update("INSERT INTO games(id) VALUE (default)", new HashMap<>());
+        template.update("INSERT INTO games(id, name) VALUE (default, 'BATTLESHIP')", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (3)", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (3)", new HashMap<>());
 
@@ -171,7 +171,6 @@ public class PieceRepositoryTest {
                 .withId(1L + ship.ordinal())
                 .withPlacement(new Point())
                 .withOrientation(NONE)
-                .withSize(ship.getSize())
                 .withBoardId(1L)
                 .build()).collect(Collectors.toList());
     }

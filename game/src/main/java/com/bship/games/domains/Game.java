@@ -1,5 +1,6 @@
 package com.bship.games.domains;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
@@ -12,18 +13,21 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Optional.ofNullable;
 
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonDeserialize(builder = Game.Builder.class)
 public class Game {
     private final List<Board> boards;
     private final Long id;
     private final Long turn;
     private final boolean over;
+    private final GameRules rules;
 
     private Game(Builder builder) {
         boards = builder.boards;
         id = builder.id;
         turn = builder.turn;
         over = builder.over;
+        rules = builder.rules;
     }
 
     public List<Board> getBoards() {
@@ -42,10 +46,15 @@ public class Game {
         return over;
     }
 
+    public GameRules getRules() {
+        return rules;
+    }
+
     public Builder copy() {
         return builder()
                 .withId(id)
                 .withBoards(boards)
+                .withRules(rules)
                 .withTurn(turn)
                 .withOver(over);
     }
@@ -64,7 +73,8 @@ public class Game {
         return Objects.equals(this.boards, that.boards) &&
                 Objects.equals(this.id, that.id) &&
                 Objects.equals(this.over, that.over) &&
-                Objects.equals(this.turn, that.turn);
+                Objects.equals(this.turn, that.turn) &&
+                Objects.equals(this.rules, that.rules);
     }
 
     @Override
@@ -79,6 +89,7 @@ public class Game {
                 .add("\"id\":" + id)
                 .add("\"over\":" + over)
                 .add("\"turn\":" + turn)
+                .add("\"rules\":" + rules)
                 .toString();
     }
 
@@ -88,6 +99,7 @@ public class Game {
         private List<Board> boards;
         private Long turn;
         public boolean over;
+        private GameRules rules;
 
         public Builder withId(Long id) {
             this.id = id;
@@ -101,6 +113,11 @@ public class Game {
 
         public Builder withOver(boolean over) {
             this.over = over;
+            return this;
+        }
+
+        public Builder withRules(GameRules rules) {
+            this.rules = rules;
             return this;
         }
 

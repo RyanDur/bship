@@ -2,6 +2,7 @@ package com.bship.games.services;
 
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
+import com.bship.games.domains.GameRules;
 import com.bship.games.exceptions.GameValidation;
 import com.bship.games.exceptions.InvalidGame;
 import com.bship.games.logic.GameLogic;
@@ -13,6 +14,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.Optional;
 
+import static com.bship.games.domains.GameRules.BATTLESHIP;
 import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -32,9 +34,11 @@ public class GameServiceTest {
     private GameService gameService;
     private GameRepository gameRepository;
     private GameLogic logic;
+    private GameRules game;
 
     @Before
     public void setup() {
+        game = BATTLESHIP;
         gameRepository = mock(GameRepository.class);
         logic = mock(GameLogic.class);
         gameService = new GameService(gameRepository, logic);
@@ -42,8 +46,8 @@ public class GameServiceTest {
 
     @Test
     public void getNewGame_shouldReturnANewGame() {
-        when(gameRepository.create()).thenReturn(Game.builder().build());
-        Game actualGame = gameService.getNewGame();
+        when(gameRepository.create(game)).thenReturn(Game.builder().build());
+        Game actualGame = gameService.getNewGame(BATTLESHIP);
 
         assertThat(actualGame, is(instanceOf(Game.class)));
     }

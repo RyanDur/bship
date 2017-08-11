@@ -109,14 +109,12 @@ public class BattleshipTest {
         Piece piece1 = Piece.builder()
                 .withType(Harbor.BATTLESHIP)
                 .withPlacement(new Point(0, 0))
-                .withSize(3)
                 .withOrientation(DOWN)
                 .build();
 
         Piece piece2 = Piece.builder()
                 .withType(AIRCRAFT_CARRIER)
                 .withPlacement(new Point(1, 0))
-                .withSize(4)
                 .withOrientation(DOWN)
                 .build();
 
@@ -136,14 +134,12 @@ public class BattleshipTest {
                 .withType(Harbor.BATTLESHIP)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
-                .withSize(3)
                 .build();
 
         Piece piece2 = Piece.builder()
                 .withType(Harbor.BATTLESHIP)
                 .withPlacement(new Point(1, 0))
                 .withOrientation(DOWN)
-                .withSize(3)
                 .build();
 
         Board board = Board.builder().addPiece(piece1).build();
@@ -157,14 +153,12 @@ public class BattleshipTest {
                 .withType(Harbor.BATTLESHIP)
                 .withPlacement(new Point())
                 .withOrientation(NONE)
-                .withSize(3)
                 .build();
 
         Piece piece2 = Piece.builder()
                 .withType(Harbor.BATTLESHIP)
                 .withPlacement(new Point(1, 0))
                 .withOrientation(DOWN)
-                .withSize(3)
                 .build();
 
         Board board = Board.builder().addPiece(piece1).build();
@@ -182,13 +176,11 @@ public class BattleshipTest {
                 .withType(Harbor.BATTLESHIP)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
-                .withSize(3)
                 .build();
         Piece carrier = Piece.builder()
                 .withType(AIRCRAFT_CARRIER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(RIGHT)
-                .withSize(4)
                 .build();
 
         Board board = Board.builder().withPieces(singletonList(battleship)).build();
@@ -462,31 +454,26 @@ public class BattleshipTest {
                 Piece.builder().withType(AIRCRAFT_CARRIER)
                         .withPlacement(new Point(0, 0))
                         .withOrientation(DOWN)
-                        .withSize(5)
                         .withTaken(false)
                         .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.BATTLESHIP)
                         .withPlacement(new Point(1, 0))
                         .withOrientation(DOWN)
-                        .withSize(4)
                         .withTaken(false)
                         .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.SUBMARINE)
                         .withPlacement(new Point(2, 0))
                         .withOrientation(DOWN)
-                        .withSize(3)
                         .withTaken(false)
                         .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.CRUISER)
                         .withPlacement(new Point(3, 0))
                         .withOrientation(DOWN)
-                        .withSize(3)
                         .withTaken(false)
                         .withBoardId(boardId).build(),
                 Piece.builder().withType(Harbor.DESTROYER)
                         .withPlacement(new Point(4, 0))
                         .withOrientation(DOWN)
-                        .withSize(2)
                         .withTaken(false)
                         .withBoardId(boardId).build());
     }

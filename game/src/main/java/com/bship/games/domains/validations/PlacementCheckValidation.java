@@ -24,14 +24,13 @@ public class PlacementCheckValidation implements ConstraintValidator<PlacementCh
                 .filter(p -> nonNull(p.getType()))
                 .filter(validOrientation)
                 .filter(p -> Harbor.getShips().contains(p.getType()))
-                .filter(p -> Harbor.valueOf(p.getType().name()).getSize().equals(p.getSize()))
-                .filter(p -> Objects.equals(p.getSize(), pointsRange(p).size()))
+                .filter(p -> Objects.equals(p.getType().getSize(), pointsRange(p).size()))
                 .filter(Util::validRange)
                 .isPresent();
     }
 
     private Predicate<Piece> validOrientation = piece ->
-            nonNull(piece.getSize()) &&
+            nonNull(piece.getType().getSize()) &&
                     nonNull(piece.getOrientation()) &&
                     !piece.getOrientation().equals(NONE);
 }

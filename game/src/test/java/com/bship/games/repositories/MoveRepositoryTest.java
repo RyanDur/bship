@@ -28,11 +28,11 @@ public class MoveRepositoryTest {
     public void setup() {
         template = new NamedParameterJdbcTemplate(DBHelper.reset());
         moves = new MoveRepository(template);
-        template.update("INSERT INTO games(id) VALUE (default)", new HashMap<>());
+        template.update("INSERT INTO games(id, name) VALUE (default, 'BATTLESHIP')", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (1)", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (1)", new HashMap<>());
 
-        template.update("INSERT INTO games(id) VALUE (default)", new HashMap<>());
+        template.update("INSERT INTO games(id, name) VALUE (default, 'BATTLESHIP')", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (2)", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (2)", new HashMap<>());
     }

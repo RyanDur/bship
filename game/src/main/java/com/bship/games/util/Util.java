@@ -53,12 +53,12 @@ public class Util {
         return concat(list, singletonList(elem));
     }
 
-    public static <T> Function<List<T>, List<T>> concat(List<T> listB) {
-        return listA -> concat(listA, listB);
-    }
-
     public static <T> List<T> concat(List<T> listA, List<T> listB) {
         return toImmutableList(listA, listB);
+    }
+
+    public static <T> Function<List<T>, List<T>> concat(List<T> listB) {
+        return listA -> concat(listA, listB);
     }
 
     public static boolean validRange(Piece piece) {
@@ -74,7 +74,7 @@ public class Util {
     }
 
     public static List<Point> pointsRange(Piece piece) {
-        if (isSet(piece.getPlacement()) && nonNull(piece.getSize()) &&
+        if (isSet(piece.getPlacement()) && nonNull(piece.getType().getSize()) &&
                 nonNull(piece.getOrientation())) {
             IntFunction<Point> mapper;
             IntStream range;
@@ -82,25 +82,25 @@ public class Util {
                 case LEFT:
                     mapper = x -> new Point(x, piece.getPlacement().getY());
                     range = IntStream.rangeClosed(
-                            piece.getPlacement().getX() - piece.getSize() + 1,
+                            piece.getPlacement().getX() - piece.getType().getSize() + 1,
                             piece.getPlacement().getX());
                     break;
                 case RIGHT:
                     mapper = x -> new Point(x, piece.getPlacement().getY());
                     range = IntStream.rangeClosed(
                             piece.getPlacement().getX(),
-                            piece.getPlacement().getX() + piece.getSize() - 1);
+                            piece.getPlacement().getX() + piece.getType().getSize() - 1);
                     break;
                 case DOWN:
                     mapper = y -> new Point(piece.getPlacement().getX(), y);
                     range = IntStream.rangeClosed(
                             piece.getPlacement().getY(),
-                            piece.getPlacement().getY() + piece.getSize() - 1);
+                            piece.getPlacement().getY() + piece.getType().getSize() - 1);
                     break;
                 case UP:
                     mapper = y -> new Point(piece.getPlacement().getX(), y);
                     range = rangeClosed(
-                            piece.getPlacement().getY() - piece.getSize() + 1,
+                            piece.getPlacement().getY() - piece.getType().getSize() + 1,
                             piece.getPlacement().getY());
                     break;
                 default:

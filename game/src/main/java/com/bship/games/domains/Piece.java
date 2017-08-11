@@ -32,7 +32,6 @@ public class Piece {
     private Long id;
 
     private Long boardId;
-    private Integer size;
     private boolean taken;
 
     private Piece(Builder builder) {
@@ -42,7 +41,6 @@ public class Piece {
         boardId = builder.boardId;
         id = builder.id;
         taken = builder.taken;
-        size = builder.size;
     }
 
     public Harbor getType() {
@@ -61,10 +59,6 @@ public class Piece {
         return boardId;
     }
 
-    public Integer getSize() {
-        return size;
-    }
-
     public Point getPlacement() {
         return placement;
     }
@@ -81,8 +75,7 @@ public class Piece {
                 .withPlacement(placement)
                 .withOrientation(orientation)
                 .withBoardId(boardId)
-                .withTaken(taken)
-                .withSize(size);
+                .withTaken(taken);
     }
 
     @JsonIgnore
@@ -100,14 +93,13 @@ public class Piece {
         return Objects.equals(this.boardId, that.boardId) &&
                 Objects.equals(this.orientation, that.orientation) &&
                 Objects.equals(this.placement, that.placement) &&
-                Objects.equals(this.size, that.size) &&
                 Objects.equals(this.taken, that.taken) &&
                 Objects.equals(this.type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(boardId, id, orientation, placement, size, taken,
+        return Objects.hash(boardId, id, orientation, placement, taken,
                 type);
     }
 
@@ -118,7 +110,6 @@ public class Piece {
         private Long boardId;
         private Long id;
         private boolean taken;
-        private Integer size;
         private Point placement;
         private Direction orientation;
 
@@ -152,11 +143,6 @@ public class Piece {
             return this;
         }
 
-        public Builder withSize(Integer size) {
-            this.size = size;
-            return this;
-        }
-
         public Piece build() {
             return new Piece(this);
         }
@@ -168,10 +154,9 @@ public class Piece {
                 .add("\"id\": " + id)
                 .add("\"boardId\": " + boardId)
                 .add("\"placement\": " + placement)
-                .add("\"orientation\": " + "\"" + orientation + "\"")
-                .add("\"size\": " + size)
+                .add("\"orientation\": " + orientation)
                 .add("\"taken\": " + taken)
-                .add("\"type\": " + "\"" + type + "\"")
+                .add("\"type\": " + type)
                 .toString();
     }
 }

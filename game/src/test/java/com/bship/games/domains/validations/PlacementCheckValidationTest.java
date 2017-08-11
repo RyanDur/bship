@@ -27,22 +27,9 @@ public class PlacementCheckValidationTest {
                 .withType(AIRCRAFT_CARRIER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
-                .withSize(5)
                 .build();
 
         assertThat(validation.isValid(piece, null), is(true));
-    }
-
-    @Test
-    public void isValid_shouldNotAllowAnInvalidAircraftCarrierSize() throws Exception {
-        Piece piece = Piece.builder()
-                .withType(AIRCRAFT_CARRIER)
-                .withPlacement(new Point(0, 0))
-                .withOrientation(DOWN)
-                .withSize(4)
-                .build();
-
-        assertThat(validation.isValid(piece, null), is(false));
     }
 
     @Test
@@ -50,7 +37,6 @@ public class PlacementCheckValidationTest {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
-                .withSize(4)
                 .build();
 
         assertThat(validation.isValid(piece, null), is(false));
@@ -62,18 +48,6 @@ public class PlacementCheckValidationTest {
                 .withType(AIRCRAFT_CARRIER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(UP)
-                .withSize(5)
-                .build();
-
-        assertThat(validation.isValid(piece, null), is(false));
-    }
-
-    @Test
-    public void isValid_shouldNotAllowAPieceWithoutASize() throws Exception {
-        Piece piece = Piece.builder()
-                .withType(AIRCRAFT_CARRIER)
-                .withPlacement(new Point(0, 0))
-                .withOrientation(DOWN)
                 .build();
 
         assertThat(validation.isValid(piece, null), is(false));
@@ -84,7 +58,6 @@ public class PlacementCheckValidationTest {
         Piece piece = Piece.builder()
                 .withType(AIRCRAFT_CARRIER)
                 .withPlacement(new Point(0, 0))
-                .withSize(5)
                 .build();
 
         assertThat(validation.isValid(piece, null), is(false));
@@ -96,7 +69,6 @@ public class PlacementCheckValidationTest {
                 .withType(AIRCRAFT_CARRIER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(NONE)
-                .withSize(5)
                 .build();
 
         assertThat(validation.isValid(piece, null), is(false));

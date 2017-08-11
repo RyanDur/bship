@@ -72,7 +72,6 @@ public class PieceRepository implements SQL {
             .withPlacement(getPoint(rs.getString("placement")))
             .withOrientation(Direction.valueOf(rs.getString("orientation")))
             .withTaken(rs.getBoolean("taken"))
-            .withSize(rs.getInt("size"))
             .withBoardId(rs.getLong("piece_board_id")).build();
 
     private Point getPoint(String point) throws SQLException {

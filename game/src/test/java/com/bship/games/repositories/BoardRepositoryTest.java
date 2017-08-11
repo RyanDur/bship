@@ -44,9 +44,9 @@ public class BoardRepositoryTest {
         boards = new BoardRepository(template, ships, moves);
 
         game = Game.builder().withId(1L).build();
-        template.update("INSERT INTO games(id) VALUE(:id)",
+        template.update("INSERT INTO games(id, name) VALUE(:id, 'BATTLESHIP')",
                 new MapSqlParameterSource("id", game.getId()));
-        template.update("INSERT INTO games(id) VALUE(:id)",
+        template.update("INSERT INTO games(id, name) VALUE(:id, 'BATTLESHIP')",
                 new MapSqlParameterSource("id", game.getId() + 1L));
         pieceList = getShips();
         when(ships.createAll(anyLong())).thenReturn(pieceList);
@@ -157,7 +157,6 @@ public class BoardRepositoryTest {
                 .withType(ship)
                 .withPlacement(new Point())
                 .withOrientation(NONE)
-                .withSize(ship.getSize())
                 .withBoardId(1L)
                 .build()).collect(Collectors.toList());
     }

@@ -4,6 +4,7 @@ import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
 import com.bship.games.domains.Point;
+import com.bship.games.domains.GameRules;
 import com.bship.games.endpoints.RequestErrors.FieldValidation;
 import com.bship.games.endpoints.RequestErrors.GameErrors;
 import com.bship.games.endpoints.RequestErrors.ObjectValidation;
@@ -30,7 +31,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -42,6 +42,7 @@ public class GameControllerTest {
     private GameService mockService;
     private MockMvc mockMvc;
     private ObjectMapper mapper;
+    private GameRules game = GameRules.BATTLESHIP;
 
     @Before
     public void setup() {
@@ -54,29 +55,30 @@ public class GameControllerTest {
 
     @Test
     public void createGame_shouldDefineRequestMappingForPostingToGamesEndpoint() throws Exception {
-        mockMvc.perform(post("/games"));
+        mockMvc.perform(post("/games/BATTLESHIP"));
     }
 
     @Test
     public void createGame_shouldRespondWith201() throws Exception {
-        mockMvc.perform(post("/games"))
+        mockMvc.perform(post("/games/BATTLESHIP"))
                 .andExpect(status().isCreated());
     }
 
     @Test
     public void createGame_shouldProduceJSONWithAUTF8Charset() throws Exception {
         Game expected = Game.builder().build();
-        when(mockService.getNewGame()).thenReturn(expected);
-        mockMvc.perform(post("/games"))
+        when(mockService.getNewGame(game)).thenReturn(expected);
+        mockMvc.perform(post("/games/BATTLESHIP")
+                .accept(APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8_VALUE));
     }
 
     @Test
     public void createGame_shouldReturnAGame() throws Exception {
         Game expected = Game.builder().withBoards(Collections.emptyList()).build();
-        when(mockService.getNewGame()).thenReturn(expected);
+        when(mockService.getNewGame(game)).thenReturn(expected);
 
-        Game actual = mapper.readValue(mockMvc.perform(post("/games"))
+        Game actual = mapper.readValue(mockMvc.perform(post("/games/BATTLESHIP"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(), Game.class);

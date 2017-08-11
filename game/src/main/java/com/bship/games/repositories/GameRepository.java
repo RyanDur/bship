@@ -1,6 +1,7 @@
 package com.bship.games.repositories;
 
 import com.bship.games.domains.Game;
+import com.bship.games.domains.GameRules;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -27,9 +28,9 @@ public class GameRepository implements SQL {
         this.boards = boardRepository;
     }
 
-    public Game create() {
-        Long id = generateGame();
-        return Game.builder().withId(id)
+    public Game create(GameRules game) {
+        Long id = generate(game);
+        return Game.builder().withId(id).withRules(GameRules.BATTLESHIP)
                 .withBoards(asList(boards.create(id), boards.create(id)))
                 .build();
     }
@@ -63,15 +64,18 @@ public class GameRepository implements SQL {
         return get(game.getId());
     }
 
-    private Long generateGame() {
+    private Long generate(GameRules game) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
-        template.update(join(SEP, INSERT_INTO, GAMES, VALUE_DEFAULT), null, holder);
+        MapSqlParameterSource source = new MapSqlParameterSource();
+        source.addValue("name", game.name());
+        template.update(join(SEP, INSERT_INTO, GAMES), source, holder);
         return holder.getKey().longValue();
     }
 
     private RowMapper<Game> buildGame(BoardRepository boards) {
         return (rs, rowNum) -> Game.builder()
                 .withId(rs.getLong("id"))
+                .withRules(GameRules.valueOf(rs.getString("name")))
                 .withBoards(boards.getAll(rs.getLong("id")))
                 .withOver(rs.getBoolean("over"))
                 .withTurn(of(rs.getLong("turn"))

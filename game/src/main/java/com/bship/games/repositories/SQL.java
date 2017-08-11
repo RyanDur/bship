@@ -40,7 +40,7 @@ public interface SQL {
     String SELECT_All_OPPONENTS_MOVES = "SELECT m.* FROM moves m JOIN boards b ON m.move_board_id = b.id WHERE b.game_id = :game_id AND m.move_board_id <> :board_id;";
 
     String PIECES = "pieces(type, size, piece_board_id) VALUES (:type, :size, :piece_board_id)";
-    String GAMES = "games(id)";
+    String GAMES = "games(id, name) VALUES (default, :name)";
     String MOVES = "moves(move_board_id, point, status) VALUES (:board_id, :point, :status)";
 
     String BOARDS_FOR_GAME = "boards(game_id)";

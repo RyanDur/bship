@@ -3,6 +3,7 @@ package com.bship.games.repositories;
 import com.bship.DBHelper;
 import com.bship.games.domains.Board;
 import com.bship.games.domains.Game;
+import com.bship.games.domains.GameRules;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -39,14 +40,14 @@ public class GameRepositoryTest {
 
     @Test
     public void create_shouldCreateAGame() {
-        Game game = repository.create();
+        Game game = repository.create(GameRules.BATTLESHIP);
 
         assertThat(game, is(instanceOf(Game.class)));
     }
 
     @Test
     public void create_shouldHaveTwoBoards() {
-        Game game = repository.create();
+        Game game = repository.create(GameRules.BATTLESHIP);
         when(boardRepository.create(anyLong())).thenReturn(Board.builder().build());
         assertThat(game.getBoards().size(), is(2));
     }
@@ -54,8 +55,8 @@ public class GameRepositoryTest {
     @Test
     public void create_shouldPersistGames() {
         when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
-        Game game1 = repository.create();
-        Game game2 = repository.create();
+        Game game1 = repository.create(GameRules.BATTLESHIP);
+        Game game2 = repository.create(GameRules.BATTLESHIP);
 
         List<Game> games = repository.getAll();
 
@@ -68,8 +69,8 @@ public class GameRepositoryTest {
     @Test
     public void getAll_shouldGetAllTheGames() {
         when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
-        Game game1 = repository.create();
-        Game game2 = repository.create();
+        Game game1 = repository.create(GameRules.BATTLESHIP);
+        Game game2 = repository.create(GameRules.BATTLESHIP);
 
         List<Game> games = repository.getAll();
 
@@ -86,7 +87,7 @@ public class GameRepositoryTest {
     @Test
     public void get_shouldRetrieveABoard() {
         when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
-        Game createdGame = repository.create();
+        Game createdGame = repository.create(GameRules.BATTLESHIP);
         Optional<Game> game = repository.get(createdGame.getId());
 
         assertThat(createdGame, is(equalTo(game.get())));
@@ -95,9 +96,9 @@ public class GameRepositoryTest {
     @Test
     public void get_shouldOnlyRetrieveTheBoardForTheGivenId() {
         when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
-        repository.create();
-        Game createdGame = repository.create();
-        repository.create();
+        repository.create(GameRules.BATTLESHIP);
+        Game createdGame = repository.create(GameRules.BATTLESHIP);
+        repository.create(GameRules.BATTLESHIP);
         Optional<Game> game = repository.get(createdGame.getId());
 
         assertThat(createdGame, is(equalTo(game.get())));
@@ -106,9 +107,9 @@ public class GameRepositoryTest {
     @Test
     public void get_shouldReturnEmptyIfTheBoardDoesNotExit() {
         when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
-        repository.create();
-        repository.create();
-        repository.create();
+        repository.create(GameRules.BATTLESHIP);
+        repository.create(GameRules.BATTLESHIP);
+        repository.create(GameRules.BATTLESHIP);
         Optional<Game> game = repository.get(100L);
 
         assertThat(game, is(Optional.empty()));
@@ -117,7 +118,7 @@ public class GameRepositoryTest {
     @Test
     public void save_shouldSaveTheGame() {
         when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
-        Game game = repository.create().copy().withTurn(2L).build();
+        Game game = repository.create(GameRules.BATTLESHIP).copy().withTurn(2L).build();
 
         repository.save(game);
         Optional<Game> savedGame = repository.get(game.getId());
@@ -128,7 +129,7 @@ public class GameRepositoryTest {
     @Test
     public void save_shouldReturnTheSavedGame() {
         when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
-        Game game = repository.create().copy().withTurn(2L).build();
+        Game game = repository.create(GameRules.BATTLESHIP).copy().withTurn(2L).build();
 
         Optional<Game> savedGame = repository.save(game);
 
@@ -138,7 +139,7 @@ public class GameRepositoryTest {
     @Test
     public void save_shouldSaveTheBoards() {
         when(boardRepository.getAll(anyLong())).thenReturn(asList(null, null));
-        Game game = repository.create();
+        Game game = repository.create(GameRules.BATTLESHIP);
 
         repository.save(game);
 
@@ -147,18 +148,19 @@ public class GameRepositoryTest {
 
     @Test
     public void delete_shouldDeleteTheGameFromTheRepository() {
-        Game game = repository.create();
+        Game game = repository.create(GameRules.BATTLESHIP);
         Optional<Game> gotGame = repository.get(game.getId());
         assertThat(gotGame.isPresent(), is(true));
         repository.delete(game);
         Optional<Game> gotDeletedGame = repository.get(game.getId());
         assertThat(gotDeletedGame.isPresent(), is(false));
     }
+
     @Test
     public void delete_shouldReturnTheDeletedGame() {
-        Game game = repository.create();
+        Game game = repository.create(GameRules.BATTLESHIP);
 
-        Optional<Game> gotDeletedGame =  repository.delete(game);
+        Optional<Game> gotDeletedGame = repository.delete(game);
 
         assertThat(gotDeletedGame.isPresent(), is(true));
     }

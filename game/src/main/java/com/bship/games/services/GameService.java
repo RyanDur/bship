@@ -2,6 +2,7 @@ package com.bship.games.services;
 
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
+import com.bship.games.domains.GameRules;
 import com.bship.games.exceptions.GameValidation;
 import com.bship.games.exceptions.InvalidGame;
 import com.bship.games.logic.GameLogic;
@@ -20,8 +21,8 @@ public class GameService {
         this.logic = logic;
     }
 
-    public Game getNewGame() {
-        return repository.create();
+    public Game getNewGame(GameRules game) {
+        return repository.create(game);
     }
 
     public Game placeMove(Long gameId, Move move) throws GameValidation {

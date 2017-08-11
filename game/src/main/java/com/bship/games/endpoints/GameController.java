@@ -2,6 +2,7 @@ package com.bship.games.endpoints;
 
 import com.bship.games.domains.Game;
 import com.bship.games.domains.Move;
+import com.bship.games.domains.GameRules;
 import com.bship.games.exceptions.GameValidation;
 import com.bship.games.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +39,11 @@ public class GameController implements BadRequestHandler {
     }
 
     @PostMapping(
-            value = "/games",
+            value = "/games/{game}",
             produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(CREATED)
-    public Game createGame() {
-        return service.getNewGame();
+    public Game createGame(@PathVariable String game) {
+        return service.getNewGame(GameRules.valueOf(game));
     }
 
     @PutMapping(

@@ -75,7 +75,6 @@ public class BoardsControllerTest {
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
-                .withSize(2)
                 .build();
 
         mockMvc.perform(put("/boards/9")
@@ -111,7 +110,7 @@ public class BoardsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{" +
                         "\"id\": 1," +
-                        "  \"type\": \"GAS_STATION\"," +
+                        "  \"type\": {\"name\": \"GAS_STATION\", \"size\": 3}," +
                         "  \"size\": 2," +
                         "  \"orientation\": \"DOWN\"," +
                         "  \"placement\": {" +
@@ -133,8 +132,7 @@ public class BoardsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{" +
                         "\"id\": 1," +
-                        "  \"type\": \"DESTROYER\"," +
-                        "  \"size\": 2," +
+                        "  \"type\": {\"name\":\"DESTROYER\", \"size\": 2}," +
                         "  \"orientation\": \"DOWN\"" +
                         "}"
                 )).andReturn()
@@ -151,8 +149,7 @@ public class BoardsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{" +
                         "\"id\": 1," +
-                        "  \"type\": \"DESTROYER\"," +
-                        "  \"size\": 2," +
+                        "  \"type\": {\"name\":\"DESTROYER\", \"size\": 2}," +
                         "  \"placement\": {" +
                         "    \"x\": 1," +
                         "    \"y\": 5" +
@@ -173,7 +170,6 @@ public class BoardsControllerTest {
                 .withType(DESTROYER)
                 .withPlacement(new Point(-1, 0))
                 .withOrientation(DOWN)
-                .withSize(3)
                 .build();
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
@@ -193,7 +189,6 @@ public class BoardsControllerTest {
                 .withType(DESTROYER)
                 .withPlacement(new Point(11, 0))
                 .withOrientation(DOWN)
-                .withSize(2)
                 .build();
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
@@ -213,7 +208,6 @@ public class BoardsControllerTest {
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, -1))
                 .withOrientation(DOWN)
-                .withSize(2)
                 .build();
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -232,7 +226,6 @@ public class BoardsControllerTest {
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, 11))
                 .withOrientation(DOWN)
-                .withSize(2)
                 .build();
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
@@ -252,7 +245,6 @@ public class BoardsControllerTest {
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(UP)
-                .withSize(3)
                 .build();
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
@@ -267,22 +259,22 @@ public class BoardsControllerTest {
 
     @Test
     public void placeShip_shouldNotAllowAnIncorrectLengthOfShipToBePlacedOnTheBoard() throws Exception {
-        Piece piece = Piece.builder()
-                .withId(1L)
-                .withType(DESTROYER)
-                .withPlacement(new Point(0, 0))
-                .withOrientation(DOWN)
-                .withSize(5)
-                .build();
-
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(piece.toString())).andReturn()
+                .content("{" +
+                        "  \"id\": 1," +
+                        "  \"type\": {\"name\":\"DESTROYER\", \"size\": 4}," +
+                        "  \"placement\": {" +
+                        "    \"x\": 0," +
+                        "    \"y\": 0" +
+                        "  }," +
+                        "  \"orientation\": \"DOWN\"" +
+                        "}")).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
-        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Incorrect ship placement."));
+        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Ship does not exist."));
     }
 
     @Test
@@ -293,7 +285,6 @@ public class BoardsControllerTest {
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
-                .withSize(2)
                 .build();
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
@@ -314,7 +305,6 @@ public class BoardsControllerTest {
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
-                .withSize(2)
                 .build();
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
@@ -333,15 +323,12 @@ public class BoardsControllerTest {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{" +
-                        "  \"type\": \"DESTROYER\"," +
+                        "  \"type\": {\"name\":\"DESTROYER\", \"size\": 2}," +
                         "  \"start\": {" +
                         "    \"x\": 0," +
                         "    \"y\": 0" +
                         "  }," +
-                        "  \"end\": {" +
-                        "    \"x\": 0," +
-                        "    \"y\": 1" +
-                        "  }" +
+                        "  \"orientation\": \"DOWN\"" +
                         "}"
                 )).andReturn()
                 .getResponse()
