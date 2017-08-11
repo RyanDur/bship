@@ -1,6 +1,8 @@
 package com.bship.games.domains;
 
+import com.bship.games.Configuration.HarborListConverter;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +20,7 @@ public enum GameRules {
     private final int numberOfPlayers;
     private final int movesPerTurn;
     private final BoardDimensions boardDimensions;
+    @JsonSerialize(converter = HarborListConverter.class)
     private final List<Harbor> pieces;
     private final List<Direction> pieceOrientations;
 

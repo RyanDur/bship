@@ -42,8 +42,8 @@ public class GameController implements BadRequestHandler {
             value = "/games/{game}",
             produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(CREATED)
-    public Game createGame(@PathVariable String game) {
-        return service.getNewGame(GameRules.valueOf(game));
+    public Game createGame(@PathVariable GameRules game) {
+        return service.getNewGame(game);
     }
 
     @PutMapping(

@@ -110,7 +110,7 @@ public class BoardsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{" +
                         "\"id\": 1," +
-                        "  \"type\": {\"name\": \"GAS_STATION\", \"size\": 3}," +
+                        "  \"type\": \"GAS_STATION\"," +
                         "  \"size\": 2," +
                         "  \"orientation\": \"DOWN\"," +
                         "  \"placement\": {" +
@@ -255,26 +255,6 @@ public class BoardsControllerTest {
 
         ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
         assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Incorrect ship placement."));
-    }
-
-    @Test
-    public void placeShip_shouldNotAllowAnIncorrectLengthOfShipToBePlacedOnTheBoard() throws Exception {
-        GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{" +
-                        "  \"id\": 1," +
-                        "  \"type\": {\"name\":\"DESTROYER\", \"size\": 4}," +
-                        "  \"placement\": {" +
-                        "    \"x\": 0," +
-                        "    \"y\": 0" +
-                        "  }," +
-                        "  \"orientation\": \"DOWN\"" +
-                        "}")).andReturn()
-                .getResponse()
-                .getContentAsString(), GameErrors.class);
-
-        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Ship does not exist."));
     }
 
     @Test

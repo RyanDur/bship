@@ -32,7 +32,7 @@ Contract.make {
                      [[
                           code   : 'ShipExists',
                           field  : 'type',
-                          value  : [name: 'INVALID_SHIP'],
+                          value  : 'INVALID_SHIP',
                           message: 'Ship does not exist.'
                       ]]
              ]]

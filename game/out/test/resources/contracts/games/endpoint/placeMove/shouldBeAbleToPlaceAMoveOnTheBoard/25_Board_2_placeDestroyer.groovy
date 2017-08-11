@@ -27,7 +27,7 @@ Contract.make {
     body([
         id            : 2,
         pieces        : [[
-                             type       : [name: "AIRCRAFT_CARRIER", size: 5],
+                             type       : 'AIRCRAFT_CARRIER',
                              placement  : [
                                  x: 0,
                                  y: 0
@@ -38,7 +38,7 @@ Contract.make {
                              id         : 6
                          ],
                          [
-                             type       : [name: 'BATTLESHIP', size: 4],
+                             type       : 'BATTLESHIP',
                              placement  : [
                                  x: 1,
                                  y: 0
@@ -49,7 +49,7 @@ Contract.make {
                              id         : 7
                          ],
                          [
-                             type       : [name: "SUBMARINE", size: 3],
+                             type       : 'SUBMARINE',
                              placement  : [
                                  x: 2,
                                  y: 0
@@ -60,7 +60,7 @@ Contract.make {
                              id         : 8
                          ],
                          [
-                             type       : [name: "CRUISER", size: 3],
+                             type       : 'CRUISER',
                              placement  : [
                                  x: 3,
                                  y: 0
@@ -71,7 +71,7 @@ Contract.make {
                              id         : 9
                          ],
                          [
-                             type       : [name: "DESTROYER", size: 2],
+                             type       : 'DESTROYER',
                              placement  : [
                                  x: 4,
                                  y: 0
