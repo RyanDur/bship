@@ -2,7 +2,6 @@ package com.bship.games.domains;
 
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
-import com.bship.games.logic.rules.Harbor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -18,12 +17,12 @@ public class BoardTest {
     public void setup() {
         Point start = new Point(0, 0);
         Point end = new Point(0, 2);
-        Harbor type = Harbor.BATTLESHIP;
+//        Harbor type = Harbor.BATTLESHIP;
 //        battleship = Piece.builder().withType(type).withStart(start).withEnd(end).build();
 
         Point start1 = new Point(1, 0);
         Point end1 = new Point(1, 5);
-        Harbor type1 = Harbor.AIRCRAFT_CARRIER;
+//        Harbor type1 = Harbor.AIRCRAFT_CARRIER;
 //        aircraftCarrier = Piece.builder().withType(type1).withStart(start1).withEnd(end1).build();
     }
 

@@ -33,7 +33,7 @@ Contract.make {
                           code   : 'PieceTypeCheck',
                           field  : 'pieces',
                           value  : [[
-                                        type       : 'INVALID_SHIP',
+                                        type       : 'INVALID_PIECE',
                                         placement  : [
                                             x: 0,
                                             y: 0

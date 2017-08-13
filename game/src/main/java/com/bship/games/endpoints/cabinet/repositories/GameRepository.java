@@ -30,8 +30,10 @@ public class GameRepository implements SQL {
 
     public Game create(GameRules game) {
         Long id = generate(game);
-        return Game.builder().withId(id).withRules(GameRules.BATTLESHIP)
-                .withBoards(asList(boards.create(id), boards.create(id)))
+        return Game.builder().withId(id).withRules(game)
+                .withBoards(asList(
+                        boards.create(id, game.getPieces().stream()),
+                        boards.create(id,game.getPieces().stream())))
                 .build();
     }
 

@@ -1,6 +1,5 @@
 package com.bship.games.util;
 
-import com.bship.games.logic.rules.Harbor;
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
 import org.junit.Rule;
@@ -16,6 +15,12 @@ import static com.bship.games.logic.rules.Direction.LEFT;
 import static com.bship.games.logic.rules.Direction.NONE;
 import static com.bship.games.logic.rules.Direction.RIGHT;
 import static com.bship.games.logic.rules.Direction.UP;
+import static com.bship.games.logic.rules.PieceType.Dummy.INVALID_PIECE;
+import static com.bship.games.logic.rules.PieceType.Harbor.AIRCRAFT_CARRIER;
+import static com.bship.games.logic.rules.PieceType.Harbor.BATTLESHIP;
+import static com.bship.games.logic.rules.PieceType.Harbor.CRUISER;
+import static com.bship.games.logic.rules.PieceType.Harbor.DESTROYER;
+import static com.bship.games.logic.rules.PieceType.Harbor.SUBMARINE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -133,7 +138,7 @@ public class UtilTest {
         Point end = new Point(7, 3);
         Piece piece = Piece.builder()
                 .withPlacement(placement)
-                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withType(AIRCRAFT_CARRIER)
                 .withOrientation(RIGHT)
                 .build();
 
@@ -153,7 +158,7 @@ public class UtilTest {
         Point end = new Point(5, 9);
         Piece piece = Piece.builder()
                 .withPlacement(placement)
-                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withType(AIRCRAFT_CARRIER)
                 .withOrientation(LEFT)
                 .build();
 
@@ -173,7 +178,7 @@ public class UtilTest {
         Point end = new Point(4, 5);
         Piece piece = Piece.builder()
                 .withPlacement(placement)
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withOrientation(DOWN)
                 .build();
 
@@ -192,7 +197,7 @@ public class UtilTest {
         Point end = new Point(7, 5);
         Piece piece = Piece.builder()
                 .withPlacement(placement)
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withOrientation(UP)
                 .build();
 
@@ -211,7 +216,7 @@ public class UtilTest {
         Point placement = new Point(7, 8);
         Piece piece = Piece.builder()
                 .withPlacement(placement)
-                .withType(Harbor.CRUISER)
+                .withType(CRUISER)
                 .withOrientation(NONE)
                 .build();
 
@@ -224,7 +229,7 @@ public class UtilTest {
     public void pointsRange_shouldHandlePlacementWithNoX() {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(null, 3))
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withOrientation(DOWN)
                 .build();
 
@@ -237,7 +242,7 @@ public class UtilTest {
         Piece piece = Piece.builder()
                 .withOrientation(UP)
                 .withPlacement(new Point(0, null))
-                .withType(Harbor.DESTROYER)
+                .withType(DESTROYER)
                 .build();
 
         List<Point> points = Util.pointsRange(piece);
@@ -248,7 +253,7 @@ public class UtilTest {
     public void pointsRange_shouldHandleNoSize() {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(0, 3))
-                .withType(Harbor.INVALID_SHIP)
+                .withType(INVALID_PIECE)
                 .withOrientation(DOWN)
                 .build();
 
@@ -260,7 +265,7 @@ public class UtilTest {
     public void pointsRange_shouldHandleNullDirection() {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(0, 3))
-                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withType(AIRCRAFT_CARRIER)
                 .build();
 
         List<Point> points = Util.pointsRange(piece);
@@ -272,12 +277,12 @@ public class UtilTest {
         Piece pieceA = Piece.builder()
                 .withPlacement(new Point(3, 3))
                 .withOrientation(RIGHT)
-                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withType(AIRCRAFT_CARRIER)
                 .build();
 
         Piece pieceB = Piece.builder()
                 .withPlacement(new Point(4, 2))
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withOrientation(DOWN)
                 .build();
 
@@ -291,12 +296,12 @@ public class UtilTest {
         Piece pieceA = Piece.builder()
                 .withPlacement(new Point(3, 3))
                 .withOrientation(RIGHT)
-                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withType(AIRCRAFT_CARRIER)
                 .build();
 
         Piece pieceB = Piece.builder()
                 .withPlacement(new Point(4, 2))
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withOrientation(DOWN)
                 .build();
 
@@ -310,12 +315,12 @@ public class UtilTest {
         Piece pieceA = Piece.builder()
                 .withPlacement(new Point(3, 3))
                 .withOrientation(LEFT)
-                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withType(AIRCRAFT_CARRIER)
                 .build();
 
         Piece pieceB = Piece.builder()
                 .withPlacement(new Point(4, 2))
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withOrientation(DOWN)
                 .build();
 
@@ -328,13 +333,13 @@ public class UtilTest {
     public void detectCollision_shouldNotDetectACollisionIfPointsDoNotIntersect() {
         Piece pieceA = Piece.builder()
                 .withPlacement(new Point(0, 3))
-                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withType(AIRCRAFT_CARRIER)
                 .withOrientation(DOWN)
                 .build();
 
         Piece pieceB = Piece.builder()
                 .withPlacement(new Point(4, 5))
-                .withType(Harbor.AIRCRAFT_CARRIER)
+                .withType(AIRCRAFT_CARRIER)
                 .withOrientation(UP)
                 .build();
 
@@ -459,7 +464,7 @@ public class UtilTest {
     public void validRange_shouldKnowIfARangeGoesOffTheLeftSideOfBoard() {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(0, 0))
-                .withType(Harbor.DESTROYER)
+                .withType(DESTROYER)
                 .withOrientation(LEFT)
                 .build();
         boolean actual = Util.validRange(piece);
@@ -470,7 +475,7 @@ public class UtilTest {
     public void validRange_shouldKnowIfARangeGoesOffTheRightSideOfBoard() {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(9, 9))
-                .withType(Harbor.SUBMARINE)
+                .withType(SUBMARINE)
                 .withOrientation(RIGHT)
                 .build();
         boolean actual = Util.validRange(piece);
@@ -481,7 +486,7 @@ public class UtilTest {
     public void validRange_shouldKnowIfARangeGoesOffTheTopOfTheBoard() {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(9, 0))
-                .withType(Harbor.SUBMARINE)
+                .withType(SUBMARINE)
                 .withOrientation(UP)
                 .build();
         boolean actual = Util.validRange(piece);
@@ -492,7 +497,7 @@ public class UtilTest {
     public void validRange_shouldKnowIfARangeGoesOffTheBottomOfTheBoard() {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(0, 9))
-                .withType(Harbor.SUBMARINE)
+                .withType(SUBMARINE)
                 .withOrientation(DOWN)
                 .build();
         boolean actual = Util.validRange(piece);
@@ -503,7 +508,7 @@ public class UtilTest {
     public void validRange_shouldKnowIfARangeIsGood() {
         Piece piece = Piece.builder()
                 .withPlacement(new Point(0, 9))
-                .withType(Harbor.SUBMARINE)
+                .withType(SUBMARINE)
                 .withOrientation(UP)
                 .build();
         boolean actual = Util.validRange(piece);

@@ -10,24 +10,23 @@ import java.util.StringJoiner;
 
 import static com.bship.games.logic.rules.BoardDimensions.BATTLESHIP_BOARD;
 import static com.bship.games.logic.rules.Direction.NONE;
-import static com.bship.games.logic.rules.Harbor.INVALID_SHIP;
 import static java.util.stream.Collectors.toList;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum GameRules {
-    BATTLESHIP(2, 1, BATTLESHIP_BOARD, remove(INVALID_SHIP, Harbor.values()), remove(NONE, Direction.values()));
+    BATTLESHIP(2, 1, BATTLESHIP_BOARD, Arrays.asList(PieceType.Harbor.values()), remove(NONE, Direction.values()));
 
     private final int numberOfPlayers;
     private final int movesPerTurn;
     private final BoardDimensions boardDimensions;
     @JsonSerialize(converter = HarborListConverter.class)
-    private final List<Harbor> pieces;
+    private final List<PieceType> pieces;
     private final List<Direction> pieceOrientations;
 
     GameRules(int numberOfPlayers,
               int movesPerTurn,
               BoardDimensions boardDimensions,
-              List<Harbor> pieces,
+              List<PieceType> pieces,
               List<Direction> pieceOrientations) {
         this.numberOfPlayers = numberOfPlayers;
         this.movesPerTurn = movesPerTurn;
@@ -52,7 +51,7 @@ public enum GameRules {
         return boardDimensions;
     }
 
-    public List<Harbor> getPieces() {
+    public List<PieceType> getPieces() {
         return pieces;
     }
 

@@ -1,9 +1,9 @@
 package com.bship.games.endpoints.cabinet.repositories;
 
-import com.bship.games.logic.rules.Direction;
-import com.bship.games.logic.rules.Harbor;
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
+import com.bship.games.logic.rules.Direction;
+import com.bship.games.logic.rules.PieceType;
 import com.bship.games.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static com.bship.games.util.Util.toIndex;
 import static java.util.Optional.of;
@@ -31,17 +32,18 @@ public class PieceRepository implements SQL {
         this.template = template;
     }
 
-    public List<Piece> createAll(Long boardId) {
+    public List<Piece> createAll(Long boardId, Stream<PieceType> pieceTypes) {
         String NEW_PIECES = join(SEP, INSERT_INTO, PIECES);
-        of(Harbor.getShips()).map(batchNewPieces(boardId))
+
+        of(pieceTypes).map(batchNewPieces(boardId))
                 .map(batch -> template.batchUpdate(NEW_PIECES, batch));
+
         return getAll(boardId);
     }
 
     public void save(List<Piece> pieces) {
         String SAVE_PIECES = join(SEP, UPDATE_PIECES, SET, join(COMMA, TAKEN, PLACEMENT, ORIENTATION), WHERE, ID);
-        of(pieces).map(batchUpdatePieces)
-                .map(batch -> template.batchUpdate(SAVE_PIECES, batch));
+        of(pieces.stream()).map(batchUpdatePieces).map(batch -> template.batchUpdate(SAVE_PIECES, batch));
     }
 
     public List<Piece> getAll(Long boardId) {
@@ -68,7 +70,7 @@ public class PieceRepository implements SQL {
 
     private RowMapper<Piece> buildPiece = (rs, rowNum) -> Piece.builder()
             .withId(rs.getLong("id"))
-            .withType(Harbor.valueOf(rs.getString("type")))
+            .withType(PieceType.Harbor.valueOf(rs.getString("type")))
             .withPlacement(getPoint(rs.getString("placement")))
             .withOrientation(Direction.valueOf(rs.getString("orientation")))
             .withTaken(rs.getBoolean("taken"))
@@ -81,20 +83,21 @@ public class PieceRepository implements SQL {
                 .orElse(new Point());
     }
 
-    private Function<List<Harbor>, SqlParameterSource[]> batchNewPieces(final Long boardId) {
+    private Function<Stream<PieceType>, SqlParameterSource[]> batchNewPieces(final Long boardId) {
         return createBatch(piece ->
                 new HashMap<String, Object>() {{
-                    put("type", piece.name());
+                    put("type", piece.getName());
                     put("size", piece.getSize());
                     put("piece_board_id", boardId);
                 }});
     }
 
-    private Function<List<Piece>, SqlParameterSource[]> batchUpdatePieces = createBatch(piece ->
-            new HashMap<String, Object>() {{
-                put("id", piece.getId());
-                put("taken", piece.isTaken());
-                put("placement", toIndex(piece.getPlacement()));
-                put("orientation", piece.getOrientation().name());
-            }});
+    private Function<Stream<Piece>, SqlParameterSource[]> batchUpdatePieces =
+            createBatch(piece ->
+                    new HashMap<String, Object>() {{
+                        put("id", piece.getId());
+                        put("taken", piece.isTaken());
+                        put("placement", toIndex(piece.getPlacement()));
+                        put("orientation", piece.getOrientation().name());
+                    }});
 }

@@ -1,8 +1,8 @@
 package com.bship.games.endpoints.cabinet.entity;
 
 import com.bship.games.logic.rules.Direction;
-import com.bship.games.logic.rules.Harbor;
 import com.bship.games.endpoints.errors.validations.NonEmpty;
+import com.bship.games.logic.rules.PieceType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -14,7 +14,7 @@ import java.util.StringJoiner;
 public class Piece {
 
     @NonEmpty
-    private Harbor type;
+    private PieceType type;
 
     @NonEmpty
     private Point placement;
@@ -37,7 +37,7 @@ public class Piece {
         taken = builder.taken;
     }
 
-    public Harbor getType() {
+    public PieceType getType() {
         return type;
     }
 
@@ -100,7 +100,7 @@ public class Piece {
     @JsonPOJOBuilder
     public static final class Builder {
 
-        private Harbor type;
+        private PieceType type;
         private Long boardId;
         private Long id;
         private boolean taken;
@@ -109,7 +109,7 @@ public class Piece {
 
         private Builder() {}
 
-        public Builder withType(Harbor shipType) {
+        public Builder withType(PieceType shipType) {
             this.type = shipType;
             return this;
         }

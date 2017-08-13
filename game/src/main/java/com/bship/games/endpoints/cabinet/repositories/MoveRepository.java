@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static com.bship.games.util.Util.toIndex;
 import static com.bship.games.util.Util.toPoint;
 import static java.util.Objects.isNull;
 import static java.util.Optional.of;
-import static java.util.stream.Collectors.toList;
 
 @Component
 public class MoveRepository implements SQL {
@@ -49,8 +49,8 @@ public class MoveRepository implements SQL {
         return template.query(SELECT_All_OPPONENTS_MOVES, source, buildMove);
     }
 
-    private List<Move> getNewMoves(List<Move> moves) {
-        return moves.stream().filter(move -> isNull(move.getId())).collect(toList());
+    private Stream<Move> getNewMoves(List<Move> moves) {
+        return moves.stream().filter(move -> isNull(move.getId()));
     }
 
     private RowMapper<Move> buildMove = (rs, rowNum) -> Move.builder()
@@ -59,7 +59,7 @@ public class MoveRepository implements SQL {
             .withBoardId(rs.getLong("move_board_id"))
             .withPoint(toPoint(rs.getInt("point"))).build();
 
-    private Function<List<Move>, SqlParameterSource[]> movesBatch = createBatch(move ->
+    private Function<Stream<Move>, SqlParameterSource[]> movesBatch = createBatch(move ->
             new HashMap<String, Object>() {{
                 put("board_id", move.getBoardId());
                 put("point", toIndex(move.getPoint()));

@@ -48,7 +48,7 @@ public class GameRepositoryTest {
     @Test
     public void create_shouldHaveTwoBoards() {
         Game game = repository.create(GameRules.BATTLESHIP);
-        when(boardRepository.create(anyLong())).thenReturn(Board.builder().build());
+        when(boardRepository.create(anyLong(), any())).thenReturn(Board.builder().build());
         assertThat(game.getBoards().size(), is(2));
     }
 

@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -54,8 +53,8 @@ public interface SQL {
         return Stream.of(sqls).collect(Collectors.joining(separator));
     }
 
-    default <T> Function<List<T>, SqlParameterSource[]> createBatch(Function<T, HashMap<String, Object>> mapper) {
-        return list -> list.stream()
+    default <T> Function<Stream<T>, SqlParameterSource[]> createBatch(Function<T, HashMap<String, Object>> mapper) {
+        return list -> list
                 .map(mapper)
                 .map(MapSqlParameterSource::new)
                 .collect(toList())

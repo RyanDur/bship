@@ -11,8 +11,8 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 
 @Target({ElementType.FIELD, ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ShipExistsValidation.class)
-public @interface ShipExists {
+@Constraint(validatedBy = PieceExistsValidation.class)
+public @interface PieceExists {
     String message() default "Ship does not exist.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

@@ -3,9 +3,9 @@ package com.bship.games.endpoints.cabinet.repositories;
 import com.bship.DBHelper;
 import com.bship.games.endpoints.cabinet.entity.Board;
 import com.bship.games.endpoints.cabinet.entity.Game;
-import com.bship.games.logic.rules.Harbor;
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
+import com.bship.games.logic.rules.PieceType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -49,12 +50,12 @@ public class BoardRepositoryTest {
         template.update("INSERT INTO games(id, name) VALUE(:id, 'BATTLESHIP')",
                 new MapSqlParameterSource("id", game.getId() + 1L));
         pieceList = getShips();
-        when(ships.createAll(anyLong())).thenReturn(pieceList);
+        when(ships.createAll(any(), any())).thenReturn(pieceList);
     }
 
     @Test
     public void create_shouldReturnABoard() {
-        Board board = boards.create(game.getId());
+        Board board = boards.create(game.getId(), PieceType.Harbor.getPieces());
         assertThat(board, is(instanceOf(Board.class)));
     }
 
@@ -68,9 +69,9 @@ public class BoardRepositoryTest {
                 .withOpponentMoves(emptyList())
                 .build();
 
-        when(ships.createAll(anyLong())).thenReturn(pieceList);
+        when(ships.createAll(anyLong(), any())).thenReturn(pieceList);
 
-        Board board = boards.create(game.getId());
+        Board board = boards.create(game.getId(), PieceType.Harbor.getPieces());
 
         assertThat(board, is(equalTo(expected)));
     }
@@ -78,7 +79,7 @@ public class BoardRepositoryTest {
     @Test
     public void get_shouldRetrieveABordFromTheRepository() {
         when(ships.getAll(anyLong())).thenReturn(pieceList);
-        Board board = boards.create(game.getId());
+        Board board = boards.create(game.getId(), PieceType.Harbor.getPieces());
         Board actual = boards.get(board.getId()).get();
 
         assertThat(actual, is(board));
@@ -86,7 +87,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void get_shouldReturnEmptyWhenThereIsNotAGame() {
-        Board board = boards.create(game.getId());
+        Board board = boards.create(game.getId(), PieceType.Harbor.getPieces());
         Optional<Board> actual = boards.get(board.getId() + 1L);
 
         assertThat(actual, is(Optional.empty()));
@@ -95,9 +96,9 @@ public class BoardRepositoryTest {
     @Test
     public void getAll_shouldGetAllTheBoardsForAGame() {
         when(ships.getAll(anyLong())).thenReturn(pieceList);
-        boards.create(game.getId() + 1L);
-        Board board1 = boards.create(game.getId());
-        Board board2 = boards.create(game.getId());
+        boards.create(game.getId() + 1L, PieceType.Harbor.getPieces());
+        Board board1 = boards.create(game.getId(), PieceType.Harbor.getPieces());
+        Board board2 = boards.create(game.getId(), PieceType.Harbor.getPieces());
 
         List<Board> boardList = boards.getAll(game.getId());
         assertThat(boardList.size(), is(2));
@@ -107,9 +108,9 @@ public class BoardRepositoryTest {
     @Test
     public void getAll_shouldGetEmptyForAGameThatDoesNotExist() {
         when(ships.getAll(anyLong())).thenReturn(pieceList);
-        boards.create(game.getId() + 1L);
-        boards.create(game.getId());
-        boards.create(game.getId());
+        boards.create(game.getId() + 1L, PieceType.Harbor.getPieces());
+        boards.create(game.getId(), PieceType.Harbor.getPieces());
+        boards.create(game.getId(), PieceType.Harbor.getPieces());
 
         List<Board> boardList = boards.getAll(game.getId() + 10L);
         assertThat(boardList, is(empty()));
@@ -118,7 +119,7 @@ public class BoardRepositoryTest {
     @Test
     public void save_shouldSaveABoard() {
         when(ships.getAll(anyLong())).thenReturn(pieceList);
-        Board board = boards.create(game.getId());
+        Board board = boards.create(game.getId(), PieceType.Harbor.getPieces());
         Board expected = board.copy().withWinner(true).build();
         boards.save(expected);
         Optional<Board> actual = boards.get(expected.getId());
@@ -129,7 +130,7 @@ public class BoardRepositoryTest {
     @Test
     public void save_shouldReturnTheSavedBoard() {
         when(ships.getAll(anyLong())).thenReturn(pieceList);
-        Board board = boards.create(game.getId());
+        Board board = boards.create(game.getId(), PieceType.Harbor.getPieces());
         Board expected = board.copy().withWinner(true).build();
         Optional<Board> actual = boards.save(expected);
 
@@ -138,7 +139,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void save_shouldSaveTheShips() {
-        Board board = boards.create(game.getId());
+        Board board = boards.create(game.getId(), PieceType.Harbor.getPieces());
         boards.save(board);
 
         verify(ships).save(board.getPieces());
@@ -146,14 +147,14 @@ public class BoardRepositoryTest {
 
     @Test
     public void save_shouldSaveTheMoves() {
-        Board board = boards.create(game.getId());
+        Board board = boards.create(game.getId(), PieceType.Harbor.getPieces());
         boards.save(board);
 
         verify(moves).save(board.getMoves());
     }
 
     public List<Piece> getShips() {
-        return Harbor.getShips().stream().map(ship -> Piece.builder()
+        return PieceType.Harbor.getPieces().map(ship -> Piece.builder()
                 .withType(ship)
                 .withPlacement(new Point())
                 .withOrientation(NONE)

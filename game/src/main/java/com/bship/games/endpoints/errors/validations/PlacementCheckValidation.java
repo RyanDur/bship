@@ -1,7 +1,7 @@
 package com.bship.games.endpoints.errors.validations;
 
-import com.bship.games.logic.rules.Harbor;
 import com.bship.games.endpoints.cabinet.entity.Piece;
+import com.bship.games.logic.rules.PieceType;
 import com.bship.games.util.Util;
 
 import javax.validation.ConstraintValidator;
@@ -13,6 +13,7 @@ import static com.bship.games.logic.rules.Direction.NONE;
 import static com.bship.games.util.Util.pointsRange;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
 public class PlacementCheckValidation implements ConstraintValidator<PlacementCheck, Piece> {
     public void initialize(PlacementCheck constraint) {
@@ -27,7 +28,7 @@ public class PlacementCheckValidation implements ConstraintValidator<PlacementCh
                 .filter(Util::isPlaced)
                 .filter(p -> nonNull(p.getType()))
                 .filter(validOrientation)
-                .filter(p -> Harbor.getShips().contains(p.getType()))
+                .filter(p -> PieceType.Harbor.getPieces().collect(toList()).contains(p.getType()))
                 .filter(p -> Objects.equals(p.getType().getSize(), pointsRange(p).size()))
                 .filter(Util::validRange)
                 .isPresent();

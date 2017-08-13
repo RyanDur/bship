@@ -83,8 +83,8 @@ assertThatJson(parsedJson).array("errors").array("validations").array("value").c
 assertThatJson(parsedJson).array("errors").array("validations").array("value").field("placement").field("x").isEqualTo(0);
 assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("PieceTypeCheck");
 assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Invalid piece type.");
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("type").isEqualTo("INVALID_PIECE");
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("id").isEqualTo(1);
-assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("type").isEqualTo("INVALID_SHIP");
 }
 
 }

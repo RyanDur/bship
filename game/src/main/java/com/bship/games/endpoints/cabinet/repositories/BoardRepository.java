@@ -1,6 +1,7 @@
 package com.bship.games.endpoints.cabinet.repositories;
 
 import com.bship.games.endpoints.cabinet.entity.Board;
+import com.bship.games.logic.rules.PieceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 
@@ -30,7 +32,7 @@ public class BoardRepository implements SQL {
     }
 
     @Transactional
-    public Board create(Long gameId) {
+    public Board create(Long gameId, Stream<PieceType> pieceTypes) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         template.update(join(SEP, INSERT_INTO, BOARDS_FOR_GAME, VALUE_ID),
                 new MapSqlParameterSource("id", gameId), holder);
@@ -40,7 +42,7 @@ public class BoardRepository implements SQL {
         return Board.builder()
                 .withId(id)
                 .withGameId(gameId)
-                .withPieces(pieces.createAll(id))
+                .withPieces(pieces.createAll(id, pieceTypes))
                 .withOpponentPieces(emptyList())
                 .withMoves(emptyList())
                 .withOpponentMoves(emptyList())

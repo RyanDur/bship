@@ -2,7 +2,6 @@ package com.bship.games.logic;
 
 import com.bship.games.endpoints.cabinet.entity.Board;
 import com.bship.games.endpoints.cabinet.entity.Game;
-import com.bship.games.logic.rules.Harbor;
 import com.bship.games.endpoints.cabinet.entity.Move;
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
@@ -26,9 +25,13 @@ import java.util.stream.Collectors;
 import static com.bship.games.logic.rules.Direction.DOWN;
 import static com.bship.games.logic.rules.Direction.NONE;
 import static com.bship.games.logic.rules.Direction.RIGHT;
-import static com.bship.games.logic.rules.Harbor.AIRCRAFT_CARRIER;
 import static com.bship.games.logic.rules.MoveStatus.HIT;
 import static com.bship.games.logic.rules.MoveStatus.MISS;
+import static com.bship.games.logic.rules.PieceType.Harbor.AIRCRAFT_CARRIER;
+import static com.bship.games.logic.rules.PieceType.Harbor.BATTLESHIP;
+import static com.bship.games.logic.rules.PieceType.Harbor.CRUISER;
+import static com.bship.games.logic.rules.PieceType.Harbor.DESTROYER;
+import static com.bship.games.logic.rules.PieceType.Harbor.SUBMARINE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -107,7 +110,7 @@ public class BattleshipTest {
     @Test
     public void placementCheck_shouldReturnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
         Piece piece1 = Piece.builder()
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
                 .build();
@@ -131,13 +134,13 @@ public class BattleshipTest {
         thrown.expectMessage("Ship already exists on board.");
 
         Piece piece1 = Piece.builder()
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
                 .build();
 
         Piece piece2 = Piece.builder()
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withPlacement(new Point(1, 0))
                 .withOrientation(DOWN)
                 .build();
@@ -150,13 +153,13 @@ public class BattleshipTest {
     @Test
     public void placementCheck_shouldKnowIfAShipIsAlreadySetOnTheBoard() throws ShipExistsCheck, ShipCollisionCheck {
         Piece piece1 = Piece.builder()
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withPlacement(new Point())
                 .withOrientation(NONE)
                 .build();
 
         Piece piece2 = Piece.builder()
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withPlacement(new Point(1, 0))
                 .withOrientation(DOWN)
                 .build();
@@ -173,7 +176,7 @@ public class BattleshipTest {
         thrown.expectMessage("Ship collision.");
 
         Piece battleship = Piece.builder()
-                .withType(Harbor.BATTLESHIP)
+                .withType(BATTLESHIP)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
                 .build();
@@ -259,7 +262,7 @@ public class BattleshipTest {
         Optional<Piece> taken = other.getPieces().stream().filter(Piece::isTaken).findFirst();
 
         assertThat(taken.get().isTaken(), is(true));
-        assertThat(taken.get().getType(), is(Harbor.DESTROYER));
+        assertThat(taken.get().getType(), is(DESTROYER));
     }
 
     @Test
@@ -456,22 +459,22 @@ public class BattleshipTest {
                         .withOrientation(DOWN)
                         .withTaken(false)
                         .withBoardId(boardId).build(),
-                Piece.builder().withType(Harbor.BATTLESHIP)
+                Piece.builder().withType(BATTLESHIP)
                         .withPlacement(new Point(1, 0))
                         .withOrientation(DOWN)
                         .withTaken(false)
                         .withBoardId(boardId).build(),
-                Piece.builder().withType(Harbor.SUBMARINE)
+                Piece.builder().withType(SUBMARINE)
                         .withPlacement(new Point(2, 0))
                         .withOrientation(DOWN)
                         .withTaken(false)
                         .withBoardId(boardId).build(),
-                Piece.builder().withType(Harbor.CRUISER)
+                Piece.builder().withType(CRUISER)
                         .withPlacement(new Point(3, 0))
                         .withOrientation(DOWN)
                         .withTaken(false)
                         .withBoardId(boardId).build(),
-                Piece.builder().withType(Harbor.DESTROYER)
+                Piece.builder().withType(DESTROYER)
                         .withPlacement(new Point(4, 0))
                         .withOrientation(DOWN)
                         .withTaken(false)

@@ -2,14 +2,14 @@ package com.bship.games.endpoints.services;
 
 import com.bship.games.endpoints.board.BoardService;
 import com.bship.games.endpoints.cabinet.entity.Board;
-import com.bship.games.logic.rules.Harbor;
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
+import com.bship.games.endpoints.cabinet.repositories.BoardRepository;
 import com.bship.games.endpoints.errors.exceptions.BoardExistence;
 import com.bship.games.endpoints.errors.exceptions.BoardValidation;
 import com.bship.games.endpoints.errors.exceptions.ShipCollisionCheck;
 import com.bship.games.logic.GameLogic;
-import com.bship.games.endpoints.cabinet.repositories.BoardRepository;
+import com.bship.games.logic.rules.PieceType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import static com.bship.games.logic.rules.Direction.NONE;
 import static com.bship.games.logic.rules.Direction.RIGHT;
-import static com.bship.games.logic.rules.Harbor.AIRCRAFT_CARRIER;
+import static com.bship.games.logic.rules.PieceType.Harbor.AIRCRAFT_CARRIER;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
@@ -127,7 +127,7 @@ public class BoardServiceTest {
     }
 
     private List<Piece> getShips() {
-        return Harbor.getShips().stream().map(ship -> Piece.builder()
+        return PieceType.Harbor.getPieces().map(ship -> Piece.builder()
                 .withType(ship)
                 .withPlacement(new Point())
                 .withOrientation(NONE)
