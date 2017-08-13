@@ -7,6 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -283,6 +284,44 @@ public class UtilTest {
         Boolean actual = Util.detectCollision(pieceA, pieceB);
 
         assertThat(actual, is(true));
+    }
+
+    @Test
+    public void detectCollision_shouldDetectIfAnyPointsDoNotIntersect() {
+        Piece pieceA = Piece.builder()
+                .withPlacement(new Point(3, 3))
+                .withOrientation(RIGHT)
+                .withType(Harbor.AIRCRAFT_CARRIER)
+                .build();
+
+        Piece pieceB = Piece.builder()
+                .withPlacement(new Point(4, 2))
+                .withType(Harbor.BATTLESHIP)
+                .withOrientation(DOWN)
+                .build();
+
+        Boolean actual = Util.detectCollision(Arrays.asList(pieceA, pieceB));
+
+        assertThat(actual, is(true));
+    }
+
+    @Test
+    public void detectCollision_shouldDetectIfAnyPointsDoIntersect() {
+        Piece pieceA = Piece.builder()
+                .withPlacement(new Point(3, 3))
+                .withOrientation(LEFT)
+                .withType(Harbor.AIRCRAFT_CARRIER)
+                .build();
+
+        Piece pieceB = Piece.builder()
+                .withPlacement(new Point(4, 2))
+                .withType(Harbor.BATTLESHIP)
+                .withOrientation(DOWN)
+                .build();
+
+        Boolean actual = Util.detectCollision(Arrays.asList(pieceA, pieceB));
+
+        assertThat(actual, is(false));
     }
 
     @Test

@@ -21,6 +21,7 @@ import static com.bship.games.domains.Direction.NONE;
 import static com.bship.games.domains.Direction.RIGHT;
 import static com.bship.games.domains.Harbor.AIRCRAFT_CARRIER;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -66,10 +67,10 @@ public class BoardServiceTest {
         Board expected = board.copy().withPieces(unplaced).addPiece(piece).build();
 
         when(repository.get(boardId)).thenReturn(of(board));
-        when(logic.placementCheck(piece)).thenReturn(b -> b);
+        when(logic.placementCheck(singletonList(piece))).thenReturn(b -> b);
         when(repository.save(any(Board.class))).thenReturn(of(expected));
 
-        Board actual = service.placePiece(boardId, piece);
+        Board actual = service.placePiece(boardId, singletonList(piece));
 
         verify(repository).save(expected);
         assertThat(actual, is(equalTo(expected)));
@@ -86,10 +87,10 @@ public class BoardServiceTest {
         Board expected = board.copy().addPiece(piece).build();
 
         when(repository.get(boardId)).thenReturn(Optional.empty());
-        when(logic.placementCheck(piece)).thenReturn(b -> b);
+        when(logic.placementCheck(singletonList(piece))).thenReturn(b -> b);
         when(repository.save(expected)).thenReturn(of(expected));
 
-        service.placePiece(boardId, piece);
+        service.placePiece(boardId, singletonList(piece));
     }
 
     @Test
@@ -102,10 +103,10 @@ public class BoardServiceTest {
         Piece piece = Piece.builder().build();
 
         when(repository.get(boardId)).thenReturn(of(board));
-        when(logic.placementCheck(piece)).thenReturn(b -> b);
+        when(logic.placementCheck(singletonList(piece))).thenReturn(b -> b);
         when(repository.save(any(Board.class))).thenReturn(Optional.empty());
 
-        service.placePiece(boardId, piece);
+        service.placePiece(boardId, singletonList(piece));
     }
 
     @Test
@@ -118,13 +119,13 @@ public class BoardServiceTest {
         Board expected = board.copy().addPiece(piece).build();
 
         when(repository.get(boardId)).thenReturn(of(board));
-        doThrow(new ShipCollisionCheck()).when(logic).placementCheck(piece);
+        doThrow(new ShipCollisionCheck()).when(logic).placementCheck(singletonList(piece));
         when(repository.save(expected)).thenReturn(Optional.empty());
 
-        service.placePiece(boardId, piece);
+        service.placePiece(boardId, singletonList(piece));
     }
 
-    public List<Piece> getShips() {
+    private List<Piece> getShips() {
         return Harbor.getShips().stream().map(ship -> Piece.builder()
                 .withType(ship)
                 .withPlacement(new Point())

@@ -1,10 +1,6 @@
 package com.bship.games.domains;
 
-import com.bship.games.domains.validations.BoundsCheck;
 import com.bship.games.domains.validations.NonEmpty;
-import com.bship.games.domains.validations.PlacementCheck;
-import com.bship.games.domains.validations.ShipExists;
-import com.bship.games.domains.validations.ValidPoint;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -13,16 +9,12 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 @JsonDeserialize(builder = Piece.Builder.class)
-@PlacementCheck
 public class Piece {
 
     @NonEmpty
-    @ShipExists
     private Harbor type;
 
     @NonEmpty
-    @BoundsCheck
-    @ValidPoint
     private Point placement;
 
     @NonEmpty
@@ -112,6 +104,8 @@ public class Piece {
         private boolean taken;
         private Point placement;
         private Direction orientation;
+
+        private Builder() {}
 
         public Builder withType(Harbor shipType) {
             this.type = shipType;

@@ -9,15 +9,15 @@ Contract.make {
     headers {
       contentType(applicationJson())
     }
-    body([
-        type       : 'AIRCRAFT_CARRIER',
-        id         : 1,
-        placement  : [
-            x: -1,
-            y: 0
-        ],
-        orientation: 'DOWN'
-    ])
+    body([[
+              type       : 'AIRCRAFT_CARRIER',
+              id         : 1,
+              placement  : [
+                  x: -1,
+                  y: 0
+              ],
+              orientation: 'DOWN'
+          ]])
   }
   response {
     status 400
@@ -27,13 +27,20 @@ Contract.make {
     body([
         errors: [[
                      validations: [[
-                                       code   : 'BoundsCheck',
-                                       field  : 'placement',
-                                       value  : [
-                                           x: -1,
-                                           y: 0
-                                       ],
-                                       message: 'out of bounds.'
+                                       code   : "PlacementOfXCheck",
+                                       field  : "pieces",
+                                       value  : [[
+                                                     type       : "AIRCRAFT_CARRIER",
+                                                     placement  : [
+                                                         x: -1,
+                                                         y: 0
+                                                     ],
+                                                     orientation: "DOWN",
+                                                     id         : 1,
+                                                     boardId    : null,
+                                                     taken      : false
+                                                 ]],
+                                       message: "Incorrect placement of X axis."
                                    ]]
                  ]]
     ])

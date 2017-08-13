@@ -64,7 +64,7 @@ public void validate_2_placeShip() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":-1,\"y\":0},\"orientation\":\"DOWN\"}");
+.body("[{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":-1,\"y\":0},\"orientation\":\"DOWN\"}]");
 
 // when:
 ResponseOptions response = given().spec(request)
@@ -75,11 +75,16 @@ assertThat(response.statusCode()).isEqualTo(400);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("placement");
-assertThatJson(parsedJson).array("errors").array("validations").field("value").field("x").isEqualTo(-1);
-assertThatJson(parsedJson).array("errors").array("validations").field("value").field("y").isEqualTo(0);
-assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("out of bounds.");
-assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("BoundsCheck");
+assertThatJson(parsedJson).array("errors").array("validations").array("value").field("placement").field("x").isEqualTo(-1);
+assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Incorrect placement of X axis.");
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("taken").isEqualTo(false);
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("type").isEqualTo("AIRCRAFT_CARRIER");
+assertThatJson(parsedJson).array("errors").array("validations").array("value").field("placement").field("y").isEqualTo(0);
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("boardId").isNull();
+assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("pieces");
+assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("PlacementOfXCheck");
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("id").isEqualTo(1);
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("orientation").isEqualTo("DOWN");
 }
 
 }

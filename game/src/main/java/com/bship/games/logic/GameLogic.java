@@ -9,11 +9,12 @@ import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.exceptions.TurnCheck;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 public interface GameLogic {
-    Function<Board, Board> placementCheck(Piece piece) throws ShipExistsCheck, ShipCollisionCheck;
+    Function<Board, Board> placementCheck(List<Piece> pieces) throws ShipExistsCheck, ShipCollisionCheck;
 
     Function<Game, Game> valid(Move move) throws TurnCheck, MoveCollision;
 

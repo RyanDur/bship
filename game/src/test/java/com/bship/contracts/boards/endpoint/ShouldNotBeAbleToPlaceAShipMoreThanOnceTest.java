@@ -64,7 +64,7 @@ public void validate_2_placeAircraftCarrier() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":0,\"y\":0},\"orientation\":\"DOWN\"}");
+.body("[{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":0,\"y\":0},\"orientation\":\"DOWN\"}]");
 
 // when:
 ResponseOptions response = given().spec(request)
@@ -102,7 +102,7 @@ public void validate_3_placeAircraftCarrierAgain() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":9,\"y\":0},\"orientation\":\"LEFT\",\"size\":5}");
+.body("[{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":9,\"y\":0},\"orientation\":\"LEFT\",\"size\":5}]");
 
 // when:
 ResponseOptions response = given().spec(request)

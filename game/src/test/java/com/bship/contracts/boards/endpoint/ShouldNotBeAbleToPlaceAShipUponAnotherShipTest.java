@@ -60,49 +60,11 @@ assertThatJson(parsedJson).array("boards").array("pieces").contains("boardId").i
 }
 
 @Test
-public void validate_2_placeCarrier() throws Exception {
+public void validate_2_placeIntersectingShips() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":3,\"y\":3},\"orientation\":\"RIGHT\",\"size\":5}");
-
-// when:
-ResponseOptions response = given().spec(request)
-.put("/boards/1");
-
-// then:
-assertThat(response.statusCode()).isEqualTo(200);
-assertThat(response.header("Content-Type")).matches("application/json.*");
-// and:
-DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("RIGHT");
-assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(5);
-assertThatJson(parsedJson).array("pieces").contains("taken").isEqualTo(false);
-assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(3);
-assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("BATTLESHIP");
-assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(4);
-assertThatJson(parsedJson).array("pieces").contains("boardId").isEqualTo(1);
-assertThatJson(parsedJson).array("pieces").field("placement").field("y").isEqualTo(3);
-assertThatJson(parsedJson).array("pieces").field("placement").field("x").isNull();
-assertThatJson(parsedJson).array("pieces").contains("orientation").isEqualTo("NONE");
-assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(2);
-assertThatJson(parsedJson).array("pieces").contains("id").isEqualTo(1);
-assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("AIRCRAFT_CARRIER");
-assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("CRUISER");
-assertThatJson(parsedJson).array("pieces").field("placement").field("x").isEqualTo(3);
-assertThatJson(parsedJson).array("pieces").field("placement").field("y").isNull();
-assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("DESTROYER");
-assertThatJson(parsedJson).field("id").isEqualTo(1);
-assertThatJson(parsedJson).array("pieces").contains("type").isEqualTo("SUBMARINE");
-assertThatJson(parsedJson).field("winner").isEqualTo(false);
-}
-
-@Test
-public void validate_3_placeIntersectingBattleship() throws Exception {
-// given:
-MockMvcRequestSpecification request = given()
-.header("Content-Type", "application/json")
-.body("{\"type\":\"BATTLESHIP\",\"id\":2,\"placement\":{\"x\":4,\"y\":2},\"orientation\":\"DOWN\"}");
+.body("[{\"type\":\"AIRCRAFT_CARRIER\",\"id\":1,\"placement\":{\"x\":3,\"y\":3},\"orientation\":\"RIGHT\"},{\"type\":\"BATTLESHIP\",\"id\":2,\"placement\":{\"x\":4,\"y\":2},\"orientation\":\"DOWN\"}]");
 
 // when:
 ResponseOptions response = given().spec(request)

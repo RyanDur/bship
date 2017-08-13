@@ -120,7 +120,7 @@ public class BattleshipTest {
 
         Board board = Board.builder().addPiece(piece1).build();
 
-        Board actual = logic.placementCheck(piece2).apply(board);
+        Board actual = logic.placementCheck(singletonList(piece2)).apply(board);
         assertThat(actual, is(equalTo(board)));
     }
 
@@ -144,7 +144,7 @@ public class BattleshipTest {
 
         Board board = Board.builder().addPiece(piece1).build();
 
-        logic.placementCheck(piece2).apply(board);
+        logic.placementCheck(singletonList(piece2)).apply(board);
     }
 
     @Test
@@ -163,7 +163,7 @@ public class BattleshipTest {
 
         Board board = Board.builder().addPiece(piece1).build();
 
-        Board actual = logic.placementCheck(piece2).apply(board);
+        Board actual = logic.placementCheck(singletonList(piece2)).apply(board);
         assertThat(actual, is(equalTo(board)));
     }
 
@@ -185,7 +185,7 @@ public class BattleshipTest {
 
         Board board = Board.builder().withPieces(singletonList(battleship)).build();
 
-        logic.placementCheck(carrier).apply(board);
+        logic.placementCheck(singletonList(carrier)).apply(board);
     }
 
     @Test

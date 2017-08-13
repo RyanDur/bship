@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import static com.bship.games.domains.MoveStatus.HIT;
 import static com.bship.games.domains.MoveStatus.MISS;
 import static com.bship.games.util.LambdaExceptionUtil.rethrowFunction;
+import static com.bship.games.util.Util.concat;
 import static com.bship.games.util.Util.detectCollision;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -39,10 +40,10 @@ public class Battleship implements GameLogic {
     private static final boolean SUNK = true;
 
     @Override
-    public Function<Board, Board> placementCheck(Piece piece) throws ShipExistsCheck, ShipCollisionCheck {
+    public Function<Board, Board> placementCheck(List<Piece> pieces) throws ShipExistsCheck, ShipCollisionCheck {
         return rethrowFunction(board -> {
-            if (exists(piece, board)) throw new ShipExistsCheck();
-            if (collision(piece, board)) throw new ShipCollisionCheck();
+            if (exists(pieces, board)) throw new ShipExistsCheck();
+            if (collision(pieces, board)) throw new ShipCollisionCheck();
             return board;
         });
     }
@@ -135,20 +136,20 @@ public class Battleship implements GameLogic {
                 .isPresent();
     }
 
-    private boolean exists(Piece piece, Board board) {
-        return ofNullable(piece).isPresent() && ofNullable(board)
+    private boolean exists(List<Piece> pieces, Board board) {
+        return ofNullable(pieces).isPresent() && ofNullable(board)
                 .map(Board::getPieces)
                 .map(Collection::stream)
                 .filter(ships -> ships.filter(Util::isPlaced)
                         .map(Piece::getType)
-                        .anyMatch(type -> type.equals(piece.getType()))).isPresent();
+                        .anyMatch(type -> pieces.stream()
+                                .anyMatch(piece -> type == piece.getType()))).isPresent();
     }
 
-    private boolean collision(Piece piece, Board board) {
-        return ofNullable(piece).isPresent() && ofNullable(board)
-                .map(Board::getPieces).map(Collection::stream)
-                .filter(ships -> ships.anyMatch(savedPiece ->
-                        detectCollision(savedPiece, piece)))
+    private boolean collision(List<Piece> pieces, Board board) {
+        return ofNullable(board)
+                .map(Board::getPieces)
+                .filter(savedPieces -> detectCollision(concat(savedPieces, pieces)))
                 .isPresent();
     }
 

@@ -1,4 +1,4 @@
-package contracts.games.endpoint.placeMove.shouldNotBeAbleToPlaceAMoveOnTheBoardWhereMoveAlreadyExists
+package contracts.games.endpoint.placeMove.shouldBeAbleToPlaceAMoveOnTheBoard
 
 import org.springframework.cloud.contract.spec.Contract
 
@@ -9,7 +9,7 @@ Contract.make {
     headers {
       contentType(applicationJson())
     }
-    body([
+    body([[
         type       : 'AIRCRAFT_CARRIER',
         id         : 6,
         placement  : [
@@ -17,7 +17,39 @@ Contract.make {
             y: 0
         ],
         orientation: 'DOWN'
-    ])
+    ],[
+        type       : 'BATTLESHIP',
+        id         : 7,
+        placement  : [
+            x: 1,
+            y: 0
+        ],
+        orientation: 'DOWN'
+    ],[
+        type       : 'SUBMARINE',
+        id         : 8,
+        placement  : [
+            x: 2,
+            y: 0
+        ],
+        orientation: 'DOWN'
+    ],[
+        type       : 'CRUISER',
+        id         : 9,
+        placement  : [
+            x: 3,
+            y: 0
+        ],
+        orientation: 'DOWN'
+    ],[
+        type       : 'DESTROYER',
+        id         : 10,
+        placement  : [
+            x: 4,
+            y: 0
+        ],
+        orientation: 'DOWN'
+    ]])
   }
   response {
     status 200
@@ -40,10 +72,10 @@ Contract.make {
                          [
                              type       : 'BATTLESHIP',
                              placement  : [
-                                 x: null,
-                                 y: null
+                                 x: 1,
+                                 y: 0
                              ],
-                             orientation: 'NONE',
+                             orientation: 'DOWN',
                              boardId    : 2,
                              taken      : false,
                              id         : 7
@@ -51,10 +83,10 @@ Contract.make {
                          [
                              type       : 'SUBMARINE',
                              placement  : [
-                                 x: null,
-                                 y: null
+                                 x: 2,
+                                 y: 0
                              ],
-                             orientation: 'NONE',
+                             orientation: 'DOWN',
                              boardId    : 2,
                              taken      : false,
                              id         : 8
@@ -62,10 +94,10 @@ Contract.make {
                          [
                              type       : 'CRUISER',
                              placement  : [
-                                 x: null,
-                                 y: null
+                                 x: 3,
+                                 y: 0
                              ],
-                             orientation: 'NONE',
+                             orientation: 'DOWN',
                              boardId    : 2,
                              taken      : false,
                              id         : 9
@@ -73,10 +105,10 @@ Contract.make {
                          [
                              type       : 'DESTROYER',
                              placement  : [
-                                 x: null,
-                                 y: null
+                                 x: 4,
+                                 y: 0
                              ],
-                             orientation: 'NONE',
+                             orientation: 'DOWN',
                              boardId    : 2,
                              taken      : false,
                              id         : 10

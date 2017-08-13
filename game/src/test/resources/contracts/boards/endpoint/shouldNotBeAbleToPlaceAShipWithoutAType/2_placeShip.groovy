@@ -9,14 +9,14 @@ Contract.make {
     headers {
       contentType(applicationJson())
     }
-    body([
-        id         : 1,
-        placement  : [
-            x: 0,
-            y: 0
-        ],
-        orientation: 'DOWN'
-    ])
+    body([[
+              id         : 1,
+              placement  : [
+                  x: 0,
+                  y: 0
+              ],
+              orientation: 'DOWN'
+          ]])
   }
   response {
     status 400
@@ -26,10 +26,20 @@ Contract.make {
     body([
         errors: [[
                      validations: [[
-                                       code   : 'NonEmpty',
-                                       field  : 'type',
-                                       value  : null,
-                                       message: 'Cannot be empty or null.'
+                                       code   : "PieceTypeExistenceCheck",
+                                       field  : "pieces",
+                                       value  : [[
+                                                     type       : null,
+                                                     placement  : [
+                                                         x: 0,
+                                                         y: 0
+                                                     ],
+                                                     orientation: "DOWN",
+                                                     id         : 1,
+                                                     boardId    : null,
+                                                     taken      : false
+                                                 ]],
+                                       message: "Missing piece type."
                                    ]]
                  ]]
     ])

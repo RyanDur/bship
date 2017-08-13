@@ -3,6 +3,7 @@ package com.bship.games.util;
 import com.bship.games.domains.Piece;
 import com.bship.games.domains.Point;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -123,5 +124,16 @@ public class Util {
                 .filter(p -> nonNull(p.getX()))
                 .filter(p -> nonNull(p.getY()))
                 .isPresent();
+    }
+
+    public static Boolean detectCollision(List<Piece> pieces) {
+        return pieces.stream()
+                .map(Util::pointsRange)
+                .flatMap(Collection::stream)
+                .distinct()
+                .collect(toList()).size() != pieces
+                .stream().map(Util::pointsRange)
+                .flatMap(Collection::stream)
+                .collect(toList()).size();
     }
 }

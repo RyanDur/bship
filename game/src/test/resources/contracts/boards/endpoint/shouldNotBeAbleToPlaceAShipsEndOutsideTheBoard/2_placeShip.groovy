@@ -9,15 +9,15 @@ Contract.make {
     headers {
       contentType(applicationJson())
     }
-    body([
-        type       : 'AIRCRAFT_CARRIER',
-        id         : 1,
-        placement  : [
-            x: 9,
-            y: 6
-        ],
-        orientation: 'DOWN'
-    ])
+    body([[
+              type       : 'AIRCRAFT_CARRIER',
+              id         : 1,
+              placement  : [
+                  x: 9,
+                  y: 6
+              ],
+              orientation: 'DOWN'
+          ]])
   }
   response {
     status 400
@@ -27,9 +27,20 @@ Contract.make {
     body([
         errors: [[
                      validations: [[
-                                       code   : 'PlacementCheck',
-                                       type   : 'piece',
-                                       message: 'Incorrect ship placement.'
+                                       code   : "OrientationCheck",
+                                       field  : "pieces",
+                                       value  : [[
+                                                     type       : "AIRCRAFT_CARRIER",
+                                                     placement  : [
+                                                         x: 9,
+                                                         y: 6
+                                                     ],
+                                                     orientation: "DOWN",
+                                                     id         : 1,
+                                                     boardId    : null,
+                                                     taken      : false
+                                                 ]],
+                                       message: "Incorrect orientation."
                                    ]]
                  ]]
     ])

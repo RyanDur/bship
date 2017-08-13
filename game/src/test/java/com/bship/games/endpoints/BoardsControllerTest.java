@@ -6,24 +6,33 @@ import com.bship.games.domains.Point;
 import com.bship.games.endpoints.RequestErrors.FieldValidation;
 import com.bship.games.endpoints.RequestErrors.GameErrors;
 import com.bship.games.endpoints.RequestErrors.ObjectValidation;
+import com.bship.games.endpoints.RequestErrors.ValidationFieldError;
 import com.bship.games.exceptions.ShipCollisionCheck;
 import com.bship.games.exceptions.ShipExistsCheck;
 import com.bship.games.services.BoardService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.bship.games.domains.Direction.DOWN;
 import static com.bship.games.domains.Direction.LEFT;
+import static com.bship.games.domains.Direction.RIGHT;
 import static com.bship.games.domains.Direction.UP;
 import static com.bship.games.domains.Harbor.BATTLESHIP;
 import static com.bship.games.domains.Harbor.DESTROYER;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -47,229 +56,286 @@ public class BoardsControllerTest {
     }
 
     @Test
-    public void placeShip_shouldHaveARoute() throws Exception {
+    public void shouldHaveARoute() throws Exception {
         mockMvc.perform(put("/boards/9"));
     }
 
     @Test
-    public void placeShip_shouldProduceJSONWithCharsetUTF8() throws Exception {
-        when(mockService.placePiece(anyLong(), any(Piece.class)))
+    public void shouldProduceJSONWithCharsetUTF8() throws Exception {
+        when(mockService.placePiece(anyLong(), anyListOf(Piece.class)))
                 .thenReturn(Board.builder().build());
-        Piece piece = Piece.builder()
+        List<Piece> pieces = singletonList(Piece.builder()
                 .withId(1L)
                 .withType(BATTLESHIP)
                 .withPlacement(new Point(4, 5))
-                .withOrientation(LEFT).build();
+                .withOrientation(LEFT).build());
 
         mockMvc.perform(put("/boards/9").contentType(MediaType.APPLICATION_JSON)
-                .content(piece.toString()))
+                .content(pieces.toString()))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @Test
-    public void placeShip_shouldRespondWith200() throws Exception {
-        when(mockService.placePiece(anyLong(), any(Piece.class)))
+    public void shouldRespondWith200() throws Exception {
+        when(mockService.placePiece(anyLong(), anyListOf(Piece.class)))
                 .thenReturn(Board.builder().build());
-        Piece piece = Piece.builder()
+
+        List<Piece> pieces = singletonList(Piece.builder()
                 .withId(1L)
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
-                .build();
+                .build());
 
         mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(piece.toString()))
+                .content(pieces.toString()))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void placeShip_shouldRequireATypeOfShip() throws Exception {
+    public void shouldRequireATypeOfShip() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{" +
-                        "\"id\": 1," +
+                .content("[{" +
+                        "  \"id\": 1," +
                         "  \"size\": 2," +
                         "  \"orientation\": \"DOWN\"," +
                         "  \"placement\": {" +
                         "    \"x\": 1," +
                         "    \"y\": 5" +
                         "  }" +
-                        "}"
+                        "}]"
                 )).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
-        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Cannot be empty or null."));
+        List<String> messages = getFieldErrorMessages(actual);
+        assertThat(messages.contains("Missing piece type."), Matchers.is(true));
     }
 
     @Test
-    public void placeShip_shouldRequireAnExistingTypeOfShip() throws Exception {
+    public void shouldRequireAnExistingTypeOfShip() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{" +
-                        "\"id\": 1," +
-                        "  \"type\": \"GAS_STATION\"," +
-                        "  \"size\": 2," +
-                        "  \"orientation\": \"DOWN\"," +
-                        "  \"placement\": {" +
-                        "    \"x\": 1," +
-                        "    \"y\": 5" +
-                        "  }" +
-                        "}"
+                .content("[{" +
+                        "    \"id\": 1," +
+                        "    \"type\": \"GAS_STATION\"," +
+                        "    \"orientation\": \"DOWN\"," +
+                        "    \"placement\": {" +
+                        "      \"x\": 0," +
+                        "      \"y\": 0" +
+                        "    }" +
+                        "}]"
                 )).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
-        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Ship does not exist."));
+        List<String> messages = getFieldErrorMessages(actual);
+
+        assertThat(messages.contains("Invalid piece type."), Matchers.is(true));
     }
 
     @Test
-    public void placeShip_shouldRequireAStartingPointForAShip() throws Exception {
+    public void shouldRequireAPlacementPointForAShip() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{" +
-                        "\"id\": 1," +
-                        "  \"type\": {\"name\":\"DESTROYER\", \"size\": 2}," +
+                .content("[{" +
+                        "  \"id\": 1," +
+                        "  \"type\": \"DESTROYER\"," +
                         "  \"orientation\": \"DOWN\"" +
-                        "}"
+                        "}]"
                 )).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
-
-        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Cannot be empty or null."));
+        List<String> messages = getFieldErrorMessages(actual);
+        assertThat(messages.contains("Missing placement."), Matchers.is(true));
     }
 
     @Test
-    public void placeShip_shouldRequireAnEndingPointForAShip() throws Exception {
+    public void shouldRequireAnOrientationForAShip() throws Exception {
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{" +
-                        "\"id\": 1," +
-                        "  \"type\": {\"name\":\"DESTROYER\", \"size\": 2}," +
+                .content("[{" +
+                        "  \"id\": 1," +
+                        "  \"type\": \"AIRCRAFT_CARRIER\"," +
                         "  \"placement\": {" +
-                        "    \"x\": 1," +
-                        "    \"y\": 5" +
+                        "    \"x\": 0," +
+                        "    \"y\": 4" +
                         "  }" +
-                        "}"
+                        "}]"
                 )).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
         FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Cannot be empty or null."));
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Missing orientation."));
     }
 
     @Test
-    public void placeShip_shouldNotAllowTheStartXToBeLessThanTheWidthOfTheBoard() throws Exception {
-        Piece piece = Piece.builder()
+    public void shouldNotAllowTheStartXToBeLessThanTheWidthOfTheBoard() throws Exception {
+        List<Piece> pieces = singletonList(Piece.builder()
                 .withId(1L)
                 .withType(DESTROYER)
                 .withPlacement(new Point(-1, 0))
                 .withOrientation(DOWN)
-                .build();
+                .build());
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(piece.toString())).andReturn()
+                .content(pieces.toString())).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
-        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("out of bounds."));
+        List<String> messages = getFieldErrorMessages(actual);
+        assertThat(messages.contains("Incorrect placement of X axis."), Matchers.is(true));
     }
 
     @Test
-    public void placeShip_shouldNotAllowTheStartXToBeGreaterThanTheWidthOfTheBoard() throws Exception {
-        Piece piece = Piece.builder()
+    public void shouldNotAllowTheStartXToBeGreaterThanTheWidthOfTheBoard() throws Exception {
+        List<Piece> pieces = singletonList(Piece.builder()
                 .withId(1L)
                 .withType(DESTROYER)
                 .withPlacement(new Point(11, 0))
                 .withOrientation(DOWN)
-                .build();
+                .build());
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(piece.toString())).andReturn()
+                .content(pieces.toString())).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
         FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("out of bounds."));
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Incorrect placement of X axis."));
     }
 
     @Test
-    public void placeShip_shouldNotAllowTheStartYToBeLessThanTheHeightOfTheBoard() throws Exception {
-        Piece piece = Piece.builder()
+    public void shouldNotAllowTheStartYToBeLessThanTheHeightOfTheBoard() throws Exception {
+        List<Piece> pieces = singletonList(Piece.builder()
                 .withId(1L)
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, -1))
                 .withOrientation(DOWN)
-                .build();
+                .build());
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(piece.toString())).andReturn()
+                .content(pieces.toString())).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
         FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("out of bounds."));
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Incorrect placement of Y axis."));
     }
 
     @Test
-    public void placeShip_shouldNotAllowTheStartYToBeGreaterThanTheHeightOfTheBoard() throws Exception {
-        Piece piece = Piece.builder()
+    public void shouldNotAllowTheStartYToBeGreaterThanTheHeightOfTheBoard() throws Exception {
+        List<Piece> pieces = singletonList(Piece.builder()
                 .withId(1L)
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, 11))
                 .withOrientation(DOWN)
-                .build();
+                .build());
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(piece.toString())).andReturn()
+                .content(pieces.toString())).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
         FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("out of bounds."));
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Incorrect placement of Y axis."));
     }
 
     @Test
-    public void placeShip_shouldNotAllowTheEndYToBeLessThanTheHeightOfTheBoard() throws Exception {
-        Piece piece = Piece.builder()
+    public void shouldNotAllowThePieceToGoOffTheTopOfTheBoard() throws Exception {
+        List<Piece> pieces = singletonList(Piece.builder()
                 .withId(1L)
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(UP)
-                .build();
+                .build());
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(piece.toString())).andReturn()
+                .content(pieces.toString())).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
-        ObjectValidation error = mapper.convertValue(actual.getErrors().get(0), ObjectValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Incorrect ship placement."));
+        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Incorrect orientation."));
     }
 
     @Test
-    public void placeShip_shouldHandleShipExistence() throws Exception {
-        doThrow(new ShipExistsCheck()).when(mockService).placePiece(anyLong(), any(Piece.class));
-        Piece piece = Piece.builder()
+    public void shouldNotAllowThePieceToGoOffTheBottomOfTheBoard() throws Exception {
+        List<Piece> pieces = singletonList(Piece.builder()
+                .withId(1L)
+                .withType(DESTROYER)
+                .withPlacement(new Point(0, 9))
+                .withOrientation(DOWN)
+                .build());
+
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(pieces.toString())).andReturn()
+                .getResponse()
+                .getContentAsString(), GameErrors.class);
+
+        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Incorrect orientation."));
+    }
+
+    @Test
+    public void shouldNotAllowThePieceToGoOffTheLeftOfTheBoard() throws Exception {
+        List<Piece> pieces = singletonList(Piece.builder()
+                .withId(1L)
+                .withType(DESTROYER)
+                .withPlacement(new Point(0, 5))
+                .withOrientation(LEFT)
+                .build());
+
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(pieces.toString())).andReturn()
+                .getResponse()
+                .getContentAsString(), GameErrors.class);
+
+        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Incorrect orientation."));
+    }
+
+    @Test
+    public void shouldNotAllowThePieceToGoOffTheRightOfTheBoard() throws Exception {
+        List<Piece> pieces = singletonList(Piece.builder()
+                .withId(1L)
+                .withType(DESTROYER)
+                .withPlacement(new Point(9, 5))
+                .withOrientation(RIGHT)
+                .build());
+
+        GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(pieces.toString())).andReturn()
+                .getResponse()
+                .getContentAsString(), GameErrors.class);
+
+        FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Incorrect orientation."));
+    }
+
+    @Test
+    public void shouldHandleShipExistence() throws Exception {
+        doThrow(new ShipExistsCheck()).when(mockService).placePiece(anyLong(), anyListOf(Piece.class));
+        List<Piece> pieces = singletonList(Piece.builder()
                 .withId(1L)
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
-                .build();
+                .build());
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(piece.toString())).andReturn()
+                .content(pieces.toString())).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
@@ -278,18 +344,18 @@ public class BoardsControllerTest {
     }
 
     @Test
-    public void placeShip_shouldHandleShipCollisions() throws Exception {
-        doThrow(new ShipCollisionCheck()).when(mockService).placePiece(anyLong(), any(Piece.class));
-        Piece piece = Piece.builder()
+    public void shouldHandleShipCollisions() throws Exception {
+        doThrow(new ShipCollisionCheck()).when(mockService).placePiece(anyLong(), anyListOf(Piece.class));
+        List<Piece> pieces = singletonList(Piece.builder()
                 .withId(1L)
                 .withType(DESTROYER)
                 .withPlacement(new Point(0, 0))
                 .withOrientation(DOWN)
-                .build();
+                .build());
 
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(piece.toString())).andReturn()
+                .content(pieces.toString())).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
@@ -298,23 +364,30 @@ public class BoardsControllerTest {
     }
 
     @Test
-    public void placeShip_shouldNeedAnId() throws Exception {
-        doThrow(new ShipCollisionCheck()).when(mockService).placePiece(anyLong(), any(Piece.class));
+    public void shouldNeedAnId() throws Exception {
+        doThrow(new ShipCollisionCheck()).when(mockService).placePiece(anyLong(), anyListOf(Piece.class));
         GameErrors actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{" +
-                        "  \"type\": {\"name\":\"DESTROYER\", \"size\": 2}," +
-                        "  \"start\": {" +
-                        "    \"x\": 0," +
-                        "    \"y\": 0" +
-                        "  }," +
-                        "  \"orientation\": \"DOWN\"" +
-                        "}"
+                .content("[{\n" +
+                        "    \"type\": \"DESTROYER\",\n" +
+                        "    \"placement\": {\n" +
+                        "      \"x\": 8,\n" +
+                        "      \"y\": 0\n" +
+                        "    },\n" +
+                        "    \"orientation\": \"DOWN\"\n" +
+                        "}]"
                 )).andReturn()
                 .getResponse()
                 .getContentAsString(), GameErrors.class);
 
         FieldValidation error = mapper.convertValue(actual.getErrors().get(0), FieldValidation.class);
-        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("Cannot be empty or null."));
+        assertThat(error.getValidations().get(0).getMessage(), CoreMatchers.is("An Id is missing."));
+    }
+
+    private List<String> getFieldErrorMessages(GameErrors actual) {
+        return Arrays.stream(mapper.convertValue(actual.getErrors(), FieldValidation[].class)).map(FieldValidation::getValidations)
+                .flatMap(Collection::stream)
+                .map(ValidationFieldError::getMessage)
+                .collect(Collectors.toList());
     }
 }

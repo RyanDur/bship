@@ -19,6 +19,10 @@ public class PlacementCheckValidation implements ConstraintValidator<PlacementCh
     }
 
     public boolean isValid(Piece piece, ConstraintValidatorContext context) {
+        return validate(piece);
+    }
+
+    private boolean validate(Piece piece) {
         return ofNullable(piece)
                 .filter(Util::isPlaced)
                 .filter(p -> nonNull(p.getType()))

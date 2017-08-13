@@ -64,7 +64,7 @@ public void validate_2_placeShip() throws Exception {
 // given:
 MockMvcRequestSpecification request = given()
 .header("Content-Type", "application/json")
-.body("{\"id\":1,\"placement\":{\"x\":0,\"y\":0},\"orientation\":\"DOWN\"}");
+.body("[{\"id\":1,\"placement\":{\"x\":0,\"y\":0},\"orientation\":\"DOWN\"}]");
 
 // when:
 ResponseOptions response = given().spec(request)
@@ -75,10 +75,16 @@ assertThat(response.statusCode()).isEqualTo(400);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("errors").array("validations").contains("value").isNull();
-assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("NonEmpty");
-assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Cannot be empty or null.");
-assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("type");
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("taken").isEqualTo(false);
+assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Missing piece type.");
+assertThatJson(parsedJson).array("errors").array("validations").array("value").field("placement").field("y").isEqualTo(0);
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("boardId").isNull();
+assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("pieces");
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("type").isNull();
+assertThatJson(parsedJson).array("errors").array("validations").array("value").field("placement").field("x").isEqualTo(0);
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("id").isEqualTo(1);
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("orientation").isEqualTo("DOWN");
+assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("PieceTypeExistenceCheck");
 }
 
 }

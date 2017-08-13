@@ -1,7 +1,7 @@
 package com.bship.games.endpoints;
 
 import com.bship.games.domains.Board;
-import com.bship.games.domains.Piece;
+import com.bship.games.domains.PieceList;
 import com.bship.games.exceptions.BoardValidation;
 import com.bship.games.services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +41,8 @@ public class BoardsController implements BadRequestHandler {
             produces = APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(OK)
     public Board placeShip(@PathVariable Long boardId,
-                           @Valid @RequestBody Piece piece) throws BoardValidation {
-        return service.placePiece(boardId, piece);
+                           @RequestBody @Valid PieceList pieces) throws BoardValidation {
+        return service.placePiece(boardId, pieces.getPieces());
     }
 
     @Override

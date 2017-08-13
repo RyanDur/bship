@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
+import static com.bship.games.util.Util.concat;
 
 @Service
 public class BoardService {
@@ -26,24 +27,23 @@ public class BoardService {
         this.logic = logic;
     }
 
-    public Board placePiece(Long boardId, Piece piece) throws BoardValidation {
+    public Board placePiece(Long boardId, List<Piece> pieces) throws BoardValidation {
         return boards.get(boardId)
-                .map(logic.placementCheck(piece))
-                .map(addPieceToBoard(boardId, piece))
+                .map(logic.placementCheck(pieces))
+                .map(addPiecesToBoard(pieces))
                 .flatMap(boards::save)
                 .orElseThrow(BoardExistence::new);
     }
 
-    private Function<Board, Board> addPieceToBoard(Long boardId, Piece piece) {
+    private Function<Board, Board> addPiecesToBoard(List<Piece> pieces) {
         return board -> board.copy()
-                .withPieces(otherPieces(board, piece))
-                .addPiece(piece.copy().withBoardId(boardId).build())
+                .withPieces(concat(set(pieces, board), pieces))
                 .build();
     }
 
-    private List<Piece> otherPieces(Board board, Piece piece) {
-        return board.getPieces().stream()
-                .filter(o -> !o.getType().equals(piece.getType()))
-                .collect(toList());
+    private List<Piece> set(List<Piece> pieces, Board board) {
+        return board.getPieces().stream().filter(piece ->
+                pieces.stream().noneMatch(p -> p.getType() == piece.getType()))
+                .collect(Collectors.toList());
     }
 }

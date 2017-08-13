@@ -9,12 +9,12 @@ Contract.make {
     headers {
       contentType(applicationJson())
     }
-    body([
+    body([[
         type       : 'AIRCRAFT_CARRIER',
         id         : 1,
         orientation: 'DOWN',
         size       : 5
-    ])
+    ]])
   }
   response {
     status 400
@@ -24,10 +24,17 @@ Contract.make {
     body([
         errors: [[
                      validations: [[
-                                       code   : 'NonEmpty',
-                                       field  : 'placement',
-                                       value  : null,
-                                       message: 'Cannot be empty or null.'
+                                       code : "PlacementExistenceCheck",
+                                       field : "pieces",
+                                       value : [[
+                                                type: "AIRCRAFT_CARRIER",
+                                                placement: null,
+                                                orientation: "DOWN",
+                                                id: 1,
+                                                boardId: null,
+                                                taken: false
+                                              ]],
+                                     message: "Missing placement."
                                    ]]
                  ]]
     ])

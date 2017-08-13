@@ -9,7 +9,7 @@ Contract.make {
     headers {
       contentType(applicationJson())
     }
-    body([
+    body([[
         type       : 'AIRCRAFT_CARRIER',
         id         : 1,
         placement  : [
@@ -18,7 +18,7 @@ Contract.make {
         ],
         orientation: 'LEFT',
         size       : 5
-    ])
+    ]])
   }
   response {
     status 400
