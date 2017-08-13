@@ -1,7 +1,7 @@
 package com.bship.games.endpoints.errors.validations;
 
 import com.bship.games.endpoints.cabinet.entity.Piece;
-import com.bship.games.logic.rules.PieceType;
+import com.bship.games.logic.rules.Harbor;
 import com.bship.games.util.Util;
 
 import javax.validation.ConstraintValidator;
@@ -28,7 +28,7 @@ public class PlacementCheckValidation implements ConstraintValidator<PlacementCh
                 .filter(Util::isPlaced)
                 .filter(p -> nonNull(p.getType()))
                 .filter(validOrientation)
-                .filter(p -> PieceType.Harbor.getPieces().collect(toList()).contains(p.getType()))
+                .filter(p -> Harbor.getPieces().collect(toList()).contains(p.getType()))
                 .filter(p -> Objects.equals(p.getType().getSize(), pointsRange(p).size()))
                 .filter(Util::validRange)
                 .isPresent();

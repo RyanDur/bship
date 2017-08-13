@@ -8,7 +8,7 @@ import org.junit.Test;
 import static com.bship.games.logic.rules.Direction.DOWN;
 import static com.bship.games.logic.rules.Direction.NONE;
 import static com.bship.games.logic.rules.Direction.UP;
-import static com.bship.games.logic.rules.PieceType.Harbor.AIRCRAFT_CARRIER;
+import static com.bship.games.logic.rules.Harbor.AIRCRAFT_CARRIER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

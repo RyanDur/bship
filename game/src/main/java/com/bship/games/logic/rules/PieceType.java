@@ -1,46 +1,37 @@
 package com.bship.games.logic.rules;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.bship.games.logic.rules.PieceType.Dummy.INVALID_PIECE;
 
 public interface PieceType {
 
-    enum Harbor implements PieceType {
-        AIRCRAFT_CARRIER(5), BATTLESHIP(4), SUBMARINE(3), CRUISER(3), DESTROYER(2);
+    List<PieceType> store = new ArrayList<>();
 
-        private final Integer size;
+    @JsonIgnore
+    default void registerPiece(PieceType type) {
+        store.add(type);
+    }
 
-        Harbor(Integer size) {
-            this.size = size;
-        }
+    @JsonIgnore
+    default String getName() {
+        return null;
+    }
 
-        @Override
-        public String getName() {
-            return name();
-        }
+    @JsonIgnore
+    default Integer getSize() {
+        return null;
+    }
 
-        @Override
-        public Integer getSize() {
-            return size;
-        }
-
-        public static Stream<PieceType> getPieces() {
-            return Arrays.stream(Harbor.values());
-        }
-
-        public static Optional<Harbor> createShip(String value) {
-            return Stream.of(Harbor.values())
-                    .filter(ship -> ship.getName().equals(value))
-                    .findFirst();
-        }
-
-        @Override
-        public String toString() {
-            return "\"" + name() + "\"";
-        }
+    @JsonCreator
+    static PieceType createPiece(String name) {
+        return store.stream()
+                .filter(i -> i.getName().equals(name)).findAny()
+                .orElse(INVALID_PIECE);
     }
 
     enum Dummy implements PieceType {
@@ -50,21 +41,5 @@ public interface PieceType {
         public String getName() {
             return name();
         }
-
-        @Override
-        public Integer getSize() {
-            return null;
-        }
-    }
-
-    String getName();
-
-    Integer getSize();
-
-    @JsonCreator
-    static PieceType create(String value) {
-        Optional<Harbor> pieceType = Harbor.createShip(value);
-        if (pieceType.isPresent()) return pieceType.get();
-        else return Dummy.INVALID_PIECE;
     }
 }

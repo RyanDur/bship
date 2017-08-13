@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toList;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum GameRules {
-    BATTLESHIP(2, 1, BATTLESHIP_BOARD, Arrays.asList(PieceType.Harbor.values()), remove(NONE, Direction.values()));
+    BATTLESHIP(2, 1, BATTLESHIP_BOARD, Arrays.asList(Harbor.values()), remove(NONE, Direction.values()));
 
     private final int numberOfPlayers;
     private final int movesPerTurn;
