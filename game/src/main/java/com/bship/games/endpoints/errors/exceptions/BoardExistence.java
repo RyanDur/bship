@@ -1,0 +1,8 @@
+package com.bship.games.endpoints.errors.exceptions;
+
+public class BoardExistence extends BoardValidation {
+
+    public BoardExistence() {
+        super("Board Does Not Exist!");
+    }
+}

@@ -1,10 +1,10 @@
 package com.bship.games.endpoints;
 
-import com.bship.games.endpoints.RequestErrors.FieldValidation;
-import com.bship.games.endpoints.RequestErrors.GameErrors;
-import com.bship.games.endpoints.RequestErrors.ObjectValidation;
-import com.bship.games.endpoints.RequestErrors.ValidationFieldError;
-import com.bship.games.endpoints.RequestErrors.ValidationObjectError;
+import com.bship.games.endpoints.errors.RequestErrors.FieldValidation;
+import com.bship.games.endpoints.errors.RequestErrors.GameErrors;
+import com.bship.games.endpoints.errors.RequestErrors.ObjectValidation;
+import com.bship.games.endpoints.errors.RequestErrors.ValidationFieldError;
+import com.bship.games.endpoints.errors.RequestErrors.ValidationObjectError;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;

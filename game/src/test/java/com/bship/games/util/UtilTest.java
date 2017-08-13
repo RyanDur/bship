@@ -1,8 +1,8 @@
 package com.bship.games.util;
 
-import com.bship.games.domains.Harbor;
-import com.bship.games.domains.Piece;
-import com.bship.games.domains.Point;
+import com.bship.games.logic.rules.Harbor;
+import com.bship.games.endpoints.cabinet.entity.Piece;
+import com.bship.games.endpoints.cabinet.entity.Point;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -11,11 +11,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.bship.games.domains.Direction.DOWN;
-import static com.bship.games.domains.Direction.LEFT;
-import static com.bship.games.domains.Direction.NONE;
-import static com.bship.games.domains.Direction.RIGHT;
-import static com.bship.games.domains.Direction.UP;
+import static com.bship.games.logic.rules.Direction.DOWN;
+import static com.bship.games.logic.rules.Direction.LEFT;
+import static com.bship.games.logic.rules.Direction.NONE;
+import static com.bship.games.logic.rules.Direction.RIGHT;
+import static com.bship.games.logic.rules.Direction.UP;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;

@@ -1,5 +1,8 @@
 package com.bship.games.domains;
 
+import com.bship.games.endpoints.cabinet.entity.Piece;
+import com.bship.games.endpoints.cabinet.entity.Point;
+import com.bship.games.logic.rules.Harbor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;

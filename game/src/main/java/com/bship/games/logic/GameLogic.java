@@ -1,13 +1,13 @@
 package com.bship.games.logic;
 
-import com.bship.games.domains.Board;
-import com.bship.games.domains.Game;
-import com.bship.games.domains.Move;
-import com.bship.games.domains.Piece;
-import com.bship.games.exceptions.MoveCollision;
-import com.bship.games.exceptions.ShipCollisionCheck;
-import com.bship.games.exceptions.ShipExistsCheck;
-import com.bship.games.exceptions.TurnCheck;
+import com.bship.games.endpoints.cabinet.entity.Board;
+import com.bship.games.endpoints.cabinet.entity.Game;
+import com.bship.games.endpoints.cabinet.entity.Move;
+import com.bship.games.endpoints.cabinet.entity.Piece;
+import com.bship.games.endpoints.errors.exceptions.MoveCollision;
+import com.bship.games.endpoints.errors.exceptions.ShipCollisionCheck;
+import com.bship.games.endpoints.errors.exceptions.ShipExistsCheck;
+import com.bship.games.endpoints.errors.exceptions.TurnCheck;
 
 import java.util.List;
 import java.util.Optional;

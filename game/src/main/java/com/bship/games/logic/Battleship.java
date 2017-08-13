@@ -1,14 +1,14 @@
 package com.bship.games.logic;
 
-import com.bship.games.domains.Board;
-import com.bship.games.domains.Game;
-import com.bship.games.domains.Move;
-import com.bship.games.domains.MoveStatus;
-import com.bship.games.domains.Piece;
-import com.bship.games.exceptions.MoveCollision;
-import com.bship.games.exceptions.ShipCollisionCheck;
-import com.bship.games.exceptions.ShipExistsCheck;
-import com.bship.games.exceptions.TurnCheck;
+import com.bship.games.endpoints.cabinet.entity.Board;
+import com.bship.games.endpoints.cabinet.entity.Game;
+import com.bship.games.endpoints.cabinet.entity.Move;
+import com.bship.games.logic.rules.MoveStatus;
+import com.bship.games.endpoints.cabinet.entity.Piece;
+import com.bship.games.endpoints.errors.exceptions.MoveCollision;
+import com.bship.games.endpoints.errors.exceptions.ShipCollisionCheck;
+import com.bship.games.endpoints.errors.exceptions.ShipExistsCheck;
+import com.bship.games.endpoints.errors.exceptions.TurnCheck;
 import com.bship.games.util.Util;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +20,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.bship.games.domains.MoveStatus.HIT;
-import static com.bship.games.domains.MoveStatus.MISS;
+import static com.bship.games.logic.rules.MoveStatus.HIT;
+import static com.bship.games.logic.rules.MoveStatus.MISS;
 import static com.bship.games.util.LambdaExceptionUtil.rethrowFunction;
 import static com.bship.games.util.Util.concat;
 import static com.bship.games.util.Util.detectCollision;

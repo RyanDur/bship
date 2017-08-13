@@ -1,5 +1,7 @@
 package com.bship.games.domains;
 
+import com.bship.games.endpoints.cabinet.entity.Board;
+import com.bship.games.endpoints.cabinet.entity.Game;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

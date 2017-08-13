@@ -1,6 +1,6 @@
 package com.bship.games.Configuration;
 
-import com.bship.games.domains.Harbor;
+import com.bship.games.logic.rules.Harbor;
 import com.fasterxml.jackson.databind.util.StdConverter;
 
 import java.util.HashMap;

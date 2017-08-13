@@ -1,7 +1,7 @@
 package com.bship.games.util;
 
-import com.bship.games.domains.Piece;
-import com.bship.games.domains.Point;
+import com.bship.games.endpoints.cabinet.entity.Piece;
+import com.bship.games.endpoints.cabinet.entity.Point;
 
 import java.util.Collection;
 import java.util.Collections;
