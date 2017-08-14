@@ -1,7 +1,7 @@
 package com.bship.games.endpoints.errors.validations;
 
 import com.bship.games.endpoints.cabinet.entity.Piece;
-import com.bship.games.logic.rules.Harbor;
+import com.bship.games.logic.definitions.Harbor;
 import com.bship.games.util.Util;
 
 import javax.validation.ConstraintValidator;
@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import static com.bship.games.logic.rules.Direction.NONE;
+import static com.bship.games.logic.definitions.Direction.NONE;
 import static com.bship.games.util.Util.pointsRange;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;

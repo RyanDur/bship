@@ -1,4 +1,4 @@
-package com.bship.games.endpoints;
+package com.bship.games.endpoints.board;
 
 import com.bship.games.endpoints.board.BoardsController;
 import com.bship.games.endpoints.cabinet.entity.Board;
@@ -25,12 +25,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.bship.games.logic.rules.Direction.DOWN;
-import static com.bship.games.logic.rules.Direction.LEFT;
-import static com.bship.games.logic.rules.Direction.RIGHT;
-import static com.bship.games.logic.rules.Direction.UP;
-import static com.bship.games.logic.rules.Harbor.BATTLESHIP;
-import static com.bship.games.logic.rules.Harbor.DESTROYER;
+import static com.bship.games.logic.definitions.Direction.DOWN;
+import static com.bship.games.logic.definitions.Direction.LEFT;
+import static com.bship.games.logic.definitions.Direction.RIGHT;
+import static com.bship.games.logic.definitions.Direction.UP;
+import static com.bship.games.logic.definitions.Harbor.BATTLESHIP;
+import static com.bship.games.logic.definitions.Harbor.DESTROYER;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.anyListOf;

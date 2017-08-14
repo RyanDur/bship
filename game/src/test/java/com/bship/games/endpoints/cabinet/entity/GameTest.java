@@ -1,4 +1,4 @@
-package com.bship.games.domains;
+package com.bship.games.endpoints.cabinet.entity;
 
 import com.bship.games.endpoints.cabinet.entity.Board;
 import com.bship.games.endpoints.cabinet.entity.Game;

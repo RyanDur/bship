@@ -6,7 +6,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static com.bship.games.logic.rules.PieceType.Dummy.INVALID_PIECE;
+import static com.bship.games.logic.PieceType.Dummy.INVALID_PIECE;
+
 
 public class PieceTypeExistsCheckValidation implements ConstraintValidator<PieceTypeCheck, List<Piece>> {
    public void initialize(PieceTypeCheck constraint) {

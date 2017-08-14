@@ -1,11 +1,11 @@
-package com.bship.games.endpoints;
+package com.bship.games.endpoints.game;
 
 import com.bship.games.endpoints.cabinet.entity.Board;
 import com.bship.games.endpoints.cabinet.entity.Game;
 import com.bship.games.endpoints.cabinet.entity.Move;
 import com.bship.games.endpoints.cabinet.entity.Point;
 import com.bship.games.endpoints.game.GameController;
-import com.bship.games.logic.rules.GameRules;
+import com.bship.games.logic.definitions.GameRules;
 import com.bship.games.endpoints.errors.RequestErrors.FieldValidation;
 import com.bship.games.endpoints.errors.RequestErrors.GameErrors;
 import com.bship.games.endpoints.errors.RequestErrors.ObjectValidation;

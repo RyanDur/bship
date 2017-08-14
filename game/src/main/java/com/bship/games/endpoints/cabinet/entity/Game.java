@@ -1,6 +1,6 @@
 package com.bship.games.endpoints.cabinet.entity;
 
-import com.bship.games.logic.rules.GameRules;
+import com.bship.games.logic.definitions.GameRules;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;

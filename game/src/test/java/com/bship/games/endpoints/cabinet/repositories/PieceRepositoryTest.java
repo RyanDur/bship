@@ -3,7 +3,7 @@ package com.bship.games.endpoints.cabinet.repositories;
 import com.bship.DBHelper;
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
-import com.bship.games.logic.rules.Harbor;
+import com.bship.games.logic.definitions.Harbor;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.bship.games.logic.rules.Direction.DOWN;
-import static com.bship.games.logic.rules.Direction.NONE;
-import static com.bship.games.logic.rules.Harbor.AIRCRAFT_CARRIER;
-import static com.bship.games.logic.rules.Harbor.BATTLESHIP;
-import static com.bship.games.logic.rules.Harbor.DESTROYER;
+import static com.bship.games.logic.definitions.Direction.DOWN;
+import static com.bship.games.logic.definitions.Direction.NONE;
+import static com.bship.games.logic.definitions.Harbor.AIRCRAFT_CARRIER;
+import static com.bship.games.logic.definitions.Harbor.BATTLESHIP;
+import static com.bship.games.logic.definitions.Harbor.DESTROYER;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -99,7 +99,7 @@ public class PieceRepositoryTest {
         pieces.save(piece);
         Piece actual = pieces.getAll(1L).stream()
                 .filter(o -> o.getId() == 1L)
-                .findFirst().get();
+                .findFirst().orElse(null);
 
         assertThat(actual, is(equalTo(piece)));
     }
@@ -130,13 +130,13 @@ public class PieceRepositoryTest {
         template.update("INSERT INTO boards(game_id) VALUE (3)", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (3)", new HashMap<>());
 
-        List<Piece> ships1 = pieces.createAll(1L, Harbor.getPieces());
-        List<Piece> ships2 = pieces.createAll(2L, Harbor.getPieces());
+        pieces.createAll(1L, Harbor.getPieces());
+        pieces.createAll(2L, Harbor.getPieces());
 
         List<Piece> ships3 = pieces.createAll(3L, Harbor.getPieces());
-        List<Piece> ships4 = pieces.createAll(4L, Harbor.getPieces());
+        pieces.createAll(4L, Harbor.getPieces());
 
-        List<Piece> ships5 = pieces.createAll(5L, Harbor.getPieces());
+        pieces.createAll(5L, Harbor.getPieces());
         List<Piece> ships6 = pieces.createAll(6L, Harbor.getPieces());
 
         List<Piece> opponents = ships3

@@ -10,17 +10,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.bship.games.logic.rules.Direction.DOWN;
-import static com.bship.games.logic.rules.Direction.LEFT;
-import static com.bship.games.logic.rules.Direction.NONE;
-import static com.bship.games.logic.rules.Direction.RIGHT;
-import static com.bship.games.logic.rules.Direction.UP;
-import static com.bship.games.logic.rules.Harbor.AIRCRAFT_CARRIER;
-import static com.bship.games.logic.rules.Harbor.BATTLESHIP;
-import static com.bship.games.logic.rules.Harbor.CRUISER;
-import static com.bship.games.logic.rules.Harbor.DESTROYER;
-import static com.bship.games.logic.rules.Harbor.SUBMARINE;
-import static com.bship.games.logic.rules.PieceType.Dummy.INVALID_PIECE;
+import static com.bship.games.logic.PieceType.Dummy.INVALID_PIECE;
+import static com.bship.games.logic.definitions.Direction.DOWN;
+import static com.bship.games.logic.definitions.Direction.LEFT;
+import static com.bship.games.logic.definitions.Direction.NONE;
+import static com.bship.games.logic.definitions.Direction.RIGHT;
+import static com.bship.games.logic.definitions.Direction.UP;
+import static com.bship.games.logic.definitions.Harbor.AIRCRAFT_CARRIER;
+import static com.bship.games.logic.definitions.Harbor.BATTLESHIP;
+import static com.bship.games.logic.definitions.Harbor.CRUISER;
+import static com.bship.games.logic.definitions.Harbor.DESTROYER;
+import static com.bship.games.logic.definitions.Harbor.SUBMARINE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -429,7 +429,7 @@ public class UtilTest {
         thrown.expect(UnsupportedOperationException.class);
         List<Integer> list1 = asList(3, 2);
         List<Integer> list2 = asList(3, 2);
-        of(list1).map(Util.concat(list2)).get().add(3);
+        of(list1).map(Util.concat(list2)).orElse(emptyList()).add(3);
     }
 
 

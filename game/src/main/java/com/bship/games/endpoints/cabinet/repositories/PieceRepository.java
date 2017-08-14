@@ -2,9 +2,9 @@ package com.bship.games.endpoints.cabinet.repositories;
 
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
-import com.bship.games.logic.rules.Direction;
-import com.bship.games.logic.rules.Harbor;
-import com.bship.games.logic.rules.PieceType;
+import com.bship.games.logic.PieceType;
+import com.bship.games.logic.definitions.Direction;
+import com.bship.games.logic.definitions.Harbor;
 import com.bship.games.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;

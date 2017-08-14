@@ -1,6 +1,7 @@
-package com.bship.games.logic.rules;
+package com.bship.games.logic.definitions;
 
-import com.bship.games.Configuration.HarborListConverter;
+import com.bship.games.Configuration.PieceListConverter;
+import com.bship.games.logic.PieceType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -8,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
-import static com.bship.games.logic.rules.BoardDimensions.BATTLESHIP_BOARD;
-import static com.bship.games.logic.rules.Direction.NONE;
+import static com.bship.games.logic.definitions.BoardDimensions.BATTLESHIP_BOARD;
+import static com.bship.games.logic.definitions.Direction.NONE;
 import static java.util.stream.Collectors.toList;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
@@ -19,7 +20,7 @@ public enum GameRules {
     private final int numberOfPlayers;
     private final int movesPerTurn;
     private final BoardDimensions boardDimensions;
-    @JsonSerialize(converter = HarborListConverter.class)
+    @JsonSerialize(converter = PieceListConverter.class)
     private final List<PieceType> pieces;
     private final List<Direction> pieceOrientations;
 

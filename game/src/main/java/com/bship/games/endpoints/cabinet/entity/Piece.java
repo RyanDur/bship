@@ -1,8 +1,8 @@
 package com.bship.games.endpoints.cabinet.entity;
 
-import com.bship.games.logic.rules.Direction;
 import com.bship.games.endpoints.errors.validations.NonEmpty;
-import com.bship.games.logic.rules.PieceType;
+import com.bship.games.logic.PieceType;
+import com.bship.games.logic.definitions.Direction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;

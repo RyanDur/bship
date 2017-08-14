@@ -1,7 +1,7 @@
 package com.bship.games.endpoints.cabinet.repositories;
 
 import com.bship.games.endpoints.cabinet.entity.Move;
-import com.bship.games.logic.rules.MoveStatus;
+import com.bship.games.logic.definitions.MoveStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

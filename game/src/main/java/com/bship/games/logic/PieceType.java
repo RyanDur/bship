@@ -1,4 +1,4 @@
-package com.bship.games.logic.rules;
+package com.bship.games.logic;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bship.games.logic.rules.PieceType.Dummy.INVALID_PIECE;
+import static com.bship.games.logic.PieceType.Dummy.INVALID_PIECE;
 
 public interface PieceType {
 

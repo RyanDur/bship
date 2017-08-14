@@ -3,7 +3,7 @@ package com.bship.games.endpoints.cabinet.repositories;
 import com.bship.DBHelper;
 import com.bship.games.endpoints.cabinet.entity.Board;
 import com.bship.games.endpoints.cabinet.entity.Game;
-import com.bship.games.logic.rules.GameRules;
+import com.bship.games.logic.definitions.GameRules;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -90,7 +90,7 @@ public class GameRepositoryTest {
         Game createdGame = repository.create(GameRules.BATTLESHIP);
         Optional<Game> game = repository.get(createdGame.getId());
 
-        assertThat(createdGame, is(equalTo(game.get())));
+        assertThat(createdGame, is(equalTo(game.orElse(null))));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class GameRepositoryTest {
         repository.create(GameRules.BATTLESHIP);
         Optional<Game> game = repository.get(createdGame.getId());
 
-        assertThat(createdGame, is(equalTo(game.get())));
+        assertThat(createdGame, is(equalTo(game.orElse(null))));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class GameRepositoryTest {
         repository.save(game);
         Optional<Game> savedGame = repository.get(game.getId());
 
-        assertThat(savedGame.get(), is(equalTo(game)));
+        assertThat(savedGame.orElse(null), is(equalTo(game)));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class GameRepositoryTest {
 
         Optional<Game> savedGame = repository.save(game);
 
-        assertThat(savedGame.get(), is(equalTo(game)));
+        assertThat(savedGame.orElse(null), is(equalTo(game)));
     }
 
     @Test

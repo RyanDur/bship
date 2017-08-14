@@ -1,4 +1,4 @@
-package com.bship.games.logic.rules;
+package com.bship.games.logic.definitions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

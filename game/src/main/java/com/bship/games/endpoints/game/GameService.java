@@ -2,7 +2,7 @@ package com.bship.games.endpoints.game;
 
 import com.bship.games.endpoints.cabinet.entity.Game;
 import com.bship.games.endpoints.cabinet.entity.Move;
-import com.bship.games.logic.rules.GameRules;
+import com.bship.games.logic.definitions.GameRules;
 import com.bship.games.endpoints.errors.exceptions.GameValidation;
 import com.bship.games.endpoints.errors.exceptions.InvalidGame;
 import com.bship.games.logic.GameLogic;

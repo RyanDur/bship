@@ -1,4 +1,4 @@
-package com.bship.games.endpoints.services;
+package com.bship.games.endpoints.board;
 
 import com.bship.games.endpoints.board.BoardService;
 import com.bship.games.endpoints.cabinet.entity.Board;
@@ -9,7 +9,7 @@ import com.bship.games.endpoints.errors.exceptions.BoardExistence;
 import com.bship.games.endpoints.errors.exceptions.BoardValidation;
 import com.bship.games.endpoints.errors.exceptions.ShipCollisionCheck;
 import com.bship.games.logic.GameLogic;
-import com.bship.games.logic.rules.Harbor;
+import com.bship.games.logic.definitions.Harbor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,9 +18,9 @@ import org.junit.rules.ExpectedException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bship.games.logic.rules.Direction.NONE;
-import static com.bship.games.logic.rules.Direction.RIGHT;
-import static com.bship.games.logic.rules.Harbor.AIRCRAFT_CARRIER;
+import static com.bship.games.logic.definitions.Direction.NONE;
+import static com.bship.games.logic.definitions.Direction.RIGHT;
+import static com.bship.games.logic.definitions.Harbor.AIRCRAFT_CARRIER;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;

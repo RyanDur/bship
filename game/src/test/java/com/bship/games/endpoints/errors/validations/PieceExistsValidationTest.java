@@ -1,9 +1,9 @@
 package com.bship.games.endpoints.errors.validations;
 
-import com.bship.games.logic.rules.PieceType;
+import com.bship.games.logic.PieceType;
 import org.junit.Test;
 
-import static com.bship.games.logic.rules.Harbor.BATTLESHIP;
+import static com.bship.games.logic.definitions.Harbor.BATTLESHIP;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

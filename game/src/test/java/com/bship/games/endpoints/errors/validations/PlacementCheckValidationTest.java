@@ -5,10 +5,10 @@ import com.bship.games.endpoints.cabinet.entity.Point;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.bship.games.logic.rules.Direction.DOWN;
-import static com.bship.games.logic.rules.Direction.NONE;
-import static com.bship.games.logic.rules.Direction.UP;
-import static com.bship.games.logic.rules.Harbor.AIRCRAFT_CARRIER;
+import static com.bship.games.logic.definitions.Direction.DOWN;
+import static com.bship.games.logic.definitions.Direction.NONE;
+import static com.bship.games.logic.definitions.Direction.UP;
+import static com.bship.games.logic.definitions.Harbor.AIRCRAFT_CARRIER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

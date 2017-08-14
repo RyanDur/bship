@@ -10,8 +10,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.bship.games.logic.rules.MoveStatus.HIT;
-import static com.bship.games.logic.rules.MoveStatus.MISS;
+import static com.bship.games.logic.definitions.MoveStatus.HIT;
+import static com.bship.games.logic.definitions.MoveStatus.MISS;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -21,12 +21,11 @@ import static org.hamcrest.Matchers.is;
 
 public class MoveRepositoryTest {
 
-    private NamedParameterJdbcTemplate template;
     private MoveRepository moves;
 
     @Before
     public void setup() {
-        template = new NamedParameterJdbcTemplate(DBHelper.reset());
+        NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(DBHelper.reset());
         moves = new MoveRepository(template);
         template.update("INSERT INTO games(id, name) VALUE (default, 'BATTLESHIP')", new HashMap<>());
         template.update("INSERT INTO boards(game_id) VALUE (1)", new HashMap<>());

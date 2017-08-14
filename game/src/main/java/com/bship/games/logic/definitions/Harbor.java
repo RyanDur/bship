@@ -1,4 +1,6 @@
-package com.bship.games.logic.rules;
+package com.bship.games.logic.definitions;
+
+import com.bship.games.logic.PieceType;
 
 import java.util.Arrays;
 import java.util.stream.Stream;

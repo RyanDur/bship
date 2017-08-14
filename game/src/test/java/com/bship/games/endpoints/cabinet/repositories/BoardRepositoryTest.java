@@ -5,7 +5,7 @@ import com.bship.games.endpoints.cabinet.entity.Board;
 import com.bship.games.endpoints.cabinet.entity.Game;
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
-import com.bship.games.logic.rules.Harbor;
+import com.bship.games.logic.definitions.Harbor;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.bship.games.logic.rules.Direction.NONE;
+import static com.bship.games.logic.definitions.Direction.NONE;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -80,7 +80,7 @@ public class BoardRepositoryTest {
     public void get_shouldRetrieveABordFromTheRepository() {
         when(ships.getAll(anyLong())).thenReturn(pieceList);
         Board board = boards.create(game.getId(), Harbor.getPieces());
-        Board actual = boards.get(board.getId()).get();
+        Board actual = boards.get(board.getId()).orElse(null);
 
         assertThat(actual, is(board));
     }
@@ -124,7 +124,7 @@ public class BoardRepositoryTest {
         boards.save(expected);
         Optional<Board> actual = boards.get(expected.getId());
 
-        assertThat(actual.get(), is(equalTo(expected)));
+        assertThat(actual.orElse(null), is(equalTo(expected)));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class BoardRepositoryTest {
         Board expected = board.copy().withWinner(true).build();
         Optional<Board> actual = boards.save(expected);
 
-        assertThat(actual.get(), is(equalTo(expected)));
+        assertThat(actual.orElse(null), is(equalTo(expected)));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class BoardRepositoryTest {
         verify(moves).save(board.getMoves());
     }
 
-    public List<Piece> getShips() {
+    private List<Piece> getShips() {
         return Harbor.getPieces().map(ship -> Piece.builder()
                 .withType(ship)
                 .withPlacement(new Point())

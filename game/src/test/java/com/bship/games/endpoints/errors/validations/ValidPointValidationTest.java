@@ -19,9 +19,8 @@ public class ValidPointValidationTest {
 
     @Test
     public void isValid_shouldNotAllowANullPoint() {
-        Point point = null;
         ValidPointValidation validation = new ValidPointValidation();
-        boolean valid = validation.isValid(point, null);
+        boolean valid = validation.isValid(null, null);
 
         assertThat(valid, is(false));
     }

@@ -1,6 +1,6 @@
 package com.bship.games.endpoints.cabinet.entity;
 
-import com.bship.games.logic.rules.MoveStatus;
+import com.bship.games.logic.definitions.MoveStatus;
 import com.bship.games.endpoints.errors.validations.BoundsCheck;
 import com.bship.games.endpoints.errors.validations.NonEmpty;
 import com.bship.games.endpoints.errors.validations.ValidPoint;
