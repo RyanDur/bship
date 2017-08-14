@@ -1,9 +1,9 @@
 package com.bship.games.endpoints.board;
 
+import com.bship.games.endpoints.board.errors.exceptions.BoardExistence;
+import com.bship.games.endpoints.board.errors.exceptions.BoardValidation;
 import com.bship.games.endpoints.cabinet.entity.Board;
 import com.bship.games.endpoints.cabinet.entity.Piece;
-import com.bship.games.endpoints.errors.exceptions.BoardExistence;
-import com.bship.games.endpoints.errors.exceptions.BoardValidation;
 import com.bship.games.logic.GameLogic;
 import com.bship.games.endpoints.cabinet.repositories.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
 package com.bship.games.endpoints.board;
 
 import com.bship.games.endpoints.BadRequestHandler;
+import com.bship.games.endpoints.board.errors.validations.bulk.PieceList;
+import com.bship.games.endpoints.board.errors.exceptions.BoardValidation;
 import com.bship.games.endpoints.cabinet.entity.Board;
-import com.bship.games.endpoints.errors.validations.PieceList;
-import com.bship.games.endpoints.errors.exceptions.BoardValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;

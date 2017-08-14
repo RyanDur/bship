@@ -1,4 +1,4 @@
-package com.bship.games.endpoints.errors.validations.bulk;
+package com.bship.games.endpoints.board.errors.validations.bulk;
 
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
@@ -8,15 +8,15 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.Objects;
 
-public class PlacementOfYCheckValidation implements ConstraintValidator<PlacementOfYCheck, List<Piece>> {
-   public void initialize(PlacementOfYCheck constraint) {
+public class PlacementOfXCheckValidation implements ConstraintValidator<PlacementOfXCheck, List<Piece>> {
+   public void initialize(PlacementOfXCheck constraint) {
    }
 
    public boolean isValid(List<Piece> pieces, ConstraintValidatorContext context) {
       return pieces.stream()
               .map(Piece::getPlacement)
-              .map(Point::getY)
+              .map(Point::getX)
               .filter(Objects::nonNull)
-              .allMatch(y -> y >= 0 && y < 10);
+              .allMatch(x -> x >= 0 && x < 10);
    }
 }

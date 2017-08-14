@@ -1,13 +1,12 @@
 package com.bship.games.endpoints.board;
 
-import com.bship.games.endpoints.board.BoardService;
 import com.bship.games.endpoints.cabinet.entity.Board;
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
 import com.bship.games.endpoints.cabinet.repositories.BoardRepository;
-import com.bship.games.endpoints.errors.exceptions.BoardExistence;
-import com.bship.games.endpoints.errors.exceptions.BoardValidation;
-import com.bship.games.endpoints.errors.exceptions.ShipCollisionCheck;
+import com.bship.games.endpoints.board.errors.exceptions.BoardExistence;
+import com.bship.games.endpoints.board.errors.exceptions.BoardValidation;
+import com.bship.games.endpoints.board.errors.exceptions.ShipCollisionCheck;
 import com.bship.games.logic.GameLogic;
 import com.bship.games.logic.definitions.Harbor;
 import org.junit.Before;

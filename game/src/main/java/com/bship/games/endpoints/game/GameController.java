@@ -4,7 +4,7 @@ import com.bship.games.endpoints.BadRequestHandler;
 import com.bship.games.endpoints.cabinet.entity.Game;
 import com.bship.games.endpoints.cabinet.entity.Move;
 import com.bship.games.logic.definitions.GameRules;
-import com.bship.games.endpoints.errors.exceptions.GameValidation;
+import com.bship.games.endpoints.game.errors.GameValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;

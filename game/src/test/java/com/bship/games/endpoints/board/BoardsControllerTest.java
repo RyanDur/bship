@@ -1,6 +1,5 @@
 package com.bship.games.endpoints.board;
 
-import com.bship.games.endpoints.board.BoardsController;
 import com.bship.games.endpoints.cabinet.entity.Board;
 import com.bship.games.endpoints.cabinet.entity.Piece;
 import com.bship.games.endpoints.cabinet.entity.Point;
@@ -8,9 +7,8 @@ import com.bship.games.endpoints.errors.RequestErrors.FieldValidation;
 import com.bship.games.endpoints.errors.RequestErrors.GameErrors;
 import com.bship.games.endpoints.errors.RequestErrors.ObjectValidation;
 import com.bship.games.endpoints.errors.RequestErrors.ValidationFieldError;
-import com.bship.games.endpoints.errors.exceptions.ShipCollisionCheck;
-import com.bship.games.endpoints.errors.exceptions.ShipExistsCheck;
-import com.bship.games.endpoints.board.BoardService;
+import com.bship.games.endpoints.board.errors.exceptions.ShipCollisionCheck;
+import com.bship.games.endpoints.board.errors.exceptions.ShipExistsCheck;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;

@@ -1,4 +1,4 @@
-package com.bship.games.endpoints.errors.validations.bulk;
+package com.bship.games.endpoints.board.errors.validations.bulk;
 
 import com.bship.games.endpoints.cabinet.entity.Piece;
 

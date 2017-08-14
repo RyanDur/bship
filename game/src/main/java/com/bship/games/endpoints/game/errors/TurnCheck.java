@@ -1,4 +1,4 @@
-package com.bship.games.endpoints.errors.exceptions;
+package com.bship.games.endpoints.game.errors;
 
 public class TurnCheck extends GameValidation {
 

@@ -4,10 +4,10 @@ import com.bship.games.endpoints.cabinet.entity.Board;
 import com.bship.games.endpoints.cabinet.entity.Game;
 import com.bship.games.endpoints.cabinet.entity.Move;
 import com.bship.games.endpoints.cabinet.entity.Piece;
-import com.bship.games.endpoints.errors.exceptions.MoveCollision;
-import com.bship.games.endpoints.errors.exceptions.ShipCollisionCheck;
-import com.bship.games.endpoints.errors.exceptions.ShipExistsCheck;
-import com.bship.games.endpoints.errors.exceptions.TurnCheck;
+import com.bship.games.endpoints.game.errors.MoveCollision;
+import com.bship.games.endpoints.board.errors.exceptions.ShipCollisionCheck;
+import com.bship.games.endpoints.board.errors.exceptions.ShipExistsCheck;
+import com.bship.games.endpoints.game.errors.TurnCheck;
 
 import java.util.List;
 import java.util.Optional;

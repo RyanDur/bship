@@ -1,14 +1,6 @@
-package com.bship.games.endpoints.errors.validations;
+package com.bship.games.endpoints.board.errors.validations.bulk;
 
 import com.bship.games.endpoints.cabinet.entity.Piece;
-import com.bship.games.endpoints.errors.validations.bulk.IdExistenceCheck;
-import com.bship.games.endpoints.errors.validations.bulk.OrientationCheck;
-import com.bship.games.endpoints.errors.validations.bulk.OrientationExistenceCheck;
-import com.bship.games.endpoints.errors.validations.bulk.PieceTypeCheck;
-import com.bship.games.endpoints.errors.validations.bulk.PieceTypeExistenceCheck;
-import com.bship.games.endpoints.errors.validations.bulk.PlacementExistenceCheck;
-import com.bship.games.endpoints.errors.validations.bulk.PlacementOfXCheck;
-import com.bship.games.endpoints.errors.validations.bulk.PlacementOfYCheck;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import javax.validation.GroupSequence;

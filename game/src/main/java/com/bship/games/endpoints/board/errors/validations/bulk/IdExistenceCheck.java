@@ -1,4 +1,4 @@
-package com.bship.games.endpoints.errors.validations.bulk;
+package com.bship.games.endpoints.board.errors.validations.bulk;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,9 +11,9 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 
 @Target({ElementType.FIELD, ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PieceTypeCheckValidation.class)
-public @interface PieceTypeExistenceCheck {
-    String message() default "Missing piece type.";
+@Constraint(validatedBy = IdCheckValidation.class)
+public @interface IdExistenceCheck {
+    String message() default "An Id is missing.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

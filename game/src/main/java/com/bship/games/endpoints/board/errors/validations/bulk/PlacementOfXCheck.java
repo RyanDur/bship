@@ -1,4 +1,4 @@
-package com.bship.games.endpoints.errors.validations.bulk;
+package com.bship.games.endpoints.board.errors.validations.bulk;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,9 +11,9 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 
 @Target({ElementType.FIELD, ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PlacementExistenceCheckValidation.class)
-public @interface PlacementExistenceCheck {
-    String message() default "Missing placement.";
+@Constraint(validatedBy = PlacementOfXCheckValidation.class)
+public @interface PlacementOfXCheck {
+    String message() default "Incorrect placement of X axis.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

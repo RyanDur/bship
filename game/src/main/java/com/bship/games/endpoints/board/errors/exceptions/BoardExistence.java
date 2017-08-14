@@ -1,4 +1,4 @@
-package com.bship.games.endpoints.errors.exceptions;
+package com.bship.games.endpoints.board.errors.exceptions;
 
 public class BoardExistence extends BoardValidation {
 
