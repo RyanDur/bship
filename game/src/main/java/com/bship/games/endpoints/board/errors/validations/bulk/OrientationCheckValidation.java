@@ -13,7 +13,7 @@ public class OrientationCheckValidation implements ConstraintValidator<Orientati
     }
 
     public boolean isValid(List<Piece> pieces, ConstraintValidatorContext context) {
-        return pieces.stream().map(Util::pointsRange).allMatch(range ->
+        return pieces.stream().map(Util.Companion::pointsRange).allMatch(range ->
                 range.stream().map(Point::getX).allMatch(x -> x >= 0 && x < 10) &&
                         range.stream().map(Point::getY).allMatch(y -> y >= 0 && y < 10));
     }

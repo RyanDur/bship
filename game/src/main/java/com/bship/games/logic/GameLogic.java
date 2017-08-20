@@ -12,11 +12,12 @@ import com.bship.games.endpoints.game.errors.TurnCheck;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface GameLogic {
-    Function<Board, Board> placementCheck(List<Piece> pieces) throws ShipExistsCheck, ShipCollisionCheck;
+    Predicate<Board> placementCheck(List<Piece> pieces) throws ShipExistsCheck, ShipCollisionCheck;
 
-    Function<Game, Game> valid(Move move) throws TurnCheck, MoveCollision;
+    Predicate<Game> valid(Move move) throws TurnCheck, MoveCollision;
 
     Function<Game, Optional<Game>> play(Move move);
 

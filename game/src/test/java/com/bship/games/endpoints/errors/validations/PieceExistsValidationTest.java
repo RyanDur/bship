@@ -1,6 +1,6 @@
 package com.bship.games.endpoints.errors.validations;
 
-import com.bship.games.logic.PieceType;
+import com.bship.games.logic.definitions.PieceType;
 import org.junit.Test;
 
 import static com.bship.games.logic.definitions.Harbor.BATTLESHIP;
@@ -14,7 +14,7 @@ public class PieceExistsValidationTest {
         String battleship = BATTLESHIP.name();
         PieceExistsValidation validation = new PieceExistsValidation();
 
-        assertThat(validation.isValid(PieceType.createPiece(battleship), null), is(true));
+        assertThat(validation.isValid(PieceType.create(battleship), null), is(true));
     }
 
     @Test
@@ -22,7 +22,7 @@ public class PieceExistsValidationTest {
         String schooner = "SCHOONER";
         PieceExistsValidation validation = new PieceExistsValidation();
 
-        assertThat(validation.isValid(PieceType.createPiece(schooner), null), is(false));
+        assertThat(validation.isValid(PieceType.create(schooner), null), is(false));
     }
 
     @Test
@@ -30,6 +30,6 @@ public class PieceExistsValidationTest {
         String empty = "";
         PieceExistsValidation validation = new PieceExistsValidation();
 
-        assertThat(validation.isValid(PieceType.createPiece(empty), null), is(false));
+        assertThat(validation.isValid(PieceType.create(empty), null), is(false));
     }
 }

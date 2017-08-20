@@ -1,7 +1,5 @@
 package com.bship.games.logic.definitions;
 
-import com.bship.games.logic.PieceType;
-
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -12,7 +10,6 @@ public enum Harbor implements PieceType {
 
     Harbor(Integer size) {
         this.size = size;
-        registerPiece(this);
     }
 
     @Override

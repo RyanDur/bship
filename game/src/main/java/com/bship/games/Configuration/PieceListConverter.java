@@ -1,6 +1,6 @@
 package com.bship.games.Configuration;
 
-import com.bship.games.logic.PieceType;
+import com.bship.games.logic.definitions.PieceType;
 import com.fasterxml.jackson.databind.util.StdConverter;
 
 import java.util.HashMap;

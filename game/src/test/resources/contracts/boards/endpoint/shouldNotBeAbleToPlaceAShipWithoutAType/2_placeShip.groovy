@@ -26,10 +26,10 @@ Contract.make {
     body([
         errors: [[
                      validations: [[
-                                       code   : "PieceTypeExistenceCheck",
+                                       code   : "PieceTypeCheck",
                                        field  : "pieces",
                                        value  : [[
-                                                     type       : null,
+                                                     type       : "INVALID_PIECE",
                                                      placement  : [
                                                          x: 0,
                                                          y: 0
@@ -39,7 +39,7 @@ Contract.make {
                                                      boardId    : null,
                                                      taken      : false
                                                  ]],
-                                       message: "Missing piece type."
+                                       message: "Invalid piece type."
                                    ]]
                  ]]
     ])

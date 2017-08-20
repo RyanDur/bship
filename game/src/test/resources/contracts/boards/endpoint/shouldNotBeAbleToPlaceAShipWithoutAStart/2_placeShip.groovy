@@ -28,7 +28,10 @@ Contract.make {
                                        field : "pieces",
                                        value : [[
                                                 type: "AIRCRAFT_CARRIER",
-                                                placement: null,
+                                                placement: [
+                                                  x: null,
+                                                  y: null
+                                                ],
                                                 orientation: "DOWN",
                                                 id: 1,
                                                 boardId: null,

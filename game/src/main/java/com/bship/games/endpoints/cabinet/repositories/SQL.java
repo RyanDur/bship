@@ -17,9 +17,6 @@ public interface SQL {
     String WHERE = "WHERE";
     String SET = "SET";
 
-    String VALUE_DEFAULT = "VALUE (default)";
-    String VALUE_ID = "VALUE(:id)";
-
     String ID = "id = :id";
     String WINNER = "winner = :winner";
     String TURN = "turn = :turn";
@@ -38,11 +35,11 @@ public interface SQL {
     String SELECT_OPPONENTS_TAKEN_PIECES = "SELECT p.* FROM pieces p JOIN boards b ON p.piece_board_id = b.id WHERE b.game_id = :game_id AND p.piece_board_id <> :piece_board_id AND p.taken IS TRUE;";
     String SELECT_All_OPPONENTS_MOVES = "SELECT m.* FROM moves m JOIN boards b ON m.move_board_id = b.id WHERE b.game_id = :game_id AND m.move_board_id <> :board_id;";
 
-    String PIECES = "pieces(type, size, piece_board_id) VALUES (:type, :size, :piece_board_id)";
+    String PIECES = "pieces(id, type, piece_board_id) VALUES (default, :type, :board_id)";
     String GAMES = "games(id, name) VALUES (default, :name)";
-    String MOVES = "moves(move_board_id, point, status) VALUES (:board_id, :point, :status)";
+    String MOVES = "moves(id, move_board_id, point, status) VALUES (default, :board_id, :point, :status)";
 
-    String BOARDS_FOR_GAME = "boards(game_id)";
+    String BOARDS_FOR_GAME = "boards(id, game_id) VALUES (default, :game_id)";
     String MOVES_FOR_BOARD = "FROM moves WHERE move_board_id = :board_id";
     String PIECES_FOR_BOARD = "FROM pieces WHERE piece_board_id = :piece_board_id";
 

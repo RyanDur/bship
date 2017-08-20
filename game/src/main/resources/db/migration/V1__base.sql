@@ -21,7 +21,6 @@ CREATE TABLE pieces (
   placement      INT          DEFAULT NULL,
   orientation    VARCHAR(50)  DEFAULT 'NONE',
   taken          BOOL         DEFAULT FALSE,
-  size           INT,
   piece_board_id INT NOT NULL,
   CONSTRAINT piece_boards_id_fk
   FOREIGN KEY (piece_board_id)

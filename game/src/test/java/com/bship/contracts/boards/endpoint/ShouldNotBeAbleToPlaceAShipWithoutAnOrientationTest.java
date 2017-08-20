@@ -79,9 +79,9 @@ assertThatJson(parsedJson).array("errors").array("validations").array("value").f
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("type").isEqualTo("AIRCRAFT_CARRIER");
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("boardId").isNull();
-assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("orientation").isNull();
 assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("pieces");
 assertThatJson(parsedJson).array("errors").array("validations").array("value").field("placement").field("x").isEqualTo(0);
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("orientation").isEqualTo("INVALID_ORIENTATION");
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("id").isEqualTo(1);
 assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("OrientationExistenceCheck");
 assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Missing orientation.");

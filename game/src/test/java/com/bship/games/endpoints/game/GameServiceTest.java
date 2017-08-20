@@ -2,11 +2,11 @@ package com.bship.games.endpoints.game;
 
 import com.bship.games.endpoints.cabinet.entity.Game;
 import com.bship.games.endpoints.cabinet.entity.Move;
-import com.bship.games.logic.definitions.GameRules;
+import com.bship.games.endpoints.cabinet.repositories.GameRepository;
 import com.bship.games.endpoints.game.errors.GameValidation;
 import com.bship.games.endpoints.game.errors.InvalidGame;
 import com.bship.games.logic.GameLogic;
-import com.bship.games.endpoints.cabinet.repositories.GameRepository;
+import com.bship.games.logic.definitions.GameRules;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,7 +22,6 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -56,7 +55,7 @@ public class GameServiceTest {
     public void placeMove_shouldGetTheGame() throws GameValidation {
         Optional<Game> game = of(Game.builder().build());
         when(gameRepository.get(1L)).thenReturn(game);
-        when(logic.valid(any(Move.class))).thenReturn(g -> g);
+        when(logic.valid(any(Move.class))).thenReturn(g -> true);
         when(logic.play(any(Move.class))).thenReturn(Optional::of);
         when(logic.setNextTurn(any(Move.class))).thenReturn(g -> g);
         when(gameRepository.save(any(Game.class))).thenReturn(game);
@@ -72,7 +71,7 @@ public class GameServiceTest {
 
         Optional<Game> game = of(Game.builder().build());
         when(gameRepository.get(1L)).thenReturn(Optional.empty());
-        when(logic.valid(any(Move.class))).thenReturn(g -> g);
+        when(logic.valid(any(Move.class))).thenReturn(g -> true);
         when(logic.play(any(Move.class))).thenReturn(Optional::of);
         when(logic.setNextTurn(any(Move.class))).thenReturn(g -> g);
         when(gameRepository.save(any(Game.class))).thenReturn(game);
@@ -85,7 +84,7 @@ public class GameServiceTest {
         Optional<Game> game = of(Game.builder().build());
         Move move = Move.builder().build();
         when(gameRepository.get(1L)).thenReturn(game);
-        when(logic.valid(any(Move.class))).thenReturn(g -> g);
+        when(logic.valid(any(Move.class))).thenReturn(g -> true);
         when(logic.play(any(Move.class))).thenReturn(Optional::of);
         when(logic.setNextTurn(any(Move.class))).thenReturn(g -> g);
         when(gameRepository.save(any(Game.class))).thenReturn(game);
@@ -99,7 +98,7 @@ public class GameServiceTest {
         Optional<Game> game = of(Game.builder().build());
         Move move = Move.builder().build();
         when(gameRepository.get(1L)).thenReturn(game);
-        when(logic.valid(any(Move.class))).thenReturn(g -> g);
+        when(logic.valid(any(Move.class))).thenReturn(g -> true);
         when(logic.play(any(Move.class))).thenReturn(Optional::of);
         when(logic.setNextTurn(any(Move.class))).thenReturn(g -> g);
         when(gameRepository.save(any(Game.class))).thenReturn(game);
@@ -113,7 +112,7 @@ public class GameServiceTest {
         Optional<Game> game = of(Game.builder().build());
         Move move = Move.builder().build();
         when(gameRepository.get(1L)).thenReturn(game);
-        when(logic.valid(any(Move.class))).thenReturn(g -> g);
+        when(logic.valid(any(Move.class))).thenReturn(g -> true);
         when(logic.play(any(Move.class))).thenReturn(Optional::of);
         when(logic.setNextTurn(any(Move.class))).thenReturn(g -> g);
         when(gameRepository.save(any(Game.class))).thenReturn(game);
@@ -127,7 +126,7 @@ public class GameServiceTest {
         Optional<Game> game = of(Game.builder().build());
         Move move = Move.builder().build();
         when(gameRepository.get(1L)).thenReturn(game);
-        when(logic.valid(any(Move.class))).thenReturn(g -> g);
+        when(logic.valid(any(Move.class))).thenReturn(g -> true);
         when(logic.play(any(Move.class))).thenReturn(Optional::of);
         when(logic.setNextTurn(any(Move.class))).thenReturn(g -> g);
         when(gameRepository.save(any(Game.class))).thenReturn(game);
@@ -141,13 +140,12 @@ public class GameServiceTest {
         Optional<Game> game = of(Game.builder().withOver(true).build());
         Move move = Move.builder().build();
         when(gameRepository.get(1L)).thenReturn(game);
-        when(logic.valid(any(Move.class))).thenReturn(g -> g);
+        when(logic.valid(any(Move.class))).thenReturn(g -> true);
         when(logic.play(any(Move.class))).thenReturn(Optional::of);
         when(logic.setNextTurn(any(Move.class))).thenReturn(g -> g);
-        when(gameRepository.delete(any(Game.class))).thenReturn(game);
+        when(gameRepository.save(any())).thenReturn(game);
 
         gameService.placeMove(1L, move);
-        verify(gameRepository, never()).save(game.get());
         verify(gameRepository).delete(game.get());
     }
 
@@ -158,7 +156,7 @@ public class GameServiceTest {
 
         Optional<Game> game = of(Game.builder().build());
         when(gameRepository.get(1L)).thenReturn(game);
-        when(logic.valid(any(Move.class))).thenReturn(g -> g);
+        when(logic.valid(any(Move.class))).thenReturn(g -> true);
         when(logic.play(any(Move.class))).thenReturn(Optional::of);
         when(logic.setNextTurn(any(Move.class))).thenReturn(g -> g);
         when(gameRepository.save(any(Game.class))).thenReturn(Optional.empty());
@@ -171,7 +169,7 @@ public class GameServiceTest {
         Optional<Game> game = of(Game.builder().build());
         Move move = Move.builder().build();
         when(gameRepository.get(1L)).thenReturn(game);
-        when(logic.valid(any(Move.class))).thenReturn(g -> g);
+        when(logic.valid(any(Move.class))).thenReturn(g -> true);
         when(logic.play(any(Move.class))).thenReturn(Optional::of);
         when(logic.setNextTurn(any(Move.class))).thenReturn(g -> g);
         when(gameRepository.save(any(Game.class))).thenReturn(game);

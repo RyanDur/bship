@@ -75,13 +75,14 @@ assertThat(response.statusCode()).isEqualTo(400);
 assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("placement").isNull();
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("taken").isEqualTo(false);
 assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Missing placement.");
 assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("PlacementExistenceCheck");
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("type").isEqualTo("AIRCRAFT_CARRIER");
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("boardId").isNull();
+assertThatJson(parsedJson).array("errors").array("validations").array("value").field("placement").field("x").isNull();
 assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("pieces");
+assertThatJson(parsedJson).array("errors").array("validations").array("value").field("placement").field("y").isNull();
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("id").isEqualTo(1);
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("orientation").isEqualTo("DOWN");
 }

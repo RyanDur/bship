@@ -11,7 +11,7 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 
 @Target({ElementType.FIELD, ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PieceTypeExistsCheckValidation.class)
+@Constraint(validatedBy = PieceTypeCheckValidation.class)
 public @interface PieceTypeCheck {
     String message() default "Invalid piece type.";
     Class<?>[] groups() default {};

@@ -50,10 +50,9 @@ public class GameRepository implements SQL {
                 buildGame(boards));
     }
 
-    public Optional<Game> delete(Game game) {
+    public void delete(Game game) {
         template.update(join(SEP, DELETE, FROM_GAMES, WHERE, ID),
                 new MapSqlParameterSource("id", game.getId()));
-        return of(game);
     }
 
     public Optional<Game> save(Game game) {

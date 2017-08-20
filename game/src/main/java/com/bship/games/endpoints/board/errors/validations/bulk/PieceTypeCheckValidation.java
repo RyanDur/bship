@@ -7,11 +7,13 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.Objects;
 
-public class PieceTypeCheckValidation implements ConstraintValidator<PieceTypeExistenceCheck, List<Piece>> {
-   public void initialize(PieceTypeExistenceCheck constraint) {
+import static com.bship.games.logic.definitions.PieceType.Dummy.INVALID_PIECE;
+
+public class PieceTypeCheckValidation implements ConstraintValidator<PieceTypeCheck, List<Piece>> {
+   public void initialize(PieceTypeCheck constraint) {
    }
 
    public boolean isValid(List<Piece> pieces, ConstraintValidatorContext context) {
-      return pieces.stream().map(Piece::getType).allMatch(Objects::nonNull);
+      return pieces.stream().map(Piece::getType).noneMatch(obj -> Objects.isNull(obj) || obj == INVALID_PIECE);
    }
 }

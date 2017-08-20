@@ -34,7 +34,7 @@ Contract.make {
                                                          x: 0,
                                                          y: 1
                                                      ],
-                                                     orientation: null,
+                                                     orientation: "INVALID_ORIENTATION",
                                                      id         : 1,
                                                      boardId    : null,
                                                      taken      : false

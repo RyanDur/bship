@@ -76,15 +76,15 @@ assertThat(response.header("Content-Type")).matches("application/json.*");
 // and:
 DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("taken").isEqualTo(false);
-assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Missing piece type.");
 assertThatJson(parsedJson).array("errors").array("validations").array("value").field("placement").field("y").isEqualTo(0);
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("boardId").isNull();
 assertThatJson(parsedJson).array("errors").array("validations").contains("field").isEqualTo("pieces");
-assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("type").isNull();
 assertThatJson(parsedJson).array("errors").array("validations").array("value").field("placement").field("x").isEqualTo(0);
+assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("PieceTypeCheck");
+assertThatJson(parsedJson).array("errors").array("validations").contains("message").isEqualTo("Invalid piece type.");
+assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("type").isEqualTo("INVALID_PIECE");
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("id").isEqualTo(1);
 assertThatJson(parsedJson).array("errors").array("validations").array("value").contains("orientation").isEqualTo("DOWN");
-assertThatJson(parsedJson).array("errors").array("validations").contains("code").isEqualTo("PieceTypeExistenceCheck");
 }
 
 }

@@ -1,8 +1,9 @@
 package com.bship.games.logic.definitions;
 
+import com.bship.games.Configuration.GameRulesDeserializer;
 import com.bship.games.Configuration.PieceListConverter;
-import com.bship.games.logic.PieceType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Arrays;
@@ -14,6 +15,7 @@ import static com.bship.games.logic.definitions.Direction.NONE;
 import static java.util.stream.Collectors.toList;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+@JsonDeserialize(using = GameRulesDeserializer.class)
 public enum GameRules {
     BATTLESHIP(2, 1, BATTLESHIP_BOARD, Arrays.asList(Harbor.values()), remove(NONE, Direction.values()));
 
@@ -75,6 +77,4 @@ public enum GameRules {
                 .add("\"pieces\": " + pieces)
                 .toString();
     }
-
-
 }

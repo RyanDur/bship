@@ -15,7 +15,6 @@ public class PieceList {
 
     @OrientationExistenceCheck(groups = ExistenceCheck.class)
     @PlacementExistenceCheck(groups = ExistenceCheck.class)
-    @PieceTypeExistenceCheck(groups = ExistenceCheck.class)
     @IdExistenceCheck(groups = ExistenceCheck.class)
     @PlacementOfYCheck(groups = CoordinateCheck.class)
     @PlacementOfXCheck(groups = CoordinateCheck.class)
