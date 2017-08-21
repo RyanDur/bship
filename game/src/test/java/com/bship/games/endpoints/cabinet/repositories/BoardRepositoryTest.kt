@@ -4,8 +4,8 @@ import com.bship.DBHelper
 import com.bship.games.endpoints.cabinet.entity.Board
 import com.bship.games.endpoints.cabinet.entity.Game
 import com.bship.games.endpoints.cabinet.entity.Piece
-import com.bship.games.logic.definitions.PieceType
 import com.bship.games.logic.definitions.Harbor
+import com.bship.games.logic.definitions.PieceType
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -78,8 +78,8 @@ class BoardRepositoryTest {
 
     @Test
     fun get_shouldReturnEmptyWhenThereIsNotAGame() {
-        val (id) = boards.create(game.id, Harbor.getPieces())
-        val actual = boards[id + 1L]
+        val game = boards.create(game.id, Harbor.getPieces())
+        val actual = boards[game.id + 1L]
 
         assertThat(actual, `is`<Optional<out Any>>(Optional.empty()))
     }
@@ -111,7 +111,7 @@ class BoardRepositoryTest {
     fun save_shouldSaveABoard() {
         whenever(shipRepo.getAll(any())).thenReturn(pieceList)
         val board = boards.create(game.id, Harbor.getPieces())
-        val expected = board.copy(winner = true)
+        val expected = board.copy { withWinner { true } }
         boards.save(expected)
         val actual = boards[expected.id]
 
@@ -122,7 +122,7 @@ class BoardRepositoryTest {
     fun save_shouldReturnTheSavedBoard() {
         whenever(shipRepo.getAll(any())).thenReturn(pieceList)
         val board = boards.create(game.id, Harbor.getPieces())
-        val expected = board.copy(winner = true)
+        val expected = board.copy { withWinner { true } }
         val actual = boards.save(expected)
 
         assertThat(actual.orElse(null), `is`(equalTo(expected)))

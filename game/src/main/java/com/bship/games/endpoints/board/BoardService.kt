@@ -21,6 +21,6 @@ open class BoardService(private val boards: BoardRepository, private val logic: 
     }
 
     private fun addPiecesToBoard(pieces: List<Piece>): (Board) -> Board {
-        return { it.copy(pieces = it.pieces + pieces) }
+        return { it.copy { withPieces { it.pieces + pieces } } }
     }
 }

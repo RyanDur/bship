@@ -68,7 +68,7 @@ class Battleship : GameLogic {
         return Function { boards ->
             game.copy()
                     .withBoards(boards)
-                    .withOver(boards.stream().anyMatch({ (_, _, _, _, _, _, isWinner) -> isWinner }))
+                    .withOver(boards.stream().anyMatch({ it.winner }))
                     .build()
         }
     }
@@ -84,8 +84,8 @@ class Battleship : GameLogic {
                         val status = getStatus(move, opponent.pieces)
                         val newMove = move.copy().withStatus(status).build()
 
-                        val currentBuild = current.copy(moves = current.moves + newMove)
-                        val opponentBuild = opponent.copy(opponentMoves = current.opponentMoves + newMove)
+                        val currentBuild = current.copy { withMoves { current.moves + newMove } }
+                        val opponentBuild = opponent.copy { withOpponentMoves { current.opponentMoves + newMove } }
 
                         asList(
                                 updateBoard(currentBuild, opponentBuild),
@@ -99,9 +99,11 @@ class Battleship : GameLogic {
         val taken = getSunk(sinkShips(current, opponent))
         val ships = sinkShips(opponent, current)
         return ofNullable(current).map({ it ->
-            it.copy(pieces = ships,
-                    opponentPieces = taken,
-                    winner = ships.size == taken.size)
+            it.copy {
+                withPieces { ships }
+                withOpponentPieces { taken }
+                withWinner { ships.size == taken.size }
+            }
         }).orElse(current)
     }
 
@@ -117,7 +119,7 @@ class Battleship : GameLogic {
         return Function { piece ->
             ofNullable(piece)
                     .filter(isSunk(moves))
-                    .map { it.copy(taken = SUNK) }
+                    .map { it.copy { withTaken { SUNK } } }
                     .orElse(piece)
         }
     }
@@ -137,7 +139,7 @@ class Battleship : GameLogic {
     private fun exists(pieces: List<Piece>, board: Board): Boolean =
             of(board).map(Board::pieces).filter {
                 it.filter(Util.Companion::isPlaced).map(Piece::type)
-                        .any({ pieces.any { (type) -> type == it } })
+                        .any({ pieces.any { piece -> piece.type == it } })
             }.isPresent
 
     private fun collision(pieces: List<Piece>, board: Board): Boolean {
@@ -159,7 +161,7 @@ class Battleship : GameLogic {
         return ofNullable(game).map { it.boards }
                 .map(partitionBoards(move))
                 .map<Board> { boards -> boards[CURRENT_BOARD] }
-                .filter { (_, _, _, _, moves) -> moves.contains(move) }
+                .filter { it.moves.contains(move) }
                 .isPresent
     }
 
@@ -168,11 +170,10 @@ class Battleship : GameLogic {
     }
 
     private fun partitionBoards(move: Move): Function<List<Board>, Map<Boolean, Board>> {
-        return Function { it.associateBy { (id) -> id == move.boardId } }
+        return Function { it.associateBy { it.id == move.boardId } }
     }
 
     companion object {
-
         private val CURRENT_BOARD = true
         private val OPPONENT_BOARD = false
         private val SUNK = true

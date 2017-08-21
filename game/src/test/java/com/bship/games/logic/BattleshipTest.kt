@@ -209,13 +209,13 @@ class BattleshipTest {
         val actual = logic.play(move).apply(game).orElse(lostGame)
 
         val boards = game.boards
-        val board1 = boards.stream().filter { (id) -> id == boardId }.findFirst().orElse(loser)
-        val opponentBoard1 = boards.stream().filter { (id) -> id != boardId }.findFirst().orElse(loser)
-        opponentBoard1.copy(opponentMoves = opponentBoard1.opponentMoves + move)
+        val board1 = boards.stream().filter { it.id == boardId }.findFirst().orElse(loser)
+        val opponentBoard1 = boards.stream().filter { it.id != boardId }.findFirst().orElse(loser)
+        opponentBoard1.copy { withOpponentMoves { opponentBoard1.opponentMoves + move } }
 
         val expected = game.copy().withBoards(asList(
-                board1.copy(moves = board1.moves + move.copy().withStatus(MISS).build()),
-                opponentBoard1.copy(opponentMoves = opponentBoard1.opponentMoves + move.copy().withStatus(MISS).build())
+                board1.copy { withMoves { board1.moves + move.copy().withStatus(MISS).build() } },
+                opponentBoard1.copy { withOpponentMoves { opponentBoard1.opponentMoves + move.copy().withStatus(MISS).build() } }
         )).build()
 
         assertThat(actual, `is`(equalTo(expected)))
@@ -236,11 +236,11 @@ class BattleshipTest {
         val boardMap = partitionBoards(game, move)
         val board1 = boardMap[true]!!
         val opponentBoard1 = boardMap[false]!!
-        opponentBoard1.copy(opponentMoves = opponentBoard1.opponentMoves + move)
+        opponentBoard1.copy { withOpponentMoves { opponentBoard1.opponentMoves + move } }
 
         val expected = game.copy().withBoards(asList(
-                board1.copy(moves = board1.moves + move.copy().withStatus(HIT).build()),
-                opponentBoard1.copy(opponentMoves = opponentBoard1.opponentMoves + move.copy().withStatus(HIT).build())))
+                board1.copy { withMoves { board1.moves + move.copy().withStatus(HIT).build() } },
+                opponentBoard1.copy { withOpponentMoves { opponentBoard1.opponentMoves + move.copy().withStatus(HIT).build() } }))
                 .build()
 
         assertThat(actual, `is`(equalTo(expected)))
@@ -287,7 +287,7 @@ class BattleshipTest {
         val carrier = pieceMap[true]!!
         val theRest = pieceMap[false]!!
 
-        val taken = theRest.map { o -> o.copy(taken = true) }
+        val taken = theRest.map { o -> o.copy { withTaken { true } } }
         val otherShips = Util.concat(carrier, taken)
 
         val moves = otherShips.stream().flatMap { p -> Util.pointsRange(p).stream() }
@@ -298,11 +298,12 @@ class BattleshipTest {
                 .map({ it.build() })
                 .collect(Collectors.toList())
 
-        val board = current.copy(
-                moves = moves,
-                opponentMoves = emptyList(),
-                opponentPieces = current.opponentPieces + taken)
-        val board1 = other.copy(pieces = otherShips)
+        val board = current.copy {
+            withMoves { moves }
+            withOpponentMoves { emptyList() }
+            withOpponentPieces { current.opponentPieces + taken }
+        }
+        val board1 = other.copy { withPieces { otherShips } }
 
         val game2 = logic.play(Move.builder()
                 .withPoint(Point(0, 0))
@@ -331,7 +332,7 @@ class BattleshipTest {
         val carrier = pieceMap[true]!!
         val theRest = pieceMap[false]!!
 
-        val taken = theRest.map { o -> o.copy(taken = true) }
+        val taken = theRest.map { o -> o.copy { withTaken { true } } }
         val otherShips = Util.concat(carrier, taken)
 
         val moves = otherShips.stream().flatMap { p -> Util.pointsRange(p).stream() }
@@ -342,11 +343,12 @@ class BattleshipTest {
                 .map { it.build() }
                 .collect(Collectors.toList())
 
-        val board = current.copy(
-                moves = moves,
-                opponentMoves = emptyList(),
-                opponentPieces = current.opponentPieces + taken)
-        val board1 = other.copy(pieces = otherShips)
+        val board = current.copy {
+            withMoves { moves }
+            withOpponentMoves { emptyList() }
+            withOpponentPieces { current.opponentPieces + taken }
+        }
+        val board1 = other.copy { withPieces { otherShips } }
 
         val game2 = logic.play(Move.builder()
                 .withPoint(Point(0, 0))
@@ -355,7 +357,7 @@ class BattleshipTest {
                 .apply(game1.copy().withBoards(asList(board, board1)).build()).orElse(lostGame)
 
         assertThat(game2.isOver, `is`(true))
-        val winner = game2.boards.first { (id) -> id == current.id }
+        val winner = game2.boards.first { it.id == current.id }
         assertThat(winner.winner, `is`(true))
     }
 
@@ -377,7 +379,7 @@ class BattleshipTest {
         val carrier = pieceMap[true]!!
         val theRest = pieceMap[false]!!
 
-        val taken = theRest.map { it.copy(taken = true) }
+        val taken = theRest.map { it.copy { withTaken { true } } }
         val otherShips = Util.concat(carrier, taken)
 
         val moves = otherShips.stream().flatMap { p -> Util.pointsRange(p).stream() }
@@ -388,11 +390,12 @@ class BattleshipTest {
                 .map { it.build() }
                 .collect(Collectors.toList())
 
-        val board = current.copy(
-                moves = moves,
-                opponentMoves = emptyList(),
-                opponentPieces = current.opponentPieces + taken)
-        val board1 = other.copy(pieces = otherShips)
+        val board = current.copy {
+            withMoves { moves }
+            withOpponentMoves { emptyList() }
+            withOpponentPieces { current.opponentPieces + taken }
+        }
+        val board1 = other.copy { withPieces { otherShips } }
 
         val move = Move.builder()
                 .withPoint(Point(0, 0))
@@ -405,7 +408,7 @@ class BattleshipTest {
 
         assertThat(game2.isOver, `is`(true))
         val winner = game2.boards.stream()
-                .filter { (id) -> id == current.id }
+                .filter { it.id == current.id }
                 .findFirst()
         assertThat(winner.isPresent, `is`(true))
         assertThat(winner.orElse(loser).winner, `is`(true))

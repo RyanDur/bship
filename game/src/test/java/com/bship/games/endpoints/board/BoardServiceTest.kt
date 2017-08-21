@@ -54,7 +54,7 @@ class BoardServiceTest {
             withType { AIRCRAFT_CARRIER }
         }
 
-        val expected = board.copy(pieces = board.pieces + piece)
+        val expected = board.copy { withPieces { board.pieces + piece } }
         val pieces = listOf(piece)
 
         whenever(repository[boardId]).thenReturn(of(board))
@@ -72,7 +72,7 @@ class BoardServiceTest {
         val boardId = 1L
         val board = Board.build {}
         val piece = Piece.build {}
-        val expected = board.copy(pieces = board.pieces + piece)
+        val expected = board.copy { withPieces { board.pieces + piece } }
 
         whenever(repository[boardId]).thenReturn(Optional.empty())
         whenever(logic.placementCheck(listOf(piece))).thenReturn(Predicate { _ -> true })
@@ -103,7 +103,7 @@ class BoardServiceTest {
         val boardId = 1L
         val board = Board.build {}
         val piece = Piece.build {}
-        val expected = board.copy(pieces = board.pieces + piece)
+        val expected = board.copy { withPieces { board.pieces + piece } }
 
         whenever(repository[boardId]).thenReturn(of(board))
         whenever(logic.placementCheck(any())).thenThrow(ShipCollisionCheck())

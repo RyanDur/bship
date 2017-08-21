@@ -53,7 +53,10 @@ class BoardSetup {
     @Test
     fun `should be able to set a ship on the board`() {
         val carrier = board1.pieces.first { it.type == AIRCRAFT_CARRIER }
-                .copy(placement = Point(0, 0), orientation = DOWN)
+                .copy {
+                    withPlacement { Point(0, 0) }
+                    withOrientation { DOWN }
+                }
 
         val content = mockMvc.perform(put("/boards/${board1.id}")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -72,15 +75,30 @@ class BoardSetup {
     fun `should be able to set up a board`() {
         val ships = listOf(
                 board1.pieces.first { it.type == AIRCRAFT_CARRIER }
-                        .copy(placement = Point(0, 0), orientation = DOWN),
+                        .copy {
+                            withPlacement { Point(0, 0) }
+                            withOrientation { DOWN }
+                        },
                 board1.pieces.first { it.type == BATTLESHIP }
-                        .copy(placement = Point(1, 0), orientation = DOWN),
+                        .copy {
+                            withPlacement { Point(1, 0) }
+                            withOrientation { DOWN }
+                        },
                 board1.pieces.first { it.type == SUBMARINE }
-                        .copy(placement = Point(2, 0), orientation = DOWN),
+                        .copy {
+                            withPlacement { Point(2, 0) }
+                            withOrientation { DOWN }
+                        },
                 board1.pieces.first { it.type == CRUISER }
-                        .copy(placement = Point(3, 0), orientation = DOWN),
+                        .copy {
+                            withPlacement { Point(3, 0) }
+                            withOrientation { DOWN }
+                        },
                 board1.pieces.first { it.type == DESTROYER }
-                        .copy(placement = Point(4, 0), orientation = DOWN))
+                        .copy {
+                            withPlacement { Point(4, 0) }
+                            withOrientation { DOWN }
+                        })
 
         val content = mockMvc.perform(put("/boards/${board1.id}")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -98,10 +116,16 @@ class BoardSetup {
     @Test
     fun `should noy be able to set the same piece more than once`() {
         val carrier1 = board1.pieces.first { it.type == AIRCRAFT_CARRIER }
-                .copy(placement = Point(0, 0), orientation = DOWN)
+                .copy {
+                    withPlacement { Point(0, 0) }
+                    withOrientation { DOWN }
+                }
 
         val carrier2 = board1.pieces.first { it.type == AIRCRAFT_CARRIER }
-                .copy(placement = Point(1, 0), orientation = DOWN)
+                .copy {
+                    withPlacement { Point(1, 0) }
+                    withOrientation { DOWN }
+                }
 
         val content = mockMvc.perform(put("/boards/${board1.id}")
                 .contentType(MediaType.APPLICATION_JSON)

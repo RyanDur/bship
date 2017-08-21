@@ -31,7 +31,7 @@ class Util {
 
         fun isPlaced(piece: Piece?): Boolean {
             return ofNullable(piece)
-                    .filter { (_, _, _, _, placement) -> isSet(placement) }
+                    .filter { p -> isSet(p.placement) }
                     .isPresent
         }
 

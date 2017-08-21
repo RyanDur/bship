@@ -45,7 +45,7 @@ class BoardTest {
     @Test
     fun addShip_shouldBeAbleToAddMultipleShipsToTheBoard() {
         val board = Board.build { withPieces { listOf(battleship) } }
-        val newBoard = board.copy(pieces = board.pieces + aircraftCarrier)
+        val newBoard = board.copy { withPieces { board.pieces + aircraftCarrier } }
 
         assertThat(newBoard.pieces).contains(battleship, aircraftCarrier)
     }

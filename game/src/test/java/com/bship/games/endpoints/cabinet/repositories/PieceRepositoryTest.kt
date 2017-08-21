@@ -80,15 +80,15 @@ class PieceRepositoryTest {
     @Test
     fun save_shouldSaveAShip() {
         val all = pieces.createAll(1L, Harbor.getPieces())
-        val piece = all[0].copy(
-                placement = Point(0, 0),
-                orientation = DOWN,
-                boardId = 1
-        )
+        val piece = all[0].copy {
+            withPlacement { Point(0, 0) }
+            withOrientation { DOWN }
+            withBoardId { 1 }
+        }
 
         pieces.save(piece)
         val actual = pieces.getAll(1L).stream()
-                .filter { (_, id) -> id == 1L }
+                .filter { it.id == 1L }
                 .findFirst().orElse(null)
 
         assertThat(actual, `is`(equalTo(piece)))
@@ -146,8 +146,8 @@ class PieceRepositoryTest {
 
     private fun take(pieceType: Harbor): (Piece) -> Piece {
         return { ship ->
-            of(ship).filter { (type) -> type == pieceType }
-                    .map { it.copy(taken = true) }
+            of(ship).filter { it.type == pieceType }
+                    .map { it.copy { withTaken { true } } }
                     .orElse(ship)
         }
     }

@@ -6,13 +6,13 @@ import java.util.*
 import java.util.Collections.emptyList
 
 @JsonDeserialize(using = BoardDeserializer::class)
-data class Board private constructor(val id: Long,
-                                     val gameId: Long,
-                                     val pieces: List<Piece>,
-                                     val opponentPieces: List<Piece>,
-                                     val moves: List<Move>,
-                                     val opponentMoves: List<Move>,
-                                     val winner: Boolean) {
+class Board private constructor(val id: Long,
+                                val gameId: Long,
+                                val pieces: List<Piece>,
+                                val opponentPieces: List<Piece>,
+                                val moves: List<Move>,
+                                val opponentMoves: List<Move>,
+                                val winner: Boolean) {
 
     private constructor(builder: Builder) : this(
             id = builder.id.orElse(0),
@@ -24,7 +24,21 @@ data class Board private constructor(val id: Long,
             winner = builder.winner.orElse(false)
     )
 
-    class Builder {
+    fun copy(init: Builder.() -> Unit): Board {
+        return Builder(this).apply(init).build()
+    }
+
+    class Builder() {
+        constructor(board: Board) : this() {
+            withId { board.id }
+            withGameId { board.gameId }
+            withWinner { board.winner }
+            withMoves { board.moves }
+            withPieces { board.pieces }
+            withOpponentMoves { board.opponentMoves }
+            withOpponentPieces { board.opponentPieces }
+        }
+
         internal var id: Optional<Long> = Optional.empty(); private set
         internal var gameId: Optional<Long> = Optional.empty(); private set
         internal var winner: Optional<Boolean> = Optional.empty(); private set
@@ -80,6 +94,34 @@ data class Board private constructor(val id: Long,
                 ", \"opponentMoves\":" + opponentMoves +
                 ", \"winner\":" + winner +
                 '}'
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Board
+
+        if (id != other.id) return false
+        if (gameId != other.gameId) return false
+        if (pieces != other.pieces) return false
+        if (opponentPieces != other.opponentPieces) return false
+        if (moves != other.moves) return false
+        if (opponentMoves != other.opponentMoves) return false
+        if (winner != other.winner) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + gameId.hashCode()
+        result = 31 * result + pieces.hashCode()
+        result = 31 * result + opponentPieces.hashCode()
+        result = 31 * result + moves.hashCode()
+        result = 31 * result + opponentMoves.hashCode()
+        result = 31 * result + winner.hashCode()
+        return result
     }
 }
 
