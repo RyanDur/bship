@@ -4,8 +4,10 @@ import com.bship.DBHelper
 import com.bship.games.endpoints.cabinet.entity.Board
 import com.bship.games.endpoints.cabinet.entity.Game
 import com.bship.games.endpoints.cabinet.entity.Point
+import com.bship.games.endpoints.errors.RequestErrors.FieldValidation
+import com.bship.games.endpoints.errors.RequestErrors.GameErrors
 import com.bship.games.logic.definitions.Direction.DOWN
-import com.bship.games.logic.definitions.Harbor.AIRCRAFT_CARRIER
+import com.bship.games.logic.definitions.Harbor.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -64,5 +66,61 @@ class BoardSetup {
 
         assertThat(actual.pieces.first { it.type == AIRCRAFT_CARRIER })
                 .isEqualToComparingFieldByField(carrier)
+    }
+
+    @Test
+    fun `should be able to set up a board`() {
+        val ships = listOf(
+                board1.pieces.first { it.type == AIRCRAFT_CARRIER }
+                        .copy(placement = Point(0, 0), orientation = DOWN),
+                board1.pieces.first { it.type == BATTLESHIP }
+                        .copy(placement = Point(1, 0), orientation = DOWN),
+                board1.pieces.first { it.type == SUBMARINE }
+                        .copy(placement = Point(2, 0), orientation = DOWN),
+                board1.pieces.first { it.type == CRUISER }
+                        .copy(placement = Point(3, 0), orientation = DOWN),
+                board1.pieces.first { it.type == DESTROYER }
+                        .copy(placement = Point(4, 0), orientation = DOWN))
+
+        val content = mockMvc.perform(put("/boards/${board1.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ships.toString()))
+                .andReturn()
+                .response
+                .contentAsString
+
+        val actual = mapper.readValue(content, Board::class.java)
+
+        assertThat(actual.pieces).containsAll(ships)
+    }
+
+
+    @Test
+    fun `should noy be able to set the same piece more than once`() {
+        val carrier1 = board1.pieces.first { it.type == AIRCRAFT_CARRIER }
+                .copy(placement = Point(0, 0), orientation = DOWN)
+
+        val carrier2 = board1.pieces.first { it.type == AIRCRAFT_CARRIER }
+                .copy(placement = Point(1, 0), orientation = DOWN)
+
+        val content = mockMvc.perform(put("/boards/${board1.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(listOf(carrier1, carrier2).toString()))
+                .andReturn()
+                .response
+                .contentAsString
+
+        val actual = mapper.readValue(content, GameErrors::class.java)
+
+        val messages = getFieldErrorMessages(actual)
+
+        assertThat(messages).contains("Duplicate ship.")
+    }
+
+    private fun getFieldErrorMessages(actual: GameErrors): List<String> {
+        return mapper.convertValue(actual.errors, Array<FieldValidation>::class.java)
+                .map { it.validations }
+                .flatten()
+                .map { it.message }
     }
 }

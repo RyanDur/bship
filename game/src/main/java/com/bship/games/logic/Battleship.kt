@@ -1,5 +1,6 @@
 package com.bship.games.logic
 
+import com.bship.games.endpoints.board.errors.exceptions.DuplicateShipCheck
 import com.bship.games.endpoints.board.errors.exceptions.ShipCollisionCheck
 import com.bship.games.endpoints.board.errors.exceptions.ShipExistsCheck
 import com.bship.games.endpoints.cabinet.entity.*
@@ -16,6 +17,7 @@ import java.util.*
 import java.util.Arrays.asList
 import java.util.Collections.emptyList
 import java.util.Objects.nonNull
+import java.util.Optional.of
 import java.util.Optional.ofNullable
 import java.util.function.Function
 import java.util.function.Predicate
@@ -27,6 +29,7 @@ class Battleship : GameLogic {
     @Throws(ShipExistsCheck::class, ShipCollisionCheck::class)
     override fun placementCheck(pieces: List<Piece>): Predicate<Board> {
         return Predicate { board ->
+            if (duplicate(pieces)) throw DuplicateShipCheck()
             if (exists(pieces, board)) throw ShipExistsCheck()
             if (collision(pieces, board)) throw ShipCollisionCheck()
             true
@@ -128,19 +131,14 @@ class Battleship : GameLogic {
         }
     }
 
-    private fun exists(pieces: List<Piece>, board: Board): Boolean {
-        return ofNullable(pieces).isPresent && ofNullable(board)
-                .map { it.pieces }
-                .map { it.stream() }
-                .filter { ships ->
-                    ships.filter { Util.isPlaced(it) }
-                            .map { it.type }
-                            .anyMatch({ type ->
-                                pieces.stream()
-                                        .anyMatch { piece -> type === piece.type }
-                            })
-                }.isPresent
-    }
+    private fun duplicate(pieces: List<Piece>): Boolean =
+            pieces.map { it.type }.distinct().size != pieces.size
+
+    private fun exists(pieces: List<Piece>, board: Board): Boolean =
+            of(board).map(Board::pieces).filter {
+                it.filter(Util.Companion::isPlaced).map(Piece::type)
+                        .any({ pieces.any { (type) -> type == it } })
+            }.isPresent
 
     private fun collision(pieces: List<Piece>, board: Board): Boolean {
         return ofNullable(board)
@@ -180,3 +178,4 @@ class Battleship : GameLogic {
         private val SUNK = true
     }
 }
+
