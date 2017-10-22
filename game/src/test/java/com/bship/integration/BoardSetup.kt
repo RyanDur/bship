@@ -4,9 +4,8 @@ import com.bship.DBHelper
 import com.bship.games.endpoints.cabinet.entity.Board
 import com.bship.games.endpoints.cabinet.entity.Game
 import com.bship.games.endpoints.cabinet.entity.Point
-import com.bship.games.endpoints.errors.RequestErrors.FieldValidation
-import com.bship.games.endpoints.errors.RequestErrors.GameErrors
 import com.bship.games.logic.definitions.Direction.DOWN
+import com.bship.games.logic.definitions.Direction.RIGHT
 import com.bship.games.logic.definitions.Harbor.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
@@ -21,7 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
-
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -114,7 +113,7 @@ class BoardSetup {
 
 
     @Test
-    fun `should noy be able to set the same piece more than once`() {
+    fun `should not be able to set the same piece more than once`() {
         val carrier1 = board1.pieces.first { it.type == AIRCRAFT_CARRIER }
                 .copy {
                     withPlacement { Point(0, 0) }
@@ -130,21 +129,34 @@ class BoardSetup {
         val content = mockMvc.perform(put("/boards/${board1.id}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(listOf(carrier1, carrier2).toString()))
+                .andExpect { status().isBadRequest }
                 .andReturn()
-                .response
-                .contentAsString
+                .resolvedException
 
-        val actual = mapper.readValue(content, GameErrors::class.java)
-
-        val messages = getFieldErrorMessages(actual)
-
-        assertThat(messages).contains("Duplicate ship.")
+        assertThat(content.message).contains("Duplicate ship.")
     }
 
-    private fun getFieldErrorMessages(actual: GameErrors): List<String> {
-        return mapper.convertValue(actual.errors, Array<FieldValidation>::class.java)
-                .map { it.validations }
-                .flatten()
-                .map { it.message }
+    @Test
+    fun `should not be able to place a piece upon another piece`() {
+        val carrier = board1.pieces.first { it.type == AIRCRAFT_CARRIER }
+                .copy {
+                    withPlacement { Point(0, 0) }
+                    withOrientation { DOWN }
+                }
+
+        val battleship = board1.pieces.first { it.type == BATTLESHIP }
+                .copy {
+                    withPlacement { Point(0, 1) }
+                    withOrientation { RIGHT }
+                }
+
+        val content = mockMvc.perform(put("/boards/${board1.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(listOf(carrier, battleship).toString()))
+                .andExpect { status().isBadRequest }
+                .andReturn()
+                .resolvedException
+
+        assertThat(content.message).contains("Ship collision.")
     }
 }

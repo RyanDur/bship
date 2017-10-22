@@ -15,7 +15,10 @@ class PieceDeserializer : JsonDeserializer<Piece>() {
         val node = oc?.readTree<JsonNode>(p)
 
         return Piece.build {
-            withId { node?.get("id")?.asLong() }
+            withId {
+                val id = node?.get("id")
+                return@withId if (id?.isNull!!) Long.MIN_VALUE else id.asLong()
+            }
             withBoardId { node?.get("boardId")?.asLong() }
             withType { node?.get("type")?.let { oc.treeToValue(it, PieceType::class.java) } }
             withPlacement { node?.get("placement")?.let { oc.treeToValue(it, Point::class.java) } }

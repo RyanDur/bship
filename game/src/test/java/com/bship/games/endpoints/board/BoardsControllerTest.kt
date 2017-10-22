@@ -1,5 +1,6 @@
 package com.bship.games.endpoints.board
 
+import com.bship.games.endpoints.board.errors.exceptions.BoardValidation
 import com.bship.games.endpoints.board.errors.exceptions.ShipCollisionCheck
 import com.bship.games.endpoints.board.errors.exceptions.ShipExistsCheck
 import com.bship.games.endpoints.cabinet.entity.Board
@@ -7,19 +8,20 @@ import com.bship.games.endpoints.cabinet.entity.Piece
 import com.bship.games.endpoints.cabinet.entity.Point
 import com.bship.games.endpoints.errors.RequestErrors.FieldValidation
 import com.bship.games.endpoints.errors.RequestErrors.GameErrors
-import com.bship.games.endpoints.errors.RequestErrors.ObjectValidation
 import com.bship.games.logic.definitions.Direction.*
 import com.bship.games.logic.definitions.Harbor.BATTLESHIP
 import com.bship.games.logic.definitions.Harbor.DESTROYER
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doThrow
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Matchers.anyListOf
-import org.mockito.Matchers.anyLong
-import org.mockito.Mockito.*
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
@@ -35,10 +37,10 @@ class BoardsControllerTest {
 
     @Before
     fun setup() {
-        mockService = mock(BoardService::class.java)
+        mockService = mock()
         val boardsController = BoardsController(mockService)
         mockMvc = MockMvcBuilders.standaloneSetup(boardsController).build()
-        mapper = ObjectMapper()
+        mapper = ObjectMapper().registerKotlinModule()
     }
 
     @Test
@@ -50,7 +52,7 @@ class BoardsControllerTest {
     @Test
     @Throws(Exception::class)
     fun shouldProduceJSONWithCharsetUTF8() {
-        `when`(mockService.placePiece(anyLong(), anyListOf(Piece::class.java)))
+        whenever(mockService.placePiece(any(), any()))
                 .thenReturn(Board.build {})
         val pieces = listOf(Piece.build {
             withType { BATTLESHIP }
@@ -67,7 +69,7 @@ class BoardsControllerTest {
     @Test
     @Throws(Exception::class)
     fun shouldRespondWith200() {
-        `when`(mockService.placePiece(anyLong(), anyListOf(Piece::class.java)))
+        whenever(mockService.placePiece(any(), any()))
                 .thenReturn(Board.build {})
 
         val pieces = listOf(Piece.build {
@@ -329,7 +331,7 @@ class BoardsControllerTest {
     @Test
     @Throws(Exception::class)
     fun shouldHandleShipExistence() {
-        doThrow(ShipExistsCheck()).`when`<BoardService>(mockService).placePiece(anyLong(), anyListOf(Piece::class.java))
+        com.nhaarman.mockito_kotlin.whenever<Board>(mockService.placePiece(any(), any())).doThrow(ShipExistsCheck())
         val pieces = listOf(Piece.build {
             withId { 1 }
             withType { DESTROYER }
@@ -337,20 +339,21 @@ class BoardsControllerTest {
             withOrientation { DOWN }
         })
 
-        val actual = mapper.readValue(mockMvc.perform(put("/boards/9")
+        val actual = mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(pieces.toString())).andReturn()
-                .response
-                .contentAsString, GameErrors::class.java)
+                .content(pieces.toString()))
+                .andExpect { status().isBadRequest }
+                .andReturn()
+                .resolvedException
 
-        val error = mapper.convertValue(actual.errors[0], ObjectValidation::class.java)
-        assertThat(error.validations[0].message, CoreMatchers.`is`("Ship already exists on board."))
+        val error = mapper.convertValue(actual, BoardValidation::class.java)
+        assertThat(error.message, CoreMatchers.`is`("Ship already exists on board."))
     }
 
     @Test
     @Throws(Exception::class)
     fun shouldHandleShipCollisions() {
-        doThrow(ShipCollisionCheck()).`when`<BoardService>(mockService).placePiece(anyLong(), anyListOf(Piece::class.java))
+        whenever(mockService.placePiece(any(), any())).thenThrow(ShipCollisionCheck())
         val pieces = listOf(Piece.build {
             withId { 1 }
             withType { DESTROYER }
@@ -358,31 +361,31 @@ class BoardsControllerTest {
             withOrientation { DOWN }
         })
 
-        val actual = mapper.readValue(mockMvc.perform(put("/boards/9")
+        val actual = mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(pieces.toString())).andReturn()
-                .response
-                .contentAsString, GameErrors::class.java)
+                .content(pieces.toString()))
+                .andExpect { status().isBadRequest }
+                .andReturn()
+                .resolvedException
 
-        val error = mapper.convertValue(actual.errors[0], ObjectValidation::class.java)
-        assertThat(error.validations[0].message, CoreMatchers.`is`("Ship collision."))
+        val error = mapper.convertValue(actual, BoardValidation::class.java)
+        assertThat(error.message, CoreMatchers.`is`("Ship collision."))
     }
 
     @Test
     @Throws(Exception::class)
     fun shouldNeedAnId() {
-        doThrow(ShipCollisionCheck()).`when`<BoardService>(mockService).placePiece(anyLong(), anyListOf(Piece::class.java))
+//        whenever(mockService.placePiece(any(), any())).doThrow(IdExistenceCheckValidation)
+        val pieces = listOf(Piece.build {
+            withBoardId { 1 }
+            withType { DESTROYER }
+            withPlacement { Point(0, 0) }
+            withOrientation { DOWN }
+        })
         val actual = mapper.readValue(mockMvc.perform(put("/boards/9")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("[{\n" +
-                        "    \"type\": \"DESTROYER\",\n" +
-                        "    \"placement\": {\n" +
-                        "      \"x\": 8,\n" +
-                        "      \"y\": 0\n" +
-                        "    },\n" +
-                        "    \"orientation\": \"DOWN\"\n" +
-                        "}]"
-                )).andReturn()
+                .content(pieces.toString()))
+                .andReturn()
                 .response
                 .contentAsString, GameErrors::class.java)
 
